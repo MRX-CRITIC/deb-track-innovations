@@ -25,46 +25,41 @@ class UserController extends Controller
 //        ]);
 //    }
 
-    public function actionRegistration() {
+    public function actionRegistration()
+    {
         $model = new RegistrationForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $confirmationCode = rand(1000, 9999);
-            $_SESSION['confirmationCode'] = $confirmationCode;
+//            $_SESSION['confirmationCode'] = $confirmationCode;
+            Yii::$app->session->set('confirmationCode', $confirmationCode);
             $this->SendConfirmationEmail($model->email, $confirmationCode);
 
-//            $userId = UserRepository::createUser(
-//                $model->email,
-//                $model->password,
-//                $confirmationCode
-//            );
-
+            $userId = UserRepository::createUser(
+                $model->email,
+                $model->password,
+            );
+            Yii::$app->user->login(Users::findIdentity($userId), 0);
             return $this->redirect('confirm-registration');
-//            Yii::$app->user->login(Users::findIdentity($userId), 0);
-//            return $this->goHome();
         }
         return $this->render('registration', [
             'model' => $model
         ]);
     }
 
-    public function actionConfirmRegistration() {
+    public function actionConfirmRegistration()
+    {
         $model = new ConfirmationForm();
-
+        var_dump(Yii::$app->session->get('confirmationCode'));
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if () {
-                $userId = UserRepository::createUser(
-                    $model->email,
-                    $model->password
-                );
-
-                Yii::$app->user->login(Users::findIdentity($userId), 0);
+            if (Yii::$app->session->get('confirmationCode') == $model->confirmationCode) {
+                UserRepository::updateStatusUser(Yii::$app->user->id);
                 return $this->goHome();
             } else {
                 Yii::$app->session->setFlash('error', 'Неверный код подтверждения.');
             }
         }
 
-        return $this->render('confirmRegistration', [
+        return $this->renderAjax('confirm-registration', [
             'model' => $model
         ]);
     }
@@ -78,7 +73,8 @@ class UserController extends Controller
             ->send();
     }
 
-    public function actionTest() {
+    public function actionTest()
+    {
 
     }
 
@@ -91,7 +87,7 @@ class UserController extends Controller
         if (!empty($email)) {
             $this->sendConfirmationEmail($email, $confirmationCode);
         } else {
-            echo ('Неверный email');
+            echo('Неверный email');
         }
 
     }

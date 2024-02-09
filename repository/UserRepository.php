@@ -24,11 +24,17 @@ class UserRepository
         $user = new Users();
         $user->email = $email;
         $user->password = password_hash($password, PASSWORD_DEFAULT);
-//        $user->confirmationCode = $confirmationCode;
-
-//        $user->is_admin = $is_admin;
 
         $user->save();
         return $user->id;
     }
+
+    public static function updateStatusUser($id) {
+        $user = self::getUserBuId($id);
+
+        $user->status = true;
+        $user-> save();
+        return $user->id;
+    }
+
 }

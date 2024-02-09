@@ -12,7 +12,7 @@ class ConfirmationForm extends \yii\base\Model
     {
         return [
             [['confirmationCode'], 'required'],
-            [['confirmationCode'], 'integer', 'length' => [4]],
+            [['confirmationCode'], 'integer', 'min' => 1000, 'max' => 9999],
         ];
     }
 }

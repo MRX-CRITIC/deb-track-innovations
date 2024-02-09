@@ -1,5 +1,5 @@
 <?php
-/* @var $confirmationCode string */
+/* @var $confirmationCode integer */
 ?>
 
 <p>Здравствуйте!</p>

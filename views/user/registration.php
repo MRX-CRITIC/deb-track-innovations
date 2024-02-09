@@ -4,6 +4,7 @@
 
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
+\app\assets\AppAsset::register($this); // подключение js / css
 
 $form = ActiveForm::begin(); ?>
 
