@@ -29,12 +29,4 @@ class UserRepository
         return $user->id;
     }
 
-    public static function updateStatusUser($id) {
-        $user = self::getUserBuId($id);
-
-        $user->status = true;
-        $user-> save();
-        return $user->id;
-    }
-
 }

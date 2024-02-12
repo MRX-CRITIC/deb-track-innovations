@@ -4,9 +4,9 @@ namespace app\controllers;
 
 use app\entity\Users;
 use app\models\ConfirmationForm;
-use app\models\MyForm;
 use app\models\RegistrationForm;
 use app\repository\UserRepository;
+use yii\web\Response;
 use Yii;
 use yii\web\Controller;
 
@@ -28,18 +28,27 @@ class UserController extends Controller
     public function actionRegistration()
     {
         $model = new RegistrationForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $confirmationCode = rand(1000, 9999);
-//            $_SESSION['confirmationCode'] = $confirmationCode;
-            Yii::$app->session->set('confirmationCode', $confirmationCode);
-            $this->SendConfirmationEmail($model->email, $confirmationCode);
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($model->validate()) {
+                $confirmationCode = rand(1000, 9999);
+                Yii::$app->session->set('confirmationCode', $confirmationCode);
+                $this->SendConfirmationEmail($model->email, $confirmationCode);
 
-            $userId = UserRepository::createUser(
-                $model->email,
-                $model->password,
-            );
-            Yii::$app->user->login(Users::findIdentity($userId), 0);
-            return $this->redirect('confirm-registration');
+                $userId = UserRepository::createUser(
+                    $model->email,
+                    $model->password,
+                );
+
+                Yii::$app->user->login(Users::findIdentity($userId), 0);
+//                return $this->redirect('confirm-registration');
+                return ['validation' => true];
+            } else {
+                return [
+                    'validation' => false,
+                    'errors' => $model->getErrors(),
+                ];
+            }
         }
         return $this->render('registration', [
             'model' => $model
