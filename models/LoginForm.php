@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\entity\Users;
 use app\repository\UserRepository;
 use Yii;
 use yii\base\Model;
@@ -69,7 +70,7 @@ class LoginForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return User|null
+     * @return Users|array|\yii\db\ActiveRecord|null
      */
     public function getUser()
     {

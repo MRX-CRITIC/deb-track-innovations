@@ -13,7 +13,6 @@ $(document).ready(function () {
                     alert(data.errors.email);
                     alert(data.errors.password);
                     alert(data.errors.repeatPassword);
-                    console.log(data)
                 }
             }
         });

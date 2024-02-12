@@ -61,7 +61,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        var_dump(Yii::$app->user->identity);
+//        var_dump(Yii::$app->user->identity);
 
         return $this->render('index');
     }
@@ -79,10 +79,10 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            var_dump(Yii::$app->user->identity);
-            if (!Yii::$app->user->identity->status){
-                return $this->redirect('/user/confirm-registration');
-            }
+//            var_dump(Yii::$app->user->identity);
+//            if (!Yii::$app->user->identity->status){
+//                return $this->redirect('/user/confirm-registration');
+//            }
             return $this->goBack();
         }
 
