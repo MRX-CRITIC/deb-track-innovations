@@ -6,12 +6,16 @@ use app\entity\Users;
 use app\models\ConfirmationForm;
 use app\models\RegistrationForm;
 use app\repository\UserRepository;
+use Exception;
 use yii\web\Response;
 use Yii;
 use yii\web\Controller;
 
 class UserController extends Controller
 {
+    /**
+     * @throws Exception
+     */
     public function actionRegistration()
     {
 
@@ -20,17 +24,10 @@ class UserController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             if ($model->validate()) {
-                $confirmationCode = rand(1000, 9999);
+                $confirmationCode = random_int(1000, 9999);
                 Yii::$app->session->set('confirmationCode', $confirmationCode);
                 $this->SendConfirmationEmail($model->email, $confirmationCode);
 
-//                $userId = UserRepository::createUser(
-//                    $model->email,
-//                    $model->password,
-//                );
-//
-//                Yii::$app->user->login(Users::findIdentity($userId), 0);
-//                return $this->redirect('confirm-registration');
                 return ['validation' => true];
             } else {
                 return [
@@ -47,36 +44,36 @@ class UserController extends Controller
     public function actionConfirmRegistration()
     {
         $model = new ConfirmationForm();
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
 
-//            $code = Yii::$app->request->post('code');
+        $postData = Yii::$app->request->post();
+        $wrappedData = ['ConfirmationForm' => $postData];
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        if (Yii::$app->request->isAjax && $model->load($wrappedData)) {
 
             if ($model->validate()) {
                 if (Yii::$app->session->get('confirmationCode') == $model->confirmationCode) {
+
                     $userId = UserRepository::createUser(
                         $model->email,
                         $model->password,
                     );
                     Yii::$app->user->login(Users::findIdentity($userId), 0);
-                    return ['codeValid' => true];
-//                    return $this->goHome();
+                    return ['confirmationCode' => true];
+                } else {
+                    return [
+                        'confirmationCode' => false,
+                        'errors' => 'Неверный код подтверждения',
+                    ];
                 }
             } else {
-                Yii::$app->response->format = Response::FORMAT_JSON;
                 return [
-                    'codeValid' => false,
-                    'errors' => $model->getErrors(),
+                    'confirmationCode' => false,
+                    'errors' => 'Не пройдена валидация',
                 ];
             }
-//            Yii::$app->session->setFlash('error', 'Неверный код подтверждения.');
+        } else {
+            return  ['errors' => 'Ошибка'];
         }
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        return  ['errors' => $model->getErrors()];
-//        return $this->goHome();
-//        return $this->render('registration', [
-//            'model' => $model
-//        ]);
     }
 
     public function SendConfirmationEmail($email, $confirmationCode)
@@ -94,15 +91,5 @@ class UserController extends Controller
 
     public function actionIndex()
     {
-        $email = 'vlad.02.10.69@gmail.com';
-        $confirmationCode = rand(1000, 9999);
-//        var_dump([Yii::$app->params['supportEmail']]);
-
-        if (!empty($email)) {
-            $this->sendConfirmationEmail($email, $confirmationCode);
-        } else {
-            echo('Неверный email');
-        }
-
     }
 }
