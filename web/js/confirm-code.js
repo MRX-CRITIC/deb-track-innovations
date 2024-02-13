@@ -13,12 +13,13 @@ $(document).ready(function () {
                 confirmationCode: confirmationCode,
                 email: email,
                 password: password,
+                _csrf: yii.getCsrfToken()
             },
             success: function (response) {
                 if (response.confirmationCode) {
                     window.location.href = '/site/index';
                 } else {
-                    $('#error-message-code').text('Неверный код подтверждения').show();
+                    $('#error-message-code').text('Введён неверный код подтверждения').show();
                 }
             }
         });

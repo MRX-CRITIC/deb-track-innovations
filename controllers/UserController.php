@@ -67,6 +67,9 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @throws HttpException
+     */
     public function actionConfirmRegistration()
     {
         $model = new ConfirmationForm();
@@ -80,13 +83,14 @@ class UserController extends Controller
                     $userId = UserRepository::createUser(
                         $model->email,
                         $model->password,
+                        $model->confirmationCode,
                     );
                     Yii::$app->user->login(Users::findIdentity($userId), 0);
                     return ['confirmationCode' => true];
                 } else {
                     return [
                         'confirmationCode' => false,
-                        'errors' => 'Неверный код подтверждения',
+                        'errors' => 'Неверный код',
                     ];
                 }
             } else {
@@ -97,7 +101,7 @@ class UserController extends Controller
             }
         }
         Yii::$app->response->format = Response::FORMAT_HTML;
-        throw new HttpException(404,'');
+        throw new HttpException(404,'Страница не найдена');
     }
 
     public function SendConfirmationEmail($email, $confirmationCode)

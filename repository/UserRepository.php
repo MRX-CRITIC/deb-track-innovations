@@ -19,11 +19,12 @@ class UserRepository
             ->one();
     }
 
-    public static function createUser($email, $password)
+    public static function createUser($email, $password, $confirmationCode)
     {
         $user = new Users();
         $user->email = $email;
         $user->password = password_hash($password, PASSWORD_DEFAULT);
+        $user->confirmationCode = $confirmationCode;
 
         $user->save();
         return $user->id;

@@ -14,8 +14,9 @@ class RegistrationForm extends \yii\base\Model
     public function rules()
     {
         return [
-            [['email', 'password', 'repeatPassword'], 'required', 'message' => 'hsdbhjsdhgfvs'],
-            ['repeatPassword', 'compare', 'compareAttribute' => 'password'],
+            [['email', 'password', 'repeatPassword'], 'required', 'message' => 'Поле не может быть пустое'],
+            ['password', 'string', 'min' => 8, 'tooShort' => 'Пароль должен содержать минимум 8 символов'],
+            ['repeatPassword', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
             ['email', 'validateEmail'],
         ];
     }

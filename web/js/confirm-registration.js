@@ -8,22 +8,14 @@ $(document).ready(function () {
             type: "POST",
             url: '/user/registration',
             data: $('#registration-form').serialize(),
+            _csrf: yii.getCsrfToken(),
             success: function (data) {
                 if (data.validation) {
                     $('#overlay-modal').css('display', 'flex');
+                    $('#verification-code').focus();
                 } else {
-                    const errorMessages = {
-                        email: "Некорректный формат email.",
-                        password: "Пароль должен быть не менее 8 символов.",
-                        repeatPassword: "Пароли не совпадают."
-                    };
-
-                    $.each(data.errors, function(key, value) {
-                        if (errorMessages[key]) {
-                            $('#error-' + key).text(errorMessages[key]).show();
-                        } else {
-                            $('#error-' + key).text(value[0]).show();
-                        }
+                    $.each(data.errors, function (key, value) {
+                        $('#error-' + key).text(value[0]).show();
                     });
                 }
             }
