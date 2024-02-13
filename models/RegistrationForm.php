@@ -9,11 +9,12 @@ class RegistrationForm extends \yii\base\Model
     public $email;
     public $password;
     public $repeatPassword;
+    public $verificationCode;
 
     public function rules()
     {
         return [
-            [['email', 'password', 'repeatPassword'], 'required'],
+            [['email', 'password', 'repeatPassword'], 'required', 'message' => 'hsdbhjsdhgfvs'],
             ['repeatPassword', 'compare', 'compareAttribute' => 'password'],
             ['email', 'validateEmail'],
         ];

@@ -7,12 +7,38 @@ use app\models\ConfirmationForm;
 use app\models\RegistrationForm;
 use app\repository\UserRepository;
 use Exception;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\web\HttpException;
 use yii\web\Response;
 use Yii;
 use yii\web\Controller;
 
 class UserController extends Controller
 {
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['registration'],
+                'rules' => [
+                    [
+                        'actions' => ['registration'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
     /**
      * @throws Exception
      */
@@ -45,10 +71,8 @@ class UserController extends Controller
     {
         $model = new ConfirmationForm();
 
-        $postData = Yii::$app->request->post();
-        $wrappedData = ['ConfirmationForm' => $postData];
         Yii::$app->response->format = Response::FORMAT_JSON;
-        if (Yii::$app->request->isAjax && $model->load($wrappedData)) {
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post(), '')) {
 
             if ($model->validate()) {
                 if (Yii::$app->session->get('confirmationCode') == $model->confirmationCode) {
@@ -71,9 +95,9 @@ class UserController extends Controller
                     'errors' => 'Не пройдена валидация',
                 ];
             }
-        } else {
-            return  ['errors' => 'Ошибка'];
         }
+        Yii::$app->response->format = Response::FORMAT_HTML;
+        throw new HttpException(404,'');
     }
 
     public function SendConfirmationEmail($email, $confirmationCode)

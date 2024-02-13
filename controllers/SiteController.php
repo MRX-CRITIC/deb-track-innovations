@@ -79,10 +79,6 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-//            var_dump(Yii::$app->user->identity);
-//            if (!Yii::$app->user->identity->status){
-//                return $this->redirect('/user/confirm-registration');
-//            }
             return $this->goBack();
         }
 
@@ -100,7 +96,6 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 
