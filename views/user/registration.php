@@ -4,7 +4,6 @@
 
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
-
 \app\assets\ConfirmRegistrationAsset::register($this);
 
 $form = ActiveForm::begin([
@@ -12,11 +11,10 @@ $form = ActiveForm::begin([
 ]); ?>
 
 
-
 <?= $form->field($model, 'email')->textInput([
     'id' => 'email',
     'placeholder' => 'example@example.com',
-//    'autofocus' => true,
+    'autofocus' => true,
 ])->label('Электронная почта') ?>
 <div class="error-message" style="color:red; display:none;" id="error-email"></div>
 
@@ -34,20 +32,32 @@ $form = ActiveForm::begin([
 <?php ActiveForm::end(); ?>
 
 
-<div id="overlay-modal" style="display:none;">
+<div id="overlay-modal" style="display: none;">
     <div id="code-modal">
-        <label for="verification-code">
-            <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
-            <?= $form->field($model, 'verificationCode')->input('text',[
-                'id' => 'verification-code',
-                'placeholder' => '••••',
-                'maxlength' => 4,
-                'autofocus' => true,
-            ])-> label('Введите код подтверждения')?>
-<!--            <input type="number" id="verification-code" maxlength="4" placeholder="••••"/><br>-->
-            <div><p id="error-message-code" style="color:red; display:none;"></p></div>
+        <label for="verification-code"><p id="title-code">Введите код подтверждения</p>
+            <p id="info">Письмо с кодом отправлено на Ваш E-mail</p>
+            <div id="code-inputs">
+
+            <?php for ($i = 1; $i <= 4; $i++): ?>
+            <?= $form->field($model, 'verificationCode[]')->input('text',[
+                'class' => 'code-input',
+                'id' => 'verification-code-' . $i,
+                'placeholder' => '•',
+                'maxlength' => 1,
+                'autocomplete' => 'off',
+                'data-index' => $i,
+            ])->label(false)?>
+            <?php endfor; ?>
+
+            </div>
+            <div><p id="error-message-code"></p></div>
+
             <button id="verify-code-btn">Подтвердить код</button>
+            <div>
+                <button id="resend-code-btn" style="display: none;">
+                    Запросить код
+                </button>
+            </div>
         </label>
     </div>
 </div>
-

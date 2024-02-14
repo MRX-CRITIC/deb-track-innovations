@@ -8,11 +8,10 @@ $(document).ready(function () {
             type: "POST",
             url: '/user/registration',
             data: $('#registration-form').serialize(),
-            _csrf: yii.getCsrfToken(),
             success: function (data) {
                 if (data.validation) {
                     $('#overlay-modal').css('display', 'flex');
-                    $('#verification-code').focus();
+                    $('#verification-code-1').focus();
                 } else {
                     $.each(data.errors, function (key, value) {
                         $('#error-' + key).text(value[0]).show();
@@ -23,6 +22,4 @@ $(document).ready(function () {
     });
 });
 
-// тип у импута сохранить на бэк
-//
 
