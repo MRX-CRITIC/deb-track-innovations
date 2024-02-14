@@ -13,21 +13,22 @@ $form = ActiveForm::begin([
 
 <?= $form->field($model, 'email')->textInput([
     'id' => 'email',
+    'class' => 'input-field',
     'placeholder' => 'example@example.com',
     'autofocus' => true,
 ])->label('Электронная почта') ?>
 <div class="error-message" style="color:red; display:none;" id="error-email"></div>
 
 
-<?= $form->field($model, 'password')->passwordInput(['id' => 'password', 'minLength' => 8])->label('Пароль') ?>
+<?= $form->field($model, 'password')->passwordInput(['id' => 'password', 'class' => 'input-field', 'minLength' => 8])->label('Пароль') ?>
 <div class="error-message" style="color:red; display:none;" id="error-password"></div>
 
 
-<?= $form->field($model, 'repeatPassword')->passwordInput(['id' => 'repeatPassword', 'minLength' => 8])->label('Повторите пароль') ?>
+<?= $form->field($model, 'repeatPassword')->passwordInput(['id' => 'repeatPassword', 'class' => 'input-field', 'minLength' => 8])->label('Повторите пароль') ?>
 <div class="error-message" style="color:red; display:none;" id="error-repeatPassword"></div>
 
 
-<?= Html::submitButton('Зарегистрироваться', ['id' => 'buttonReg']) ?>
+<?= Html::submitButton('Зарегистрироваться', ['id' => 'registration-btn']) ?>
 
 <?php ActiveForm::end(); ?>
 
@@ -51,13 +52,14 @@ $form = ActiveForm::begin([
 
             </div>
             <div><p id="error-message-code"></p></div>
-
             <button id="verify-code-btn">Подтвердить код</button>
+
             <div>
                 <button id="resend-code-btn" style="display: none;">
-                    Запросить код
+                    Запросить код повторно
                 </button>
             </div>
+
         </label>
     </div>
 </div>

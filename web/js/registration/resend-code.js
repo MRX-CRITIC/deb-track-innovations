@@ -1,9 +1,12 @@
 $(document).ready(function() {
-    let counter = 60;
+    $('#registration-btn').click(function () {
+        let timerInterval = setInterval(countdown, 1000)
+
+    let counter = 6;
     const countdownElement = $('<span id="countdown-timer"></span>');
     const resendButton = $('#resend-code-btn');
     resendButton.before(countdownElement);
-    let timerInterval = setInterval(countdown, 1000);
+
 
     function countdown() {
         if (counter === 0) {
@@ -27,11 +30,12 @@ $(document).ready(function() {
                 if (data.validation) {
                     $('#overlay-modal').css('display', 'flex');
                     $('#verification-code-1').focus();
-                    counter = 60;
+                    counter = 6;
                     countdownElement.css('display', 'inline');
                     resendButton.css('display', 'none');
                     clearInterval(timerInterval);
                     timerInterval = setInterval(countdown, 1000);
+                    $('#code-inputs .code-input').val('');
                 } else {
                     $.each(data.errors, function(key, value) {
                         $('#error-' + key).text(value[0]).show();
@@ -44,5 +48,6 @@ $(document).ready(function() {
     resendButton.click(function(e) {
         e.preventDefault();
         resendCode();
+        });
     });
 });

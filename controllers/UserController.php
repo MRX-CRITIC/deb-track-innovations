@@ -39,6 +39,7 @@ class UserController extends Controller
             ],
         ];
     }
+
     /**
      * @throws Exception
      */
@@ -52,6 +53,8 @@ class UserController extends Controller
             if ($model->validate()) {
                 $confirmationCode = random_int(1000, 9999);
                 Yii::$app->session->set('confirmationCode', $confirmationCode);
+                Yii::$app->session->set('model', $model);
+//                var_dump($_SESSION);
                 $this->SendConfirmationEmail($model->email, $confirmationCode);
 
                 return ['validation' => true];
@@ -78,30 +81,45 @@ class UserController extends Controller
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post(), '')) {
 
             if ($model->validate()) {
-                if (Yii::$app->session->get('confirmationCode') == $model->confirmationCode) {
+                if (Yii::$app->session->get('model')->email == $model->email &&
+                    Yii::$app->session->get('model')->password == $model->password) {
 
-                    $userId = UserRepository::createUser(
-                        $model->email,
-                        $model->password,
-                        $model->confirmationCode,
-                    );
-                    Yii::$app->user->login(Users::findIdentity($userId), 0);
-                    return ['confirmationCode' => true];
+                    if (Yii::$app->session->get('confirmationCode') == $model->confirmationCode) {
+
+                        $userId = UserRepository::createUser(
+                            $model->email,
+                            $model->password,
+                            $model->confirmationCode,
+                        );
+                        Yii::$app->user->login(Users::findIdentity($userId), 0);
+                        return [
+                            'confirmationCode' => true,
+                            'validation' => true,
+                        ];
+                    } else {
+                        return [
+                            'confirmationCode' => false,
+                            'validation' => true,
+                            'errors' => 'Неверный код',
+                        ];
+                    }
                 } else {
                     return [
                         'confirmationCode' => false,
-                        'errors' => 'Неверный код',
+                        'validation' => false,
+                        'errors' => 'Не пройдена валидация',
                     ];
                 }
             } else {
                 return [
                     'confirmationCode' => false,
-                    'errors' => 'Не пройдена валидация',
+                    'validation' => false,
+                    'errors' => $model->getErrors(),
                 ];
             }
         }
         Yii::$app->response->format = Response::FORMAT_HTML;
-        throw new HttpException(404,'Страница не найдена');
+        throw new HttpException(404, 'Страница не найдена');
     }
 
     public function SendConfirmationEmail($email, $confirmationCode)

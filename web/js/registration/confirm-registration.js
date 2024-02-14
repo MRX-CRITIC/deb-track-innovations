@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#buttonReg').click(function (e) {
+    $('#registration-btn').click(function (e) {
         e.preventDefault();
 
         $('.error-message').hide().text('');
@@ -12,6 +12,8 @@ $(document).ready(function () {
                 if (data.validation) {
                     $('#overlay-modal').css('display', 'flex');
                     $('#verification-code-1').focus();
+                    $('.input-field').prop('disabled', true);
+                    $('#registration-btn').prop('disabled', true);
                 } else {
                     $.each(data.errors, function (key, value) {
                         $('#error-' + key).text(value[0]).show();
