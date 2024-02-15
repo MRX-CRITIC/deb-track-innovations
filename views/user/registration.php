@@ -20,11 +20,19 @@ $form = ActiveForm::begin([
 <div class="error-message" style="color:red; display:none;" id="error-email"></div>
 
 
-<?= $form->field($model, 'password')->passwordInput(['id' => 'password', 'class' => 'input-field', 'minLength' => 8])->label('Пароль') ?>
+<?= $form->field($model, 'password')->passwordInput([
+    'id' => 'password',
+    'class' => 'input-field',
+    'minLength' => 8
+])->label('Пароль') ?>
 <div class="error-message" style="color:red; display:none;" id="error-password"></div>
 
 
-<?= $form->field($model, 'repeatPassword')->passwordInput(['id' => 'repeatPassword', 'class' => 'input-field', 'minLength' => 8])->label('Повторите пароль') ?>
+<?= $form->field($model, 'repeatPassword')->passwordInput([
+    'id' => 'repeatPassword',
+    'class' => 'input-field',
+    'minLength' => 8
+])->label('Повторите пароль') ?>
 <div class="error-message" style="color:red; display:none;" id="error-repeatPassword"></div>
 
 

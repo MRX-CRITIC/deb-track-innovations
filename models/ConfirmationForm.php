@@ -14,8 +14,10 @@ class ConfirmationForm extends \yii\base\Model
     public function rules()
     {
         return [
-            [['confirmationCode', 'email', 'password', 'repeatPassword'], 'required'],
-            [['confirmationCode'], 'integer', 'min' => 1000, 'max' => 9999, 'message' => 'Код должен содержать 4 цифры'],
+            [['confirmationCode', 'email', 'password', 'repeatPassword'], 'required', 'message' => 'Поле не может быть пустое'],
+            [['confirmationCode'], 'integer', 'min' => 1000, 'max' => 9999,
+                'tooSmall' => 'Код должен содержать 4 цифры',
+                'tooBig' => 'Код должен содержать 4 цифры'],
             ['password', 'string', 'min' => 8, 'tooShort' => 'Пароль должен содержать минимум 8 символов'],
             ['repeatPassword', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
             ['email', 'validateEmail'],

@@ -45,7 +45,6 @@ class UserController extends Controller
      */
     public function actionRegistration()
     {
-
         $model = new RegistrationForm();
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -54,10 +53,11 @@ class UserController extends Controller
                 $confirmationCode = random_int(1000, 9999);
                 Yii::$app->session->set('confirmationCode', $confirmationCode);
                 Yii::$app->session->set('model', $model);
-//                var_dump($_SESSION);
-                $this->SendConfirmationEmail($model->email, $confirmationCode);
 
-                return ['validation' => true];
+                $this->SendConfirmationEmail($model->email, $confirmationCode);
+                return [
+                    'validation' => true,
+                ];
             } else {
                 return [
                     'validation' => false,
@@ -76,7 +76,6 @@ class UserController extends Controller
     public function actionConfirmRegistration()
     {
         $model = new ConfirmationForm();
-
         Yii::$app->response->format = Response::FORMAT_JSON;
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post(), '')) {
 
@@ -107,7 +106,7 @@ class UserController extends Controller
                     return [
                         'confirmationCode' => false,
                         'validation' => false,
-                        'errors' => 'Не пройдена валидация',
+                        'errors' => $model->getErrors(),
                     ];
                 }
             } else {

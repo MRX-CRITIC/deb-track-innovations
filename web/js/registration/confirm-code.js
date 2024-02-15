@@ -1,4 +1,11 @@
 $(document).ready(function () {
+
+    function timeShowErrors() {
+        setTimeout(function() {
+            $('#error-message-code').fadeOut();
+        }, 3000);
+    }
+
     $('#verify-code-btn').click(function (e) {
         e.preventDefault();
 
@@ -6,6 +13,7 @@ $(document).ready(function () {
         $('.code-input').each(function () {
             confirmationCode += $(this).val();
         });
+
         const email = $('#email').val();
         const password = $('#password').val();
         const repeatPassword = $('#repeatPassword').val();
@@ -25,21 +33,15 @@ $(document).ready(function () {
 
                 } else if (!response.confirmationCode && response.validation) {
                     $('#error-message-code').text('Неверный код подтверждения').show();
-                    setTimeout(function() {
-                        $('#error-message-code').fadeOut();
-                    }, 1000);
+                    timeShowErrors();
 
-                } else if (!(response.confirmationCode && response.validation)) {
-                    console.log(response.errors.confirmationCode[0])
+                } else if (!(response.confirmationCode && response.validation) && (response.errors.confirmationCode.length < 0)) {
                     $('#error-message-code').text('Не пройдена валидация').show();
-                    setTimeout(function() {
-                        $('#error-message-code').fadeOut();
-                    }, 1000);
-                } else if (response.errors.confirmationCode[0]) {
+                    timeShowErrors();
+
+                } else if (response.errors.confirmationCode.length > 0) {
                     $('#error-message-code').text(response.errors.confirmationCode[0]).show();
-                    setTimeout(function() {
-                        $('#error-message-code').fadeOut();
-                    }, 1000);
+                    timeShowErrors();
                 }
             }
         });
@@ -77,6 +79,19 @@ $(document).ready(function () {
                 }
             }
         });
+        $(document).on('keydown', function(event) {
+            if (event.key === 'Escape') {
+                $('#overlay-modal').css('display', 'none');
+                $('#registration-btn').prop('disabled', false);
+            }
+        });
+
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('#code-modal').length) {
+                $('#overlay-modal').css('display', 'none');
+                $('#registration-btn').prop('disabled', false);
+            }
+        });
 
         $('.code-input').on('focus', function() {
             $(this).val('');
@@ -89,7 +104,6 @@ $(document).ready(function () {
                     codeInputs.get(index + 1).focus();
                 } else {
                     $('#verify-code-btn').focus();
-
                 }
             }
         });
