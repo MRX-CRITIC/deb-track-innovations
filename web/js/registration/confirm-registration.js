@@ -19,7 +19,7 @@ $(document).ready(function () {
                     $('#code-inputs .code-input').val('');
                 } else {
                     $.each(data.errors, function (key, value) {
-                        $('#error-' + key).text(value[0]).show();
+                        $('#error-' + key).text(value[1]).show();
                     });
                 }
             }

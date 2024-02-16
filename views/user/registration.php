@@ -4,41 +4,57 @@
 
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
+
 \app\assets\ConfirmRegistrationAsset::register($this);
+?>
+<div class="body">
+    <div class="login-container">
+        <div class="brand-logo"></div>
+        <div class="login-form">
 
-$form = ActiveForm::begin([
-    'id' => 'registration-form',
-]); ?>
+            <?php
+            $form = ActiveForm::begin([
+                'id' => 'registration-form',
+                'class' => '',
+            ]); ?>
 
+            <div class="form-group">
+                <?= $form->field($model, 'email')->textInput([
+                    'id' => 'email',
+                    'class' => 'input-field',
+//                    'placeholder' => 'example@example.com',
+                    'autofocus' => true,
+                ])->label('Электронная почта', ['class' => 'form-label']) ?>
+                <div class="error-message" style="color:red; display:none;" id="error-email"></div>
+            </div>
 
-<?= $form->field($model, 'email')->textInput([
-    'id' => 'email',
-    'class' => 'input-field',
-    'placeholder' => 'example@example.com',
-    'autofocus' => true,
-])->label('Электронная почта') ?>
-<div class="error-message" style="color:red; display:none;" id="error-email"></div>
+            <div class="form-group">
+                <?= $form->field($model, 'password')->passwordInput([
+                    'id' => 'password',
+                    'class' => 'input-field',
+                    'minLength' => 8
+                ])->label('Пароль', ['class' => 'form-label']) ?>
+                <div class="error-message" style="color:red; display:none;" id="error-password"></div>
+            </div>
 
+            <div class="form-group">
+                <?= $form->field($model, 'repeatPassword')->passwordInput([
+                    'id' => 'repeatPassword',
+                    'class' => 'input-field',
+                    'minLength' => 8
+                ])->label('Повторите пароль', ['class' => 'form-label']) ?>
+                <div class="error-message" style="color:red; display:none;" id="error-repeatPassword"></div>
+            </div>
 
-<?= $form->field($model, 'password')->passwordInput([
-    'id' => 'password',
-    'class' => 'input-field',
-    'minLength' => 8
-])->label('Пароль') ?>
-<div class="error-message" style="color:red; display:none;" id="error-password"></div>
+            <?= Html::submitButton('Зарегистрироваться', [
+                'id' => 'registration-btn',
+                'class' => 'login-button'
+            ]) ?>
 
-
-<?= $form->field($model, 'repeatPassword')->passwordInput([
-    'id' => 'repeatPassword',
-    'class' => 'input-field',
-    'minLength' => 8
-])->label('Повторите пароль') ?>
-<div class="error-message" style="color:red; display:none;" id="error-repeatPassword"></div>
-
-
-<?= Html::submitButton('Зарегистрироваться', ['id' => 'registration-btn']) ?>
-
-<?php ActiveForm::end(); ?>
+            <?php ActiveForm::end(); ?>
+        </div>
+    </div>
+</div>
 
 
 <div id="overlay-modal" style="display: none;">
@@ -47,16 +63,16 @@ $form = ActiveForm::begin([
             <p id="info">Письмо с кодом отправлено на Ваш E-mail</p>
             <div id="code-inputs">
 
-            <?php for ($i = 1; $i <= 4; $i++): ?>
-            <?= $form->field($model, 'verificationCode[]')->input('text',[
-                'class' => 'code-input',
-                'id' => 'verification-code-' . $i,
-                'placeholder' => '•',
-                'maxlength' => 1,
-                'autocomplete' => 'off',
-                'data-index' => $i,
-            ])->label(false)?>
-            <?php endfor; ?>
+                <?php for ($i = 1; $i <= 4; $i++): ?>
+                    <?= $form->field($model, 'verificationCode[]')->input('text', [
+                        'class' => 'code-input',
+                        'id' => 'verification-code-' . $i,
+                        'placeholder' => '•',
+                        'maxlength' => 1,
+                        'autocomplete' => 'off',
+                        'data-index' => $i,
+                    ])->label(false) ?>
+                <?php endfor; ?>
 
             </div>
             <div><p id="error-message-code"></p></div>

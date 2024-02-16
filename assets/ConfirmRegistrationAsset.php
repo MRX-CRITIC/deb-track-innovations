@@ -11,5 +11,6 @@ class ConfirmRegistrationAsset extends AppAsset
     ];
     public $css = [
         'css/confirm-reg.css',
+        'css/registr-and-auth.css',
     ];
 }
