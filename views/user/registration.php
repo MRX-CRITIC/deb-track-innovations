@@ -25,7 +25,7 @@ use yii\bootstrap5\ActiveForm;
 //                    'placeholder' => 'example@example.com',
                     'autofocus' => true,
                 ])->label('Электронная почта', ['class' => 'form-label']) ?>
-                <div class="error-message" style="color:red; display:none;" id="error-email"></div>
+                <div class="error-message" style="display:none;" id="error-email"></div>
             </div>
 
             <div class="form-group">
@@ -34,7 +34,7 @@ use yii\bootstrap5\ActiveForm;
                     'class' => 'input-field',
                     'minLength' => 8
                 ])->label('Пароль', ['class' => 'form-label']) ?>
-                <div class="error-message" style="color:red; display:none;" id="error-password"></div>
+                <div class="error-message" style="display:none;" id="error-password"></div>
             </div>
 
             <div class="form-group">
@@ -43,7 +43,7 @@ use yii\bootstrap5\ActiveForm;
                     'class' => 'input-field',
                     'minLength' => 8
                 ])->label('Повторите пароль', ['class' => 'form-label']) ?>
-                <div class="error-message" style="color:red; display:none;" id="error-repeatPassword"></div>
+                <div class="error-message" style="display:none;" id="error-repeatPassword"></div>
             </div>
 
             <?= Html::submitButton('Зарегистрироваться', [

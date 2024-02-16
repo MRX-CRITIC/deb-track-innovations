@@ -50,7 +50,6 @@ class UserController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             if ($model->validate()) {
-
                 if (empty(Yii::$app->session->get('time')) || (Yii::$app->session->get('time') + 60) < time()) {
                     $confirmationCode = random_int(1000, 9999);
                     Yii::$app->session->set('confirmationCode', $confirmationCode);
@@ -59,19 +58,23 @@ class UserController extends Controller
                     $this->SendConfirmationEmail($model->email, $confirmationCode);
                     return [
                         'validation' => true,
-                        'time' => true,
+                        'time' => false,
+                        'errorsYii' => $model->getErrors(),
                     ];
                 }
                 return [
                     'validation' => false,
-                    'time' => false,
+                    'time' => true,
                     'errors' => 'Используете код который был направлен ранее или дождитесь таймера',
+                    'errors_Yii' => $model->getErrors(),
                 ];
 
             } else {
                 return [
                     'validation' => false,
+                    'time' => false,
                     'errors' =>  'Не пройдена валидация',
+                    'errorsYii' => $model->getErrors(),
                 ];
             }
         }
