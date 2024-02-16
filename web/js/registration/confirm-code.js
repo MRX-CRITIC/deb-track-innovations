@@ -1,11 +1,11 @@
+
+function timeShowErrors() {
+    setTimeout(function() {
+        $('#error-message-code').fadeOut();
+    }, 3000);
+}
+
 $(document).ready(function () {
-
-    function timeShowErrors() {
-        setTimeout(function() {
-            $('#error-message-code').fadeOut();
-        }, 3000);
-    }
-
     $('#verify-code-btn').click(function (e) {
         e.preventDefault();
 

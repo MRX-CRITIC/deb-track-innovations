@@ -50,18 +50,28 @@ class UserController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             if ($model->validate()) {
-                $confirmationCode = random_int(1000, 9999);
-                Yii::$app->session->set('confirmationCode', $confirmationCode);
-                Yii::$app->session->set('model', $model);
 
-                $this->SendConfirmationEmail($model->email, $confirmationCode);
+                if (empty(Yii::$app->session->get('time')) || (Yii::$app->session->get('time') + 60) < time()) {
+                    $confirmationCode = random_int(1000, 9999);
+                    Yii::$app->session->set('confirmationCode', $confirmationCode);
+                    Yii::$app->session->set('model', $model);
+                    Yii::$app->session->set('time', time());
+                    $this->SendConfirmationEmail($model->email, $confirmationCode);
+                    return [
+                        'validation' => true,
+                        'time' => true,
+                    ];
+                }
                 return [
-                    'validation' => true,
+                    'validation' => false,
+                    'time' => false,
+                    'errors' => 'Используете код который был направлен ранее или дождитесь таймера',
                 ];
+
             } else {
                 return [
                     'validation' => false,
-                    'errors' => $model->getErrors(),
+                    'errors' =>  'Не пройдена валидация',
                 ];
             }
         }
@@ -77,6 +87,7 @@ class UserController extends Controller
     {
         $model = new ConfirmationForm();
         Yii::$app->response->format = Response::FORMAT_JSON;
+
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post(), '')) {
 
             if ($model->validate()) {
