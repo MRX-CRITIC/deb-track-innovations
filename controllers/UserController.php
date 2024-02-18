@@ -50,7 +50,10 @@ class UserController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             if ($model->validate()) {
-                if (empty(Yii::$app->session->get('time')) || (Yii::$app->session->get('time') + 60) < time()) {
+                if (empty(Yii::$app->session->get('time')) ||
+                    (Yii::$app->session->get('time') + 60) < time() ||
+                    $model->email !=Yii::$app->session->get('model')->email) {
+
                     $confirmationCode = random_int(1000, 9999);
                     Yii::$app->session->set('confirmationCode', $confirmationCode);
                     Yii::$app->session->set('model', $model);

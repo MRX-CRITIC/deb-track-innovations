@@ -8,8 +8,12 @@ use yii\bootstrap5\ActiveForm;
 \app\assets\ConfirmRegistrationAsset::register($this);
 ?>
 <div class="body">
+    <div class="brand-logo">
+        <div class="img-logo"></div>
+        DebTrack Innovations
+    </div>
+    <div class="line"></div>
     <div class="login-container">
-        <div class="brand-logo"></div>
         <div class="login-form">
 
             <?php
@@ -22,7 +26,7 @@ use yii\bootstrap5\ActiveForm;
                 <?= $form->field($model, 'email')->textInput([
                     'id' => 'email',
                     'class' => 'input-field',
-//                    'placeholder' => 'example@example.com',
+                    'placeholder' => 'example@example.com',
                     'autofocus' => true,
                 ])->label('Электронная почта', ['class' => 'form-label']) ?>
                 <div class="error-message" style="display:none;" id="error-email"></div>

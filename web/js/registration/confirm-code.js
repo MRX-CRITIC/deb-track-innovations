@@ -48,6 +48,14 @@ $(document).ready(function () {
     });
 });
 
+function closeModalAndEnableButton() {
+    $('#overlay-modal').css('display', 'none');
+    $('#registration-btn').prop('disabled', false);
+    $('.input-field').prop('disabled', false);
+}
+
+
+
 $(document).ready(function () {
 
     const codeInputs = $('#code-inputs .code-input');
@@ -79,17 +87,16 @@ $(document).ready(function () {
                 }
             }
         });
+
         $(document).on('keydown', function(event) {
             if (event.key === 'Escape') {
-                $('#overlay-modal').css('display', 'none');
-                $('#registration-btn').prop('disabled', false);
+                closeModalAndEnableButton();
             }
         });
 
         $(document).on('click', function(event) {
             if (!$(event.target).closest('#code-modal').length) {
-                $('#overlay-modal').css('display', 'none');
-                $('#registration-btn').prop('disabled', false);
+                closeModalAndEnableButton();
             }
         });
 
