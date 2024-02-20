@@ -12,7 +12,7 @@
 }
 
 .img-logo {
-    background: url("../img/img_qHmjH7HacfBDlJ5DrfKr-fotor-bg-remover-20240218181020.png") no-repeat center / contain;
+    background: url("../../img/img_qHmjH7HacfBDlJ5DrfKr-fotor-bg-remover-20240218181020.png") no-repeat center / contain;
     width: 5vh;
     height: 5vh;
     margin: 1vh;
@@ -96,3 +96,8 @@
     text-decoration: underline;
 }
 
+.reg-title {
+    position: absolute;
+    top: 21%;
+    left: 53%;
+}

@@ -5,8 +5,12 @@
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 
+$this->title = 'Регистрация';
+$this->params['breadcrumbs'][] = $this->title;
+
 \app\assets\ConfirmRegistrationAsset::register($this);
 ?>
+
 <div class="body">
     <div class="brand-logo">
         <div class="img-logo"></div>
@@ -15,6 +19,10 @@ use yii\bootstrap5\ActiveForm;
     <div class="line"></div>
     <div class="login-container">
         <div class="login-form">
+            <div class="reg-title">
+            <h1><?= Html::encode($this->title) ?></h1>
+            <p>Пожалуйста, заполните следующие поля для регистрации: </p>
+            </div>
 
             <?php
             $form = ActiveForm::begin([

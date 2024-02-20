@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\entity\Users;
 use app\models\ConfirmationForm;
+use app\models\LoginForm;
 use app\models\RegistrationForm;
 use app\repository\UserRepository;
 use Exception;
@@ -22,12 +23,16 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['registration'],
                 'rules' => [
                     [
-                        'actions' => ['registration'],
+                        'actions' => ['registration', 'login'],
                         'allow' => true,
                         'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                 ],
             ],
@@ -147,11 +152,31 @@ class UserController extends Controller
             ->send();
     }
 
-    public function actionTest()
+    public function actionLogin()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
+        }
+
+        $model->password = '';
+        return $this->render('login', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 
     public function actionIndex()
     {
+        return $this->render('index');
     }
 }

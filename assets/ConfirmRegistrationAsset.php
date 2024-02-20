@@ -10,7 +10,7 @@ class ConfirmRegistrationAsset extends AppAsset
         'js/registration/resend-code.js',
     ];
     public $css = [
-        'css/confirm-reg.css',
-        'css/registr-and-auth.css',
+        'css/user/confirm-reg.css',
+        'css/user/registr-and-auth.css',
     ];
 }
