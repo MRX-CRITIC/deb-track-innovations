@@ -11,8 +11,6 @@ $(document).ready(function () {
     $('#registration-btn').click(function (e) {
         e.preventDefault();
         $('.error-message').hide().text('');
-        // $('.input-field').css('background', 'transparent');
-        // $('.input-field').css('color', 'white');
 
         $.ajax({
             type: "POST",
@@ -28,11 +26,13 @@ $(document).ready(function () {
                 } else {
                     $.each(data.errorsYii, function (key, value) {
                         $('#error-' + key).text(value[0]).show();
-                        // $('#' + key).css('background', 'rgba(250,219,218,0.92)');
-                        // $('#' + key).css('color', 'black');
+                        $('#' + key).css('border', '1px solid red');
                     });
 
-                    timeShowErrors();
+                    setTimeout(function() {
+                        $('.error-message').fadeOut();
+                        $('.input-field').css('border', '1px solid #3385ff');
+                    }, 3000);
                 }
             }
         });

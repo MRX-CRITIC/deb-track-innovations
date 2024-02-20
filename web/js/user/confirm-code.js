@@ -1,4 +1,3 @@
-
 function timeShowErrors() {
     setTimeout(function() {
         $('#error-message-code').fadeOut();

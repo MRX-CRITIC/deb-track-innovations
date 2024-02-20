@@ -8,20 +8,20 @@ use yii\bootstrap5\ActiveForm;
 $this->title = 'Регистрация';
 $this->params['breadcrumbs'][] = $this->title;
 
-\app\assets\ConfirmRegistrationAsset::register($this);
+\app\assets\RegistrationAsset::register($this);
 ?>
 
 <div class="body">
     <div class="brand-logo">
         <div class="img-logo"></div>
-        DebTrack Innovations
+        <?= Yii::$app->name; ?>
     </div>
     <div class="line"></div>
     <div class="login-container">
         <div class="login-form">
             <div class="reg-title">
-            <h1><?= Html::encode($this->title) ?></h1>
-            <p>Пожалуйста, заполните следующие поля для регистрации: </p>
+                <h1><?= Html::encode($this->title) ?></h1>
+                <p>Пожалуйста, заполните следующие поля для регистрации: </p>
             </div>
 
             <?php
@@ -44,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'password')->passwordInput([
                     'id' => 'password',
                     'class' => 'input-field',
+                    'placeholder' => '••••••••••••••••••',
                     'minLength' => 8
                 ])->label('Пароль', ['class' => 'form-label']) ?>
                 <div class="error-message" style="display:none;" id="error-password"></div>
@@ -53,6 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'repeatPassword')->passwordInput([
                     'id' => 'repeatPassword',
                     'class' => 'input-field',
+                    'placeholder' => '••••••••••••••••••',
                     'minLength' => 8
                 ])->label('Повторите пароль', ['class' => 'form-label']) ?>
                 <div class="error-message" style="display:none;" id="error-repeatPassword"></div>
@@ -62,8 +64,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'id' => 'registration-btn',
                 'class' => 'login-button'
             ]) ?>
-
+            <div class="transition">Если у вас уже есть аккаунт - <a href="login">авторизуйтесь</a></div>
             <?php ActiveForm::end(); ?>
+
         </div>
     </div>
 </div>

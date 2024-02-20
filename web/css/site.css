@@ -86,3 +86,11 @@ a.desc:after {
 .form-group {
     margin-bottom: 1rem;
 }
+
+body .bg-dark {
+    background-color: #2D3748 !important;
+}
+
+body .navbar-brand {
+    color: blue;
+}

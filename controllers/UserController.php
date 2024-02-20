@@ -25,7 +25,7 @@ class UserController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['registration', 'login'],
+                        'actions' => ['registration', 'login', 'confirm-registration'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -50,6 +50,10 @@ class UserController extends Controller
      */
     public function actionRegistration()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new RegistrationForm();
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -96,6 +100,10 @@ class UserController extends Controller
      */
     public function actionConfirmRegistration()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new ConfirmationForm();
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -103,7 +111,7 @@ class UserController extends Controller
 
             if ($model->validate()) {
                 if (Yii::$app->session->get('model')->email == $model->email &&
-                    Yii::$app->session->get('model')->password == $model->password) {
+                    Yii::$app->session->get('model')->password == $model->password ) {
 
                     if (Yii::$app->session->get('confirmationCode') == $model->confirmationCode) {
 
@@ -139,7 +147,6 @@ class UserController extends Controller
                 ];
             }
         }
-        Yii::$app->response->format = Response::FORMAT_HTML;
         throw new HttpException(404, 'Страница не найдена');
     }
 
@@ -159,11 +166,22 @@ class UserController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
 
-        $model->password = '';
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->login()) {
+                if (Yii::$app->request->isAjax) {
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ['validation' => $model->login()];
+                }
+                return $this->goBack();
+            } elseif (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return [
+                    'validation' => $model->login(),
+                    'errors' => $model->getErrors(),
+                ];
+            }
+        }
         return $this->render('login', [
             'model' => $model,
         ]);

@@ -15,7 +15,7 @@
     background: url("../../img/img_qHmjH7HacfBDlJ5DrfKr-fotor-bg-remover-20240218181020.png") no-repeat center / contain;
     width: 5vh;
     height: 5vh;
-    margin: 1vh;
+    margin: 2vh;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -25,7 +25,7 @@
     width: 1px;
     height: 60vh;
     background-color: #FFFFFF;
-    margin: 0 -72px;
+    margin: 0;
 }
 
 .login-container {
@@ -38,20 +38,20 @@
     justify-content: space-around;
 }
 
-.brand-logo {
-    color: #4C51BF;
+body .brand-logo {
+    color: #0000ff;
     position: relative;
-    width: 40%;
+    width: 45%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 4vh;
+    font-size: 4vh !important;
 }
 
 .login-form form {
     max-width: 300px;
-    margin: auto;
+    margin: 0 2vh -13vh 0;
 }
 
 .form-group {
@@ -99,5 +99,18 @@
 .reg-title {
     position: absolute;
     top: 21%;
-    left: 53%;
+    left: 55%;
+}
+
+body .bg-light {
+    background-color: #2D3748  !important;
+}
+
+.transition {
+    font-size: 0.875em;
+    margin-top: 3vh;
+}
+
+.custom-control {
+    margin: 0 0 15px 0;
 }
