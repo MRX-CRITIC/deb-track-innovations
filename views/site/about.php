@@ -4,15 +4,15 @@
 
 use yii\helpers\Html;
 
-$this->title = 'О нас';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'О пректе';
+!Yii::$app->user->isGuest ? $this->params['breadcrumbs'][] = $this->title : '';
 ?>
 <div class="site-about">
     <h1><?= Html::encode($this->title) ?></h1>
+    <div class="jumbotron text-center bg-transparent mt-5 mb-5">
+        <h1 class="display-4">Добро пожаловать!</h1>
+        <p class="lead">Проект поможет вам отслеживать внесение платежей по одному и более кредитному продукту</p>
+    </div>
 
-    <p>
-        This is the About page. You may modify the following file to customize its content:
-    </p>
 
-    <code><?= __FILE__ ?></code>
 </div>

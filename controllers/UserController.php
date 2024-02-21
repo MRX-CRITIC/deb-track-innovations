@@ -30,7 +30,7 @@ class UserController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -53,6 +53,7 @@ class UserController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+
 
         $model = new RegistrationForm();
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
@@ -90,6 +91,7 @@ class UserController extends Controller
                 ];
             }
         }
+        $this->view->params['homeLink'] = false;
         return $this->render('registration', [
             'model' => $model
         ]);
@@ -182,6 +184,7 @@ class UserController extends Controller
                 ];
             }
         }
+        $this->view->params['homeLink'] = false;
         return $this->render('login', [
             'model' => $model,
         ]);
@@ -190,7 +193,7 @@ class UserController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(['user/login']);
     }
 
     public function actionIndex()

@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
             <?= Html::submitButton('Авторизоваться', ['class' => 'login-button', 'name' => 'login-button']) ?>
-            <div class="transition">Если у вас нет аккаунта - <a href="registration">зарегистрироваться</a></div>
+            <div class="transition">Еще нет аккаунта? - <a href="registration">зарегистрироваться</a></div>
 
 
             <?php ActiveForm::end(); ?>

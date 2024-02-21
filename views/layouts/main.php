@@ -35,18 +35,27 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <?php
     NavBar::begin([
         'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandUrl' => Yii::$app->user->isGuest ? Yii::$app->urlManager->createUrl(['site/about']) : Yii::$app->homeUrl,
         'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
 
-    $navItems = [
-        ['label' => 'Главная', 'url' => ['/site/index']],
-        ['label' => 'О нас', 'url' => ['/site/about']],
-        ['label' => 'Связь', 'url' => ['/site/contact']],
-    ];
+    $navItems = [];
 
-    if (Yii::$app->user->isGuest) {
-
+    if (!Yii::$app->user->isGuest) {
+        $navItems[] = ['label' => 'Главная', 'url' => ['/site/index']];
+        $navItems[] = ['label' => 'Аналитика', 'url' => ['']];
+        $navItems[] = ['label' => 'Аккаунт', 'url' => ['/site/contact']];
+        $navItems[] = ['label' => 'О проекте', 'url' => ['/site/about']];
+        $navItems[] = '<li class="nav-item">'
+            . Html::beginForm(['/user/logout'])
+            . Html::submitButton(
+                'Выход (' . Yii::$app->user->identity->email . ')',
+                ['class' => 'nav-link btn btn-link logout']
+            )
+            . Html::endForm()
+            . '</li>';
+    } else {
+        $navItems[] = ['label' => 'О проекте', 'url' => ['/site/about']];
         $navItems[] = [
             'label' => 'Войти',
             'items' => [
@@ -65,21 +74,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             'template' => '<a 
                 href="/" 
                 class="{linkClass}" 
-                id="{linkOptions[id]}" 
-                role="{linkOptions[role]}" 
-                data-toggle="{linkOptions[data-toggle]}" 
-                aria-haspopup="{linkOptions[aria-haspopup]}" 
-                aria-expanded="{linkOptions[aria-expanded]}">{label}</a>',
+                id="{linkOptions[id]}"
+                >{label}</a>',
         ];
-    } else {
-        $navItems[] = '<li class="nav-item">'
-            . Html::beginForm(['/user/logout'])
-            . Html::submitButton(
-                'Выход (' . Yii::$app->user->identity->email . ')',
-                ['class' => 'nav-link btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
@@ -92,10 +89,11 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <main id="main" class="flex-shrink-0" role="main">
     <div class="container">
         <?php if (!empty($this->params['breadcrumbs'])): ?>
-            <?= Breadcrumbs::widget(['homeLink' => [
-                'label' => 'Главная',
-                'url' => Yii::$app->homeUrl,
-            ],
+            <?= Breadcrumbs::widget([
+                'homeLink' => ($this->params['homeLink'] !== false) ? [
+                    'label' => 'Главная',
+                    'url' => Yii::$app->homeUrl,
+                ] : ['label' => 'Вход',],
                 'links' => $this->params['breadcrumbs'] ?? [],
             ]) ?>
         <?php endif ?>

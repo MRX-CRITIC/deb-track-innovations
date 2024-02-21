@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=money-back-monitoring',
+    'dsn' => 'mysql:host=localhost;dbname=deb-track-innovations',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',

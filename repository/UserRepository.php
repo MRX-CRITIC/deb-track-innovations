@@ -24,7 +24,7 @@ class UserRepository
         $user = new Users();
         $user->email = $email;
         $user->password = password_hash($password, PASSWORD_DEFAULT);
-        $user->confirmationCode = $confirmationCode;
+        $user->confirmation_code = $confirmationCode;
 
         $user->save();
         return $user->id;

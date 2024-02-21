@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'id' => 'registration-btn',
                 'class' => 'login-button'
             ]) ?>
-            <div class="transition">Если у вас уже есть аккаунт - <a href="login">авторизуйтесь</a></div>
+            <div class="transition">Уже есть аккаунт? - <br><a href="login">авторизуйтесь</a></div>
             <?php ActiveForm::end(); ?>
 
         </div>

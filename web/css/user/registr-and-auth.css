@@ -23,7 +23,7 @@
 
 .line {
     width: 1px;
-    height: 60vh;
+    height: 65vh;
     background-color: #FFFFFF;
     margin: 0;
 }
@@ -107,8 +107,12 @@ body .bg-light {
 }
 
 .transition {
-    font-size: 0.875em;
+    font-size: 1em;
     margin-top: 3vh;
+    border: 1px solid white;
+    padding: 1vh;
+    border-radius: 10px;
+    text-align: center;
 }
 
 .custom-control {
