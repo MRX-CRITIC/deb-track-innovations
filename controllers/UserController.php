@@ -62,7 +62,7 @@ class UserController extends Controller
             if ($model->validate()) {
                 if (empty(Yii::$app->session->get('time')) ||
                     (Yii::$app->session->get('time') + 60) < time() ||
-                    $model->email !=Yii::$app->session->get('model')->email) {
+                    $model->email != Yii::$app->session->get('model')->email) {
 
                     $confirmationCode = random_int(1000, 9999);
                     Yii::$app->session->set('confirmationCode', $confirmationCode);
@@ -86,7 +86,7 @@ class UserController extends Controller
                 return [
                     'validation' => false,
                     'time' => false,
-                    'errors' =>  'Не пройдена валидация',
+                    'errors' => 'Не пройдена валидация',
                     'errorsYii' => $model->getErrors(),
                 ];
             }
@@ -113,7 +113,7 @@ class UserController extends Controller
 
             if ($model->validate()) {
                 if (Yii::$app->session->get('model')->email == $model->email &&
-                    Yii::$app->session->get('model')->password == $model->password ) {
+                    Yii::$app->session->get('model')->password == $model->password) {
 
                     if (Yii::$app->session->get('confirmationCode') == $model->confirmationCode) {
 

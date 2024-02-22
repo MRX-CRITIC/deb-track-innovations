@@ -20,6 +20,7 @@ class CardsForm extends Model
      * @var mixed
      */
 
+
     public function rules()
     {
         return [
@@ -41,7 +42,7 @@ class CardsForm extends Model
     {
         return [
             'user_id' => 'ID пользователя',
-            'bank_id' => 'ID банка',
+            'bank_id' => 'Название банка',
             'credit_limit' => 'Кредитный лимит',
             'start_date_billing_period' => 'Начало периода выписки',
             'end_date_billing_period' => 'Конец периода выписки',
@@ -53,3 +54,5 @@ class CardsForm extends Model
         ];
     }
 }
+
+
