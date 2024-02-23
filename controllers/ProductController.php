@@ -3,7 +3,10 @@
 namespace app\controllers;
 
 use app\models\CardsForm;
-use app\repository\ProductRepository;
+use app\repository\BanksRepository;
+use app\repository\CardsRepository;
+use app\repository\UserRepository;
+use DateTime;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -45,14 +48,23 @@ class ProductController extends Controller
     {
         $model = new CardsForm();
 
+//        $model->validateDates('2024.02.10', '2024.02.09');
+
+        $user_id = Yii::$app->user->getId();
+        $banksList = BanksRepository::getAllBanks($user_id);
+        $banksList['new'] = 'Добавить свой банк... ( + )';
+
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->user_id = Yii::$app->user->getId();
-            ProductRepository::createCard(
+            $model->user_id = $user_id;
+            $model->credit_limit = preg_replace('/\D/', '', $model->credit_limit);
+            $model->interest_free_period = preg_replace('/\D/', '', $model->interest_free_period);
+
+            CardsRepository::createCard(
                 $model->user_id,
                 $model->bank_id,
                 $model->name_card,
@@ -75,6 +87,7 @@ class ProductController extends Controller
         } else {
             return $this->render('add-card', [
                 'model' => $model,
+                'banksList' => $banksList,
             ]);
         }
     }

@@ -2,13 +2,13 @@
 
 namespace app\repository;
 
-use app\entity\Product;
+use app\entity\Cards;
 
-class ProductRepository
+class CardsRepository
 {
-    public static function getProductBuId($id)
+    public static function getCardBuId($id)
     {
-        return Product::find()
+        return Cards::find()
             ->where(['id' => $id])
             ->one();
     }
@@ -21,7 +21,7 @@ class ProductRepository
         $start_date_billing_period, $end_date_billing_period, $note
     )
     {
-        $card = new Product();
+        $card = new Cards();
 
         $card->user_id = $user_id;
         $card->bank_id = $bank_id;

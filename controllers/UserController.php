@@ -122,6 +122,7 @@ class UserController extends Controller
                             $model->password,
                             $model->confirmationCode,
                         );
+                        Yii::$app->session->removeAll();
                         Yii::$app->user->login(Users::findIdentity($userId), 0);
                         return [
                             'confirmationCode' => true,
