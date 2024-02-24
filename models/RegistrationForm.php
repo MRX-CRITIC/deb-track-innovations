@@ -19,6 +19,7 @@ class RegistrationForm extends \yii\base\Model
             ['password', 'string', 'min' => 8, 'tooShort' => 'Пароль должен содержать минимум 8 символов'],
             ['repeatPassword', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
             ['email', 'validateEmail'],
+            ['email', 'string', 'max' => 59, 'tooLong' => 'Email должно содержать не более 59 символов'],
             ['email', 'email', 'message' => 'Некорректный формат адреса электронной почты'],
         ];
     }

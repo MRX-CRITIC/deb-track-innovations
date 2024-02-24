@@ -31,49 +31,102 @@ class CardsForm extends Model
             [
                 [
                     'user_id', 'bank_id', 'credit_limit',
-                    'start_date_billing_period', 'end_date_billing_period',
-                    'cost_banking_services',
-                    'interest_free_period'
-                ], 'required', 'message' => 'Поле не может быть пустое'
+                    'cost_banking_services', 'interest_free_period'
+                ],
+                'required', 'message' => 'Поле не может быть пустое'
             ],
             [['payment_partial_repayment', 'service_period', 'refund_cash_calculation'], 'required', 'message' => 'Не может быть не выбрано'],
-            [['user_id', 'bank_id', 'service_period'], 'integer'],
-            [['cost_banking_services', 'percentage_partial_repayment'], 'number'],
+            [['user_id', 'bank_id'], 'integer'],
+            [['cost_banking_services', 'percentage_partial_repayment'], 'number', 'min' => 0, 'max' => 9999, 'tooBig' => 'Значение не может быть больше 9 999'],
             [['start_date_billing_period', 'end_date_billing_period'], 'date', 'format' => 'php:Y-m-d'],
-            [['start_date_billing_period', 'end_date_billing_period'], 'validateDates', 'params' => []],
             [['name_card'], 'string', 'max' => 30],
-            [['payment_partial_repayment', 'payment_date_purchase_partial_repayment', 'refund_cash_calculation'], 'boolean'],
-            [['conditions_partial_repayment', 'note'], 'safe'],
+            [
+                [
+                    'payment_partial_repayment', 'payment_date_purchase_partial_repayment',
+                    'refund_cash_calculation', 'service_period'
+                ], 'boolean'],
+            [['conditions_partial_repayment', 'note'], 'string', 'max' => 600, 'tooLong' => 'Должно содержать не более 600 символов'],
+
+            ['interest_free_period', 'validateFreePeriod'],
+            ['credit_limit', 'validateCreditLimit'],
+            ['user_id', 'validateUserId'],
+            [['start_date_billing_period', 'end_date_billing_period'], 'validateDates'],
+            [['start_date_billing_period', 'end_date_billing_period', 'refund_cash_calculation'], 'validateDatesRequired'],
         ];
     }
+
 
     /**
      * @throws Exception
      */
-    public function validateDates($start_date_billing_period, $end_date_billing_period)
+    public function validateDates($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $startDate = $start_date_billing_period;
-            $endDate = $end_date_billing_period;
+            $startDate = new DateTime($this->start_date_billing_period);
+            $endDate = new DateTime($this->end_date_billing_period);
             $diff = $startDate->diff($endDate)->days;
 
-//            Yii::info("
-//                Начальная дата: " . $startDate->format('Y-m-d') . ",
-//                Конечная дата: " . $endDate->format('Y-m-d') . ",
-//                ATTRIBUTE: " . $start_date_billing_period . ",
-//                PARAMS: " . $end_date_billing_period . ",
-//                Разница в днях: $diff", __METHOD__);
-
             if ($endDate < $startDate) {
-                $this->addError('end_date_billing_period', 'Дата окончания должна быть после даты начала');
+                $this->addError(
+                    'end_date_billing_period',
+                    'Дата окончания должна быть после даты начала'
+                );
             } elseif ($diff > 31 || $diff < 28) {
-                $this->addError('start_date_billing_period', 'Разница между датами должна быть от 28 до 31 дня включительно');
+                $this->addError(
+                    'end_date_billing_period',
+                    'Разница между датами должна быть от 28 до 31 дня включительно'
+                );
+            }
+        }
+    }
+
+    public function validateDatesRequired($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if ($this->refund_cash_calculation == "1") {
+                if (empty($this->start_date_billing_period) || empty($this->end_date_billing_period)) {
+                    $this->addError('start_date_billing_period', 'Поле не может быть пустое');
+                    $this->addError('end_date_billing_period', 'Поле не может быть пустое');
+                }
             }
         }
     }
 
 
-    public function attributeLabels(): array
+    public function validateUserId($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if ($this->user_id != Yii::$app->user->getId()) {
+                $this->addError('user_id', 'Ошибка! Попытка изменить структуру формы');
+                Yii::$app->session->setFlash('error', 'Ошибка! Попытка изменить целостность формы');
+            }
+        }
+    }
+
+    public function validateCreditLimit($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $this->credit_limit = preg_replace('/\D/', '', $this->credit_limit);
+
+            if ($this->credit_limit < 1000 || $this->credit_limit > 10000000) {
+                $this->addError('credit_limit', 'Значение должно быть в диапазоне от 1 000 до 9 999 999');
+            }
+        }
+    }
+
+    public function validateFreePeriod($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $this->interest_free_period = preg_replace('/\D/', '', $this->interest_free_period);
+
+            if ($this->interest_free_period < 7 || $this->interest_free_period > 366) {
+                $this->addError('interest_free_period', 'Значение должно быть в диапазоне от 7 дней до 1 года');
+            }
+        }
+    }
+
+
+    public function attributeLabels()
     {
         return [
             'user_id' => 'ID пользователя',

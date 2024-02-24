@@ -14,11 +14,12 @@ class CardsRepository
     }
 
     public static function createCard(
-        $user_id, $bank_id, $name_card,
+        $user_id, $bank_id, $name_card = null,
         $credit_limit, $cost_banking_services, $interest_free_period,
-        $payment_partial_repayment, $percentage_partial_repayment, $payment_date_purchase_partial_repayment,
-        $conditions_partial_repayment, $service_period, $refund_cash_calculation,
-        $start_date_billing_period, $end_date_billing_period, $note
+        $payment_partial_repayment, $percentage_partial_repayment = null,
+        $payment_date_purchase_partial_repayment = null,
+        $conditions_partial_repayment = null, $service_period, $refund_cash_calculation,
+        $start_date_billing_period = null, $end_date_billing_period = null, $note = null
     )
     {
         $card = new Cards();

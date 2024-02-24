@@ -48,8 +48,6 @@ class ProductController extends Controller
     {
         $model = new CardsForm();
 
-//        $model->validateDates('2024.02.10', '2024.02.09');
-
         $user_id = Yii::$app->user->getId();
         $banksList = BanksRepository::getAllBanks($user_id);
         $banksList['new'] = 'Добавить свой банк... ( + )';
@@ -60,9 +58,8 @@ class ProductController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->user_id = $user_id;
-            $model->credit_limit = preg_replace('/\D/', '', $model->credit_limit);
             $model->interest_free_period = preg_replace('/\D/', '', $model->interest_free_period);
+            $model->credit_limit = preg_replace('/\D/', '', $model->credit_limit);
 
             CardsRepository::createCard(
                 $model->user_id,
@@ -82,8 +79,8 @@ class ProductController extends Controller
                 $model->note,
             );
 
-            Yii::$app->session->setFlash('success', 'Карточка успешно добавлена.');
-//            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'Карта успешно добавлена');
+            return $this->redirect('add-card');
         } else {
             return $this->render('add-card', [
                 'model' => $model,
