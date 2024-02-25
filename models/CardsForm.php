@@ -35,16 +35,21 @@ class CardsForm extends Model
                 ],
                 'required', 'message' => 'Поле не может быть пустое'
             ],
+
             [['payment_partial_repayment', 'service_period', 'refund_cash_calculation'], 'required', 'message' => 'Не может быть не выбрано'],
             [['user_id', 'bank_id'], 'integer'],
             [['cost_banking_services', 'percentage_partial_repayment'], 'number', 'min' => 0, 'max' => 9999, 'tooBig' => 'Значение не может быть больше 9 999'],
             [['start_date_billing_period', 'end_date_billing_period'], 'date', 'format' => 'php:Y-m-d'],
             [['name_card'], 'string', 'max' => 30],
+
             [
                 [
                     'payment_partial_repayment', 'payment_date_purchase_partial_repayment',
                     'refund_cash_calculation', 'service_period'
-                ], 'boolean'],
+                ],
+                'boolean'
+            ],
+
             [['conditions_partial_repayment', 'note'], 'string', 'max' => 600, 'tooLong' => 'Должно содержать не более 600 символов'],
 
             ['interest_free_period', 'validateFreePeriod'],

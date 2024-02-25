@@ -96,3 +96,13 @@ $("#model-refund-cash-calculation input[type='radio']").change(function () {
         $(".billing-period").hide();
     }
 });
+
+
+$(document).ready(function() {
+    $('#bank-select').change(function() {
+        if ($(this).val() === 'add-bank') {
+            window.location.href = '/product/add-bank';
+            $('#bank-select').val('');
+        }
+    });
+});

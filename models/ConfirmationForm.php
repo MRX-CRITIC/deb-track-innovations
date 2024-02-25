@@ -34,4 +34,14 @@ class ConfirmationForm extends \yii\base\Model
             }
         }
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'email' => 'Электронная почта',
+            'password' => 'Пароль',
+            'repeatPassword' => 'Повторный пароль',
+            'verificationCode' => 'Код подтверждения',
+        ];
+    }
 }

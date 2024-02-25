@@ -20,6 +20,7 @@
     width: 300px;
     margin: 20px;
     box-sizing: content-box;
+    flex-wrap: wrap;
 }
 
 #code-modal input {

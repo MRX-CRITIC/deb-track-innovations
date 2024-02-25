@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\entity\Banks;
+use app\models\BanksForm;
 use app\models\CardsForm;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
@@ -29,7 +31,7 @@ class ProductController extends Controller
 //                        'roles' => ['?'],
 //                    ],
                     [
-                        'actions' => ['add-card'],
+                        'actions' => ['add-card', 'add-bank'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -50,7 +52,7 @@ class ProductController extends Controller
 
         $user_id = Yii::$app->user->getId();
         $banksList = BanksRepository::getAllBanks($user_id);
-        $banksList['new'] = 'Добавить свой банк... ( + )';
+        $banksList['add-bank'] = 'Добавить свой банк... ( + )';
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -80,11 +82,35 @@ class ProductController extends Controller
             );
 
             Yii::$app->session->setFlash('success', 'Карта успешно добавлена');
-            return $this->redirect('add-card');
+            return $this->redirect(['add-card']);
         } else {
             return $this->render('add-card', [
                 'model' => $model,
                 'banksList' => $banksList,
+            ]);
+        }
+    }
+
+    public function actionAddBank()
+    {
+        $model = new BanksForm();
+
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            BanksRepository::createBank(
+                $model->user_id,
+                $model->name_bank,
+            );
+
+            Yii::$app->session->setFlash('success', 'Банк успешно добавлен');
+            return $this->redirect(['add-bank']);
+        } else {
+            return $this->render('add-bank', [
+                'model' => $model,
             ]);
         }
     }

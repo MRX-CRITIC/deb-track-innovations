@@ -26,4 +26,14 @@ class BanksRepository
             ->column();
     }
 
+    public static function createBank($user_id, $name) {
+        $bank = new Banks();
+
+        $bank->user_id = $user_id;
+        $bank->name = $name;
+
+        $bank->save();
+        return $bank->id;
+    }
+
 }

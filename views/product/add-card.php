@@ -5,6 +5,7 @@ use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\CardsForm */
@@ -14,7 +15,7 @@ $this->title = 'Добавление карты';
 $this->params['breadcrumbs'][] = $this->title;
 \app\assets\ProductAsset::register($this);
 ?>
-<div class="site-add-card">
+<div class="site-add-product">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php $form = ActiveForm::begin([
@@ -22,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
     <?= $form->field($model, 'user_id')->hiddenInput([
-            'value'=> Yii::$app->user->identity->id])->label(false) ?>
+        'value' => Yii::$app->user->identity->id])->label(false) ?>
 
     <?= $form->field($model, 'bank_id')->dropDownList($banksList, [
         'prompt' => 'Выберите банк',
@@ -82,14 +83,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'service_period')->radioList([
         true => 'Год',
         false =>
-                    '<span class="tooltip-custom">Месяц
+            '<span class="tooltip-custom">Месяц
                         <span class="tooltiptext-custom">
                              Если вы указываете в месяц и при этом возврат ДС
                              производится из расчета выписки, то взиматься будет
                              в последний день выписки, в противном случае 30 дней
                          </span>
                     </span>'
-    ],[
+    ], [
         'item' => function ($index, $label, $name, $checked, $value) {
             $radioId = $name . '-' . $index;
             $options = [
@@ -107,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'refund_cash_calculation')->radioList([
         true => 'Из расчета выписки',
         false =>
-                    '<span class="tooltip-custom">С даты снятия/покупки
+            '<span class="tooltip-custom">С даты снятия/покупки
                         <span class="tooltiptext-custom">
                              Если с даты снятия/покупки, то вы будете каждый раз указывать вручную дату
                          </span>
