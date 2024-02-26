@@ -20,6 +20,7 @@ class CardsForm extends Model
     public $payment_date_purchase_partial_repayment;
     public $conditions_partial_repayment;
     public $service_period;
+    public $date_annual_service;
     public $refund_cash_calculation;
     public $start_date_billing_period;
     public $end_date_billing_period;
@@ -39,7 +40,7 @@ class CardsForm extends Model
             [['payment_partial_repayment', 'service_period', 'refund_cash_calculation'], 'required', 'message' => 'Не может быть не выбрано'],
             [['user_id', 'bank_id'], 'integer'],
             [['cost_banking_services', 'percentage_partial_repayment'], 'number', 'min' => 0, 'max' => 9999, 'tooBig' => 'Значение не может быть больше 9 999'],
-            [['start_date_billing_period', 'end_date_billing_period'], 'date', 'format' => 'php:Y-m-d'],
+            [['start_date_billing_period', 'end_date_billing_period', 'date_annual_service'], 'date', 'format' => 'php:Y-m-d'],
             [['name_card'], 'string', 'max' => 30],
 
             [
@@ -54,12 +55,12 @@ class CardsForm extends Model
 
             ['interest_free_period', 'validateFreePeriod'],
             ['credit_limit', 'validateCreditLimit'],
+            [['date_annual_service', 'service_period'], 'validateDateAnnualServiceRequired'],
             ['user_id', 'validateUserId'],
             [['start_date_billing_period', 'end_date_billing_period'], 'validateDates'],
             [['start_date_billing_period', 'end_date_billing_period', 'refund_cash_calculation'], 'validateDatesRequired'],
         ];
     }
-
 
     /**
      * @throws Exception
@@ -102,7 +103,7 @@ class CardsForm extends Model
     {
         if (!$this->hasErrors()) {
             if ($this->user_id != Yii::$app->user->getId()) {
-                $this->addError('user_id', 'Ошибка! Попытка изменить структуру формы');
+                $this->addError($attribute, 'Ошибка! Попытка изменить структуру формы');
                 Yii::$app->session->setFlash('error', 'Ошибка! Попытка изменить целостность формы');
             }
         }
@@ -114,7 +115,17 @@ class CardsForm extends Model
             $this->credit_limit = preg_replace('/\D/', '', $this->credit_limit);
 
             if ($this->credit_limit < 1000 || $this->credit_limit > 10000000) {
-                $this->addError('credit_limit', 'Значение должно быть в диапазоне от 1 000 до 9 999 999');
+                $this->addError($attribute, 'Значение должно быть в диапазоне от 1 000 до 9 999 999');
+            }
+        }
+    }
+
+    public function validateDateAnnualServiceRequired($attribute, $params) {
+        if (!$this->hasErrors()) {
+            if ($this->service_period == "1") {
+                if (empty($this->date_annual_service)) {
+                    $this->addError('date_annual_service', 'Поле не может быть пустое');
+                }
             }
         }
     }
@@ -125,7 +136,7 @@ class CardsForm extends Model
             $this->interest_free_period = preg_replace('/\D/', '', $this->interest_free_period);
 
             if ($this->interest_free_period < 7 || $this->interest_free_period > 366) {
-                $this->addError('interest_free_period', 'Значение должно быть в диапазоне от 7 дней до 1 года');
+                $this->addError($attribute, 'Значение должно быть в диапазоне от 7 дней до 1 года');
             }
         }
     }
@@ -134,7 +145,7 @@ class CardsForm extends Model
     public function attributeLabels()
     {
         return [
-            'user_id' => 'ID пользователя',
+            'user_id' => 'Пользователь',
             'bank_id' => 'Название банка',
             'name_card' => 'Название карты',
             'credit_limit' => 'Кредитный лимит',
@@ -145,6 +156,7 @@ class CardsForm extends Model
             'payment_date_purchase_partial_repayment' => 'Платеж для частичного погашения расчитывается с даты покупки/снятия',
             'conditions_partial_repayment' => 'Если нет, то опишите как',
             'service_period' => 'Период обслуживания',
+            'date_annual_service' => 'Дата годового обслуживания',
             'refund_cash_calculation' => 'Как производится расчет возврата денежных средств банку',
             'start_date_billing_period' => 'Начальная дата расчетного периода',
             'end_date_billing_period' => 'Конечная дата расчетного периода',

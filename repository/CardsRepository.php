@@ -18,7 +18,7 @@ class CardsRepository
         $credit_limit, $cost_banking_services, $interest_free_period,
         $payment_partial_repayment, $percentage_partial_repayment = null,
         $payment_date_purchase_partial_repayment = null,
-        $conditions_partial_repayment = null, $service_period, $refund_cash_calculation,
+        $conditions_partial_repayment = null, $service_period, $date_annual_service = null, $refund_cash_calculation,
         $start_date_billing_period = null, $end_date_billing_period = null, $note = null
     )
     {
@@ -35,6 +35,7 @@ class CardsRepository
         $card->payment_date_purchase_partial_repayment = $payment_date_purchase_partial_repayment;
         $card->conditions_partial_repayment = $conditions_partial_repayment;
         $card->service_period = $service_period;
+        $card->date_annual_service = $date_annual_service;
         $card->refund_cash_calculation = $refund_cash_calculation;
         $card->start_date_billing_period = $start_date_billing_period;
         $card->end_date_billing_period = $end_date_billing_period;
@@ -43,4 +44,14 @@ class CardsRepository
         $card->save();
         return $card->id;
     }
+
+    public static function getCards($user_id)
+    {
+        return Cards::find()
+            ->joinWith('bank')
+            ->where(['cards.user_id' => $user_id])
+            ->all();
+    }
+
+
 }

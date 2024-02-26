@@ -9,6 +9,5 @@ class ProductAsset extends AppAsset
     ];
     public $css = [
         'css/product/add-card.css',
-        'css/product/add-bank.css',
     ];
 }

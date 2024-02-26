@@ -7,10 +7,10 @@ use app\entity\Cards;
 
 class BanksRepository
 {
-    public static function getBankBuId($id)
+    public static function getBankBuId($bank_id)
     {
         return Banks::find()
-            ->where(['id' => $id])
+            ->where(['id' => $bank_id])
             ->one();
     }
 
@@ -35,5 +35,6 @@ class BanksRepository
         $bank->save();
         return $bank->id;
     }
+
 
 }

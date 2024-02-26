@@ -98,6 +98,24 @@ $("#model-refund-cash-calculation input[type='radio']").change(function () {
 });
 
 
+
+$(document).ready(function () {
+    if ($("#model-service-period").find('input[type="radio"]:checked').val() === "1") {
+        $(".date_annual_service").show();
+    } else {
+        $(".date_annual_service").hide();
+    }
+});
+$("#model-service-period input[type='radio']").change(function () {
+    if ($(this).val() === "1") {
+        $(".date_annual_service").show();
+    } else {
+        $(".date_annual_service").hide();
+    }
+});
+
+
+
 $(document).ready(function() {
     $('#bank-select').change(function() {
         if ($(this).val() === 'add-bank') {
@@ -106,3 +124,4 @@ $(document).ready(function() {
         }
     });
 });
+

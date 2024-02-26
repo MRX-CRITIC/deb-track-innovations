@@ -15,7 +15,7 @@ $this->title = 'Добавление карты';
 $this->params['breadcrumbs'][] = $this->title;
 \app\assets\ProductAsset::register($this);
 ?>
-<div class="site-add-product">
+<div class="site-product">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php $form = ActiveForm::begin([
@@ -104,6 +104,11 @@ $this->params['breadcrumbs'][] = $this->title;
         },
         'id' => 'model-service-period'
     ]) ?>
+
+    <div class="date_annual_service">
+        <?= $form->field($model, 'date_annual_service')->input('date') ?>
+        <div class="message-annual-service">Год укажите текущий, если в этом году списание уже было, то укажите ее.</div>
+    </div>
 
     <?= $form->field($model, 'refund_cash_calculation')->radioList([
         true => 'Из расчета выписки',

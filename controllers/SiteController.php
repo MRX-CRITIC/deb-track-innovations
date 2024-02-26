@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\repository\BanksRepository;
+use app\repository\CardsRepository;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -65,7 +67,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $user_id = Yii::$app->user->getId();
+
+        return $this->render('index', [
+            'cards' => CardsRepository::getCards($user_id),
+        ]);
     }
 
     /**

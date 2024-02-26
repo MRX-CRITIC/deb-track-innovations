@@ -1,14 +1,13 @@
-.site-add-product {
+.site-product {
     background-color: #2D3748;
     font-family: 'system-ui', sans-serif;
     margin: 0;
     color: white;
-    display: grid;
-    align-items: center;
-    justify-content: space-around;
+    display: block;
     height: 100%;
     border-radius: 10px;
-    padding: 4vh;
+    padding: 5vh 30vh 5vh 30vh;
+    width: 100%;
 }
 
 .tooltip-custom {
@@ -62,4 +61,10 @@
 
 #add-card-form {
 
+}
+
+.message-annual-service {
+    margin: -2vh 0 2vh 0;
+    font-size: 0.8rem;
+    color: #ff0000;
 }

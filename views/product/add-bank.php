@@ -9,7 +9,6 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\BanksForm */
-/* @var $banksList app\controllers\ProductController */
 
 $this->title = 'Добавление банка';
 $this->params['breadcrumbs'][] = ['label' => 'Добавление карты', 'url' => ['add-card']];
@@ -17,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 \app\assets\ProductAsset::register($this);
 ?>
 
-<div class="site-add-product">
+<div class="site-product">
     <h1><?= Html::encode($this->title) ?></h1>
     <?php $form = ActiveForm::begin([
         'id' => 'add-bank-form']); ?>

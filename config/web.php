@@ -57,6 +57,11 @@ $config = [
             // send all mails to a file by default.
             'useFileTransport' => false,
         ],
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'thousandSeparator' => ' ', // Разделитель тысяч
+            'currencyCode' => 'RUB',
+        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

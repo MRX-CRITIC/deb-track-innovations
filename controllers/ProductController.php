@@ -3,10 +3,13 @@
 namespace app\controllers;
 
 use app\entity\Banks;
+use app\entity\CashFlow;
 use app\models\BanksForm;
 use app\models\CardsForm;
+use app\models\CashFlowForm;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
+use app\repository\CashFlowRepository;
 use app\repository\UserRepository;
 use DateTime;
 use Yii;
@@ -31,7 +34,7 @@ class ProductController extends Controller
 //                        'roles' => ['?'],
 //                    ],
                     [
-                        'actions' => ['add-card', 'add-bank'],
+                        'actions' => ['add-card', 'add-bank', 'add-operation'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -75,6 +78,7 @@ class ProductController extends Controller
                 $model->payment_date_purchase_partial_repayment,
                 $model->conditions_partial_repayment,
                 $model->service_period,
+                $model->date_annual_service,
                 $model->refund_cash_calculation,
                 $model->start_date_billing_period,
                 $model->end_date_billing_period,
@@ -110,6 +114,34 @@ class ProductController extends Controller
             return $this->redirect(['add-bank']);
         } else {
             return $this->render('add-bank', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionAddOperation()
+    {
+        $model = new CashFlowForm();
+
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            CashFlowRepository::createOperation(
+                $model->user_id,
+                $model->card_id,
+                $model->date_operation,
+                $model->type_operation,
+                $model->sum,
+                $model->note,
+            );
+
+            Yii::$app->session->setFlash('success', 'Операция успешно добавлена');
+            return $this->redirect(['add-operation']);
+        } else {
+            return $this->render('add-operation', [
                 'model' => $model,
             ]);
         }
