@@ -104,7 +104,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="date_annual_service">
         <?= $form->field($model, 'date_annual_service')->input('date') ?>
-        <div class="message-annual-service">Год укажите текущий, если в этом году списание уже было, то укажите ее.</div>
+        <div class="message-annual-service">Год укажите текущий, если в этом году списание уже было, то укажите ее.
+        </div>
     </div>
 
     <?= $form->field($model, 'refund_cash_calculation')->radioList([
@@ -139,7 +140,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'note')->textarea(['rows' => 3]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Добавить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Добавить', [
+            'class' => 'btn btn-success',
+            'id' => 'btn-add-card'
+        ]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

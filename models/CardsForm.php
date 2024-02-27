@@ -100,10 +100,10 @@ class CardsForm extends Model
     public function validateCreditLimit($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $this->credit_limit = preg_replace('/\D/', '', $this->credit_limit);
+//            $this->credit_limit = preg_replace('/\D/', '', $this->credit_limit);
 
-            if ($this->credit_limit < 1000 || $this->credit_limit > 10000000) {
-                $this->addError($attribute, 'Значение должно быть в диапазоне от 1 000 до 9 999 999');
+            if ($this->credit_limit < 1000.00 || $this->credit_limit > 9999999.99) {
+                $this->addError($attribute, 'Значение должно быть в диапазоне от 1 000.00 до 9 999 999.99');
             }
         }
     }

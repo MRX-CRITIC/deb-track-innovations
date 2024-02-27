@@ -19,6 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+
 }
 
 .line {
@@ -39,15 +40,23 @@
 }
 
 body .brand-logo {
-    color: #FFFFFF;
-    position: relative;
-    width: 45%;
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    width: 45%;
+    height: 100%;
     font-size: 4vh !important;
 }
+
+.brand-logo .tn-atom {
+    background: linear-gradient(175deg, #44FFFD, #22E0E5, #9A4DFF, #9933FF, #ff00ff);
+    /* background: linear-gradient(175deg, #89D1C9, #63B6B7, #897CB6, #8679B7, #e933ff); */
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 
 .login-form form {
     max-width: 300px;

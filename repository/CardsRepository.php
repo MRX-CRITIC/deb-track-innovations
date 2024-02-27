@@ -55,6 +55,8 @@ class CardsRepository
 
         $card->save();
         return $card->id;
+
+
     }
 
     public static function getAllCards($user_id)

@@ -94,9 +94,15 @@ body .bg-dark {
     background-color: #2D3748 !important;
 }
 
-/*body .navbar-brand {*/
-/*    color: blue;*/
-/*}*/
+body .navbar-brand {
+    /*font-size: 1.3rem !important;*/
+    background: linear-gradient(175deg, #44FFFD, #22E0E5, #9A4DFF, #9933FF, #ff00ff);
+    /* background: linear-gradient(175deg, #89D1C9, #63B6B7, #897CB6, #8679B7, #e933ff); */
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    --bs-navbar-brand-margin-end: 3rem;
+}
 
 
 .fixed-top {

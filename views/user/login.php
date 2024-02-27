@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="body">
     <div class="brand-logo">
         <div class="img-logo"></div>
-        <?= Yii::$app->name; ?>
+        <div class="tn-atom">
+            <?= Yii::$app->name; ?>
+        </div>
     </div>
     <div class="line"></div>
     <div class="login-container">
