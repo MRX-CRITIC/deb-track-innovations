@@ -7,7 +7,7 @@ use Exception;
 use Yii;
 use yii\base\Model;
 
-class CashFlowForm extends Model
+class OperationForm extends Model
 {
     public $user_id;
     public $card_id;
@@ -19,7 +19,7 @@ class CashFlowForm extends Model
     public function rules()
     {
         return [
-            [['user_id', 'card_id', 'date_operation', 'type_operation', 'sum'], 'required'],
+            [['user_id', 'card_id', 'date_operation', 'type_operation', 'sum'], 'required', 'message' => 'Поле не может быть пустое'],
             [['user_id', 'card_id', 'type_operation'], 'integer'],
             [['date_operation'], 'date', 'format' => 'php:Y-m-d'],
             [['sum'], 'number'],
@@ -33,7 +33,7 @@ class CashFlowForm extends Model
     public function validateCreditLimit($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $card = CardsRepository::getCardBuId($this->card_id);
+            $card = CardsRepository::getCreditLimitCard($this->card_id);
 
             if (!$card) {
                 $this->addError('card_id', 'Карта не найдена');

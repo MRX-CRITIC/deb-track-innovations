@@ -10,8 +10,20 @@ class CardsRepository
     {
         return Cards::find()
             ->where(['id' => $id])
+            ->select('id')
             ->one();
+//        return $card_id ? (int) $card_id : null;
     }
+
+    public static function getCreditLimitCard($id)
+    {
+        return Cards::find()
+            ->where(['id' => $id])
+            ->select('credit_limit')
+            ->one();
+//        return $card_id ? (int) $card_id : null;
+    }
+
 
     public static function createCard(
         $user_id, $bank_id, $name_card = null,
@@ -45,7 +57,7 @@ class CardsRepository
         return $card->id;
     }
 
-    public static function getCards($user_id)
+    public static function getAllCards($user_id)
     {
         return Cards::find()
             ->joinWith('bank')

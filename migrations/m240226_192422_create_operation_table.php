@@ -2,12 +2,12 @@
 
 use yii\db\Migration;
 
-class m240226_192422_create_cash_flow_table extends Migration
+class m240226_192422_create_operation_table extends Migration
 {
 
     public function safeUp()
     {
-        $this->createTable('cash_flow', [
+        $this->createTable('operation', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'card_id' => $this->integer()->notNull(),
@@ -18,8 +18,8 @@ class m240226_192422_create_cash_flow_table extends Migration
         ]);
 
         $this->addForeignKey(
-            'fk-cash_flow-user_id',
-            'cash_flow',
+            'fk-operation-user_id',
+            'operation',
             'user_id',
             'users',
             'id',
@@ -27,8 +27,8 @@ class m240226_192422_create_cash_flow_table extends Migration
         );
 
         $this->addForeignKey(
-            'fk-cash_flow-bank_id',
-            'cash_flow',
+            'fk-operation-bank_id',
+            'operation',
             'card_id',
             'cards',
             'id',
@@ -38,9 +38,9 @@ class m240226_192422_create_cash_flow_table extends Migration
 
     public function safeDown()
     {
-        $this->dropForeignKey('fk-cash_flow-user_id', 'cash_flow');
-        $this->dropForeignKey('fk-cash_flow-bank_id', 'cash_flow');
+        $this->dropForeignKey('fk-operation-user_id', 'operation');
+        $this->dropForeignKey('fk-operation-bank_id', 'operation');
 
-        $this->dropTable('cash_flow');
+        $this->dropTable('operation');
     }
 }

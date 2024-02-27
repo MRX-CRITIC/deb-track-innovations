@@ -31,7 +31,8 @@ $this->title = 'DebTrack Innovations';
                             echo '<div></div>';
                         } ?>
                         <div class="links">
-                            <a class="add-operation" href="product/add-operation">Добавить операцию</a>
+<!--                            <a class="add-operation" href="/product/add-operation">Добавить операцию</a>-->
+                            <a class="add-operation" href="/product/add-operation?card_id=<?=$card->id?>">Добавить операцию</a>
                         </div>
                     </div>
 

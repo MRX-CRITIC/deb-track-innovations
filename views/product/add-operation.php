@@ -8,7 +8,8 @@ use yii\bootstrap5\NavBar;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/* @var $model app\models\CashFlowForm */
+/* @var $model app\models\OperationForm */
+/* @var $card_id app\controllers\ProductController */
 
 $this->title = 'Добавление операции';
 $this->params['breadcrumbs'][] = $this->title;
@@ -19,12 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="site-product">
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php $form = ActiveForm::begin([
-        'id' => 'add-operation-form',
-    ]); ?>
 
-    <?= $form->field($model, 'user_id')->hiddenInput([
-        'value' => Yii::$app->user->identity->id])->label(false) ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'add-operation-form']); ?>
+
+    <?= $form->field($model, 'user_id')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false) ?>
+    <?= $form->field($model, 'card_id')->hiddenInput(['value' => $card_id])->label(false) ?>
 
     <div class="date_operation">
         <?= $form->field($model, 'date_operation')->input('date') ?>
@@ -34,9 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'type_operation')->radioList([
             true => 'Снятие/покупка',
             false => 'Внесение'
-        ], [
-            'id' => 'type_operation',
-        ]) ?>
+        ], ['id' => 'type_operation']) ?>
     </div>
 
     <?= $form->field($model, 'sum')->textInput([
@@ -52,5 +51,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <?php ActiveForm::end(); ?>
+
 </div>
 

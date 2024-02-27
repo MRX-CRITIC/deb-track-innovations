@@ -3,13 +3,13 @@
 namespace app\controllers;
 
 use app\entity\Banks;
-use app\entity\CashFlow;
+use app\entity\Operation;
 use app\models\BanksForm;
 use app\models\CardsForm;
-use app\models\CashFlowForm;
+use app\models\OperationForm;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
-use app\repository\CashFlowRepository;
+use app\repository\OperationRepository;
 use app\repository\UserRepository;
 use DateTime;
 use Yii;
@@ -119,9 +119,15 @@ class ProductController extends Controller
         }
     }
 
-    public function actionAddOperation()
+    public function actionAddOperation($card_id)
     {
-        $model = new CashFlowForm();
+        $card = CardsRepository::getCardBuId($card_id);
+        if ($card === null) {
+            Yii::$app->session->setFlash('error', 'Карта не найдена');
+            return $this->redirect(['/site/index']);
+        }
+
+        $model = new OperationForm();
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -129,7 +135,7 @@ class ProductController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            CashFlowRepository::createOperation(
+            OperationRepository::createOperation(
                 $model->user_id,
                 $model->card_id,
                 $model->date_operation,
@@ -139,10 +145,11 @@ class ProductController extends Controller
             );
 
             Yii::$app->session->setFlash('success', 'Операция успешно добавлена');
-            return $this->redirect(['add-operation']);
+            return $this->refresh();
         } else {
             return $this->render('add-operation', [
                 'model' => $model,
+                'card_id' => $card->id,
             ]);
         }
     }

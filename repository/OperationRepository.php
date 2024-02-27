@@ -2,13 +2,13 @@
 
 namespace app\repository;
 
-use app\entity\CashFlow;
+use app\entity\Operation;
 
-class CashFlowRepository
+class OperationRepository
 {
     public static function getCardBuId($id)
     {
-        return CashFlow::find()
+        return Operation::find()
             ->where(['id' => $id])
             ->one();
     }
@@ -18,7 +18,7 @@ class CashFlowRepository
         $type_operation, $sum, $note = null
     )
     {
-        $operation = new CashFlow();
+        $operation = new Operation();
 
         $operation->user_id = $user_id;
         $operation->card_id = $card_id;

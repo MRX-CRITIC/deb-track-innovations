@@ -70,7 +70,7 @@ class SiteController extends Controller
         $user_id = Yii::$app->user->getId();
 
         return $this->render('index', [
-            'cards' => CardsRepository::getCards($user_id),
+            'cards' => CardsRepository::getAllCards($user_id),
         ]);
     }
 
