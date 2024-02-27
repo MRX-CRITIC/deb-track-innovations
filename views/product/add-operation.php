@@ -24,8 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form = ActiveForm::begin([
         'id' => 'add-operation-form']); ?>
 
-    <?= $form->field($model, 'user_id')->hiddenInput(['value' => Yii::$app->user->identity->id])->label(false) ?>
-    <?= $form->field($model, 'card_id')->hiddenInput(['value' => $card_id])->label(false) ?>
 
     <div class="date_operation">
         <?= $form->field($model, 'date_operation')->input('date') ?>

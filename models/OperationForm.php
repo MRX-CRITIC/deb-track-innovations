@@ -25,7 +25,6 @@ class OperationForm extends Model
             [['sum'], 'number'],
             [['note'], 'string', 'max' => 600, 'tooLong' => 'Должно содержать не более 600 символов'],
 
-            ['user_id', 'validateUserId'],
             ['sum', 'validateCreditLimit'],
         ];
     }
@@ -44,17 +43,6 @@ class OperationForm extends Model
             }
         }
     }
-
-    public function validateUserId($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            if ($this->user_id != Yii::$app->user->getId()) {
-                $this->addError('user_id', 'Ошибка! Попытка изменить структуру формы');
-                Yii::$app->session->setFlash('error', 'Ошибка! Попытка изменить целостность формы');
-            }
-        }
-    }
-
 
     public function attributeLabels()
     {

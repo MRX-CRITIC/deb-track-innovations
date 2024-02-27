@@ -28,11 +28,6 @@ class ProductController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
-//                    [
-//                        'actions' => [''],
-//                        'allow' => true,
-//                        'roles' => ['?'],
-//                    ],
                     [
                         'actions' => ['add-card', 'add-bank', 'add-operation'],
                         'allow' => true,
@@ -52,8 +47,9 @@ class ProductController extends Controller
     public function actionAddCard()
     {
         $model = new CardsForm();
-
         $user_id = Yii::$app->user->getId();
+        $model->user_id = $user_id;
+
         $banksList = BanksRepository::getAllBanks($user_id);
         $banksList['add-bank'] = 'Добавить свой банк... ( + )';
 
@@ -98,6 +94,7 @@ class ProductController extends Controller
     public function actionAddBank()
     {
         $model = new BanksForm();
+        $model->user_id = Yii::$app->user->getId();
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -119,7 +116,7 @@ class ProductController extends Controller
         }
     }
 
-    public function actionAddOperation($card_id)
+    public function actionAddOperation(int $card_id)
     {
         $card = CardsRepository::getCardBuId($card_id);
         if ($card === null) {
@@ -128,6 +125,8 @@ class ProductController extends Controller
         }
 
         $model = new OperationForm();
+        $model->user_id = Yii::$app->user->getId();
+        $model->card_id = $card->id;
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -149,7 +148,6 @@ class ProductController extends Controller
         } else {
             return $this->render('add-operation', [
                 'model' => $model,
-                'card_id' => $card->id,
             ]);
         }
     }

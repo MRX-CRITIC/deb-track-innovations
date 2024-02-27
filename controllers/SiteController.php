@@ -26,10 +26,10 @@ class SiteController extends Controller
                     [
                         'actions' => ['about'],
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['?', '@'],
                     ],
                     [
-                        'actions' => ['index', 'about', 'contact'],
+                        'actions' => ['index', 'contact'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -60,13 +60,13 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
+
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site/about');
+        }
+
         $user_id = Yii::$app->user->getId();
 
         return $this->render('index', [

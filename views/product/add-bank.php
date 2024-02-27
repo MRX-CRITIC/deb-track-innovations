@@ -21,9 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form = ActiveForm::begin([
         'id' => 'add-bank-form']); ?>
 
-    <?= $form->field($model, 'user_id')->hiddenInput([
-        'value' => Yii::$app->user->identity->id])->label(false) ?>
-
     <?= $form->field($model, 'name_bank')->input('text', [
         'placeholder' => 'Введите название банка',
     ]) ?>

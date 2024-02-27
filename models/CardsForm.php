@@ -26,7 +26,7 @@ class CardsForm extends Model
     public $end_date_billing_period;
     public $note;
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [
@@ -56,7 +56,6 @@ class CardsForm extends Model
             ['interest_free_period', 'validateFreePeriod'],
             ['credit_limit', 'validateCreditLimit'],
             [['date_annual_service', 'service_period'], 'validateDateAnnualServiceRequired'],
-            ['user_id', 'validateUserId'],
             [['start_date_billing_period', 'end_date_billing_period'], 'validateDates'],
             [['start_date_billing_period', 'end_date_billing_period', 'refund_cash_calculation'], 'validateDatesRequired'],
         ];
@@ -94,17 +93,6 @@ class CardsForm extends Model
                     $this->addError('start_date_billing_period', 'Поле не может быть пустое');
                     $this->addError('end_date_billing_period', 'Поле не может быть пустое');
                 }
-            }
-        }
-    }
-
-
-    public function validateUserId($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            if ($this->user_id != Yii::$app->user->getId()) {
-                $this->addError($attribute, 'Ошибка! Попытка изменить структуру формы');
-                Yii::$app->session->setFlash('error', 'Ошибка! Попытка изменить целостность формы');
             }
         }
     }
@@ -153,7 +141,7 @@ class CardsForm extends Model
             'interest_free_period' => 'Беспроцентный период',
             'payment_partial_repayment' => 'Нужно ли вносить платежи в счет частичного погашения задолженность',
             'percentage_partial_repayment' => 'Какой процент частичного погашения от суммы долга',
-            'payment_date_purchase_partial_repayment' => 'Платеж для частичного погашения расчитывается с даты покупки/снятия',
+            'payment_date_purchase_partial_repayment' => 'Платеж для частичного погашения рассчитывается с даты покупки/снятия',
             'conditions_partial_repayment' => 'Если нет, то опишите как',
             'service_period' => 'Период обслуживания',
             'date_annual_service' => 'Дата годового обслуживания',

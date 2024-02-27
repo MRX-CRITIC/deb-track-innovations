@@ -22,9 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'add-card-form',
     ]); ?>
 
-    <?= $form->field($model, 'user_id')->hiddenInput([
-        'value' => Yii::$app->user->identity->id])->label(false) ?>
-
     <?= $form->field($model, 'bank_id')->dropDownList($banksList, [
         'prompt' => 'Выберите банк',
         'id' => 'bank-select',
