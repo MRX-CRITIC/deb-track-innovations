@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\repository\BalanceRepository;
 use app\repository\CardsRepository;
 use Exception;
 use Yii;
@@ -25,22 +26,33 @@ class OperationForm extends Model
             [['sum'], 'number'],
             [['note'], 'string', 'max' => 600, 'tooLong' => 'Должно содержать не более 600 символов'],
 
-            ['sum', 'validateCreditLimit'],
+            [['user_id', 'sum', 'type_operation'], 'validateBalance'],
         ];
     }
 
-    public function validateCreditLimit($attribute, $params)
+    public function validateBalance($attribute, $params)
     {
         if (!$this->hasErrors()) {
+            $balance = BalanceRepository::getBalanceCard($this->user_id, $this->card_id);
             $card = CardsRepository::getCreditLimitCard($this->card_id);
 
-            if (!$card) {
+            if (empty($card && $balance)) {
                 $this->addError('card_id', 'Карта не найдена');
                 Yii::$app->session->setFlash('error', 'Карта не найдена');
+                return;
             }
-            elseif ($this->sum > $card->credit_limit) {
-                $this->addError($attribute, 'Сумма операции превышает кредитный лимит карты');
+
+            if ($this->type_operation == 1) {
+                if ($this->sum + $balance->fin_balance > $card->credit_limit) {
+                    $this->addError('sum', 'Сумма внесения превышает кредитный лимит карты');
+                }
+            } elseif ($this->type_operation == 0) {
+                if ($this->sum > $balance->fin_balance) {
+                    $this->addError('sum', 'Сумма операции превышает фактический баланс карты');
+                }
             }
+
+
         }
     }
 

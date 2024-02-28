@@ -128,6 +128,10 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * @throws \Throwable
+     * @throws StaleObjectException
+     */
     public function actionAddOperation(int $card_id)
     {
         $card = CardsRepository::getCardBuId($card_id);
@@ -153,6 +157,13 @@ class ProductController extends Controller
                 $model->type_operation,
                 $model->sum,
                 $model->note,
+            );
+
+            $fin_balance = BalanceServices::updateBalance(
+                $model->user_id,
+                $model->card_id,
+                $model->type_operation,
+                $model->sum,
             );
 
             Yii::$app->session->setFlash('success', 'Операция успешно добавлена');

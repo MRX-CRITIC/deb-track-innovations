@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\repository\BalanceRepository;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
 use Yii;
@@ -68,9 +69,18 @@ class SiteController extends Controller
         }
 
         $user_id = Yii::$app->user->getId();
+        $cards = CardsRepository::getAllCards($user_id);
 
+//        var_dump($cards);
+
+//        foreach ($cards as $card) {
+////            var_dump($card->id);
+//            $balance = BalanceRepository::getBalanceCard($user_id, $card->id);
+//            var_dump($balance->fin_balance);
+//        }
         return $this->render('index', [
-            'cards' => CardsRepository::getAllCards($user_id),
+            'cards' => $cards,
+//            'balance' => BalanceRepository::getBalanceCard($user_id, $card_id),
         ]);
     }
 

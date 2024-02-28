@@ -12,6 +12,7 @@ use yii\bootstrap5\NavBar;
 $this->title = 'DebTrack Innovations';
 \app\assets\ProductAsset::register($this);
 \app\assets\IndexAsset::register($this);
+//var_dump(Yii::$app->request->post());
 ?>
 
 <div class="site-product">
@@ -23,6 +24,8 @@ $this->title = 'DebTrack Innovations';
             <?php foreach ($cards as $card): ?>
                 <?php $formattedCreditLimit = Yii::$app->formatter->asDecimal($card->credit_limit, 2); ?>
                 <?php $formattedCostBanking = Yii::$app->formatter->asDecimal($card->cost_banking_services, 2); ?>
+                <?php $formattedFinBalance = Yii::$app->formatter->asDecimal($card->lastBalance->fin_balance, 2); ?>
+
                 <div class="product-info">
                     <div class="header">
                         <?php if (!empty($card->name_card)) {
@@ -37,7 +40,7 @@ $this->title = 'DebTrack Innovations';
                     </div>
 
                     <br>
-                    <div>Баланс: /** Кредитный лимит минус дс которые изъяли **/</div>
+                    <div>Баланс: <?= Html::encode($formattedFinBalance) ?></div>
                     <div>Ближайший платеж: /** Дата и сумма **/</div>
                     <div>Возможность снятия/перевода: /****/</div>
                     <br>

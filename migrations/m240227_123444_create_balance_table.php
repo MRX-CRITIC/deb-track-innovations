@@ -11,6 +11,7 @@ class m240227_123444_create_balance_table extends Migration
             'user_id' => $this->integer()->notNull(),
             'card_id' => $this->integer()->notNull(),
             'fin_balance' => $this->decimal(9, 2)->notNull(),
+            'date' => $this->timestamp()->defaultExpression('NOW()')->notNull(),
         ]);
 
         $this->addForeignKey(
@@ -23,7 +24,7 @@ class m240227_123444_create_balance_table extends Migration
         );
 
         $this->addForeignKey(
-            'fk-balance-bank_id',
+            'fk-balance-card_id',
             'balance',
             'card_id',
             'cards',
@@ -35,7 +36,7 @@ class m240227_123444_create_balance_table extends Migration
     public function safeDown()
     {
         $this->dropForeignKey('fk-balance-user_id', 'balance');
-        $this->dropForeignKey('fk-balance-bank_id', 'balance');
+        $this->dropForeignKey('fk-balance-card_id', 'balance');
 
         $this->dropTable('balance');
     }

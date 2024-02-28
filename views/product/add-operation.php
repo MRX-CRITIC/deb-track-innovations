@@ -10,6 +10,7 @@ use yii\helpers\Url;
 /** @var yii\web\View $this */
 /* @var $model app\models\OperationForm */
 /* @var $card_id app\controllers\ProductController */
+/* @var $fin_balance app\controllers\ProductController */
 
 $this->title = 'Добавление операции';
 $this->params['breadcrumbs'][] = $this->title;
@@ -31,14 +32,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="type_operation">
         <?= $form->field($model, 'type_operation')->radioList([
-            true => 'Снятие/покупка',
-            false => 'Внесение'
+            false => 'Снятие/покупка',
+            true => 'Внесение'
         ], ['id' => 'type_operation']) ?>
     </div>
 
     <?= $form->field($model, 'sum')->textInput([
         'type' => 'number',
-        'placeholder' => '100 000',
+        'placeholder' => '100000',
         'id' => 'sum',
     ]) ?>
 
