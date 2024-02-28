@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+
 use app\entity\Balance;
 use app\entity\Banks;
 use app\entity\Operation;
@@ -14,8 +15,10 @@ use app\repository\BanksRepository;
 use app\repository\CardsRepository;
 use app\repository\OperationRepository;
 use app\repository\UserRepository;
+use app\services\BalanceServices;
 use DateTime;
 use Yii;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -24,7 +27,6 @@ use yii\widgets\ActiveForm;
 
 class ProductController extends Controller
 {
-
     public function behaviors()
     {
         return [
@@ -47,75 +49,55 @@ class ProductController extends Controller
         ];
     }
 
+    /**
+     * @throws StaleObjectException
+     * @throws \Throwable
+     */
     public function actionAddCard()
     {
-        $cardModel = new CardsForm();
-        $balanceModel = new BalanceForm();
+        $model = new CardsForm();
+
 
         $user_id = Yii::$app->user->getId();
-        $cardModel->user_id = $user_id;
+        $model->user_id = $user_id;
 
         $banksList = BanksRepository::getAllBanks($user_id);
         $banksList['add-bank'] = 'Добавить свой банк... ( + )';
 
-        if (Yii::$app->request->isAjax && $cardModel->load(Yii::$app->request->post())) {
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($cardModel);
+            return ActiveForm::validate($model);
         }
 
-        if ($cardModel->load(Yii::$app->request->post()) && $cardModel->validate()) {
-            $cardModel->interest_free_period = preg_replace('/\D/', '', $cardModel->interest_free_period);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->interest_free_period = preg_replace('/\D/', '', $model->interest_free_period);
 
 
-            $credit_limit = $cardModel->credit_limit;
+            $credit_limit = $model->credit_limit;
             $card_id = CardsRepository::createCard(
-                $cardModel->user_id,
-                $cardModel->bank_id,
-                $cardModel->name_card,
-                $cardModel->credit_limit,
-                $cardModel->cost_banking_services,
-                $cardModel->interest_free_period,
-                $cardModel->payment_partial_repayment,
-                $cardModel->percentage_partial_repayment,
-                $cardModel->payment_date_purchase_partial_repayment,
-                $cardModel->conditions_partial_repayment,
-                $cardModel->service_period,
-                $cardModel->date_annual_service,
-                $cardModel->refund_cash_calculation,
-                $cardModel->start_date_billing_period,
-                $cardModel->end_date_billing_period,
-                $cardModel->note,
+                $model->user_id,
+                $model->bank_id,
+                $model->name_card,
+                $model->credit_limit,
+                $model->cost_banking_services,
+                $model->interest_free_period,
+                $model->payment_partial_repayment,
+                $model->percentage_partial_repayment,
+                $model->payment_date_purchase_partial_repayment,
+                $model->conditions_partial_repayment,
+                $model->service_period,
+                $model->date_annual_service,
+                $model->refund_cash_calculation,
+                $model->start_date_billing_period,
+                $model->end_date_billing_period,
+                $model->note,
             );
 
-            if (!empty($card_id)) {
-
-                $balanceModel->user_id = $user_id;
-                $balanceModel->card_id = $card_id;
-                $balanceModel->fin_balance = $credit_limit;
-
-                if ($balanceModel->validate()) {
-                    BalanceRepository::createBalance(
-                        $balanceModel->user_id,
-                        $balanceModel->card_id,
-                        $balanceModel->fin_balance,
-                    );
-                    Yii::$app->session->setFlash('success', 'Карта и баланс успешно созданы');
-                    return $this->redirect(['add-card']);
-                } else {
-                    Yii::$app->session->setFlash('error', 'Валидация баланса не пройдена');
-                }
-            }
-
-            Yii::$app->session->setFlash(
-                'error',
-                'Карта создана, но при создании баланса произошла ошибка'
-            );
-//            Yii::$app->session->setFlash('success', 'Карта успешно добавлена');
+            BalanceServices::createStartBalance($user_id, $card_id, $credit_limit);
             return $this->redirect(['add-card']);
         } else {
             return $this->render('add-card', [
-                'model' => $cardModel,
-                'balanceModel' => $balanceModel,
+                'model' => $model,
                 'banksList' => $banksList,
             ]);
         }

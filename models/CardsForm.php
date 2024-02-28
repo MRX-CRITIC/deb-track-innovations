@@ -39,9 +39,10 @@ class CardsForm extends Model
 
             [['payment_partial_repayment', 'service_period', 'refund_cash_calculation'], 'required', 'message' => 'Не может быть не выбрано'],
             [['user_id', 'bank_id'], 'integer'],
+            ['credit_limit', 'integer', 'min' => 1000.00, 'max' => 9999999.99, 'tooSmall' => 'Значение не может быть меньше 1 000.00', 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
             [['cost_banking_services', 'percentage_partial_repayment'], 'number', 'min' => 0, 'max' => 9999, 'tooBig' => 'Значение не может быть больше 9 999'],
             [['start_date_billing_period', 'end_date_billing_period', 'date_annual_service'], 'date', 'format' => 'php:Y-m-d'],
-            [['name_card'], 'string', 'max' => 30],
+            [['name_card'], 'string', 'max' => 30, 'tooLong' => 'Должно содержать не более 30 символов'],
 
             [
                 [
@@ -54,7 +55,6 @@ class CardsForm extends Model
             [['conditions_partial_repayment', 'note'], 'string', 'max' => 600, 'tooLong' => 'Должно содержать не более 600 символов'],
 
             ['interest_free_period', 'validateFreePeriod'],
-            ['credit_limit', 'validateCreditLimit'],
             [['date_annual_service', 'service_period'], 'validateDateAnnualServiceRequired'],
             [['start_date_billing_period', 'end_date_billing_period'], 'validateDates'],
             [['start_date_billing_period', 'end_date_billing_period', 'refund_cash_calculation'], 'validateDatesRequired'],
@@ -93,17 +93,6 @@ class CardsForm extends Model
                     $this->addError('start_date_billing_period', 'Поле не может быть пустое');
                     $this->addError('end_date_billing_period', 'Поле не может быть пустое');
                 }
-            }
-        }
-    }
-
-    public function validateCreditLimit($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-//            $this->credit_limit = preg_replace('/\D/', '', $this->credit_limit);
-
-            if ($this->credit_limit < 1000.00 || $this->credit_limit > 9999999.99) {
-                $this->addError($attribute, 'Значение должно быть в диапазоне от 1 000.00 до 9 999 999.99');
             }
         }
     }

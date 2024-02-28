@@ -13,7 +13,7 @@ class m240226_192422_create_operation_table extends Migration
             'card_id' => $this->integer()->notNull(),
             'date_operation' => $this->date()->notNull(),
             'type_operation' => $this->boolean()->notNull(),
-            'sum' => $this->decimal(7, 2)->notNull(),
+            'sum' => $this->decimal(9, 2)->notNull(),
             'note' => $this->text(),
         ]);
 

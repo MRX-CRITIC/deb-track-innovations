@@ -10,7 +10,7 @@ class m240227_123444_create_balance_table extends Migration
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'card_id' => $this->integer()->notNull(),
-            'fin_balance' => $this->decimal(7, 2)->notNull(),
+            'fin_balance' => $this->decimal(9, 2)->notNull(),
         ]);
 
         $this->addForeignKey(

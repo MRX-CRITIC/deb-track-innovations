@@ -3,6 +3,7 @@
 namespace app\repository;
 
 use app\entity\Cards;
+use yii\db\StaleObjectException;
 
 class CardsRepository
 {
@@ -22,6 +23,18 @@ class CardsRepository
             ->select('credit_limit')
             ->one();
 //        return $card_id ? (int) $card_id : null;
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws StaleObjectException
+     */
+    public static function deleteCardErrorBalance($id)
+    {
+        return Cards::find()
+            ->where(['id' => $id])
+            ->one()
+            ->delete();
     }
 
 

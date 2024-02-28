@@ -33,8 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
     <?= $form->field($model, 'credit_limit')->textInput([
-        'type' => 'text',
-        'placeholder' => '100 000',
+        'type' => 'number',
+        'placeholder' => '100000',
         'id' => 'credit-limit',
     ]) ?>
 

@@ -11,7 +11,7 @@ class m240221_125145_create_cards_table extends Migration
             'user_id' => $this->integer()->notNull(),
             'bank_id' => $this->integer()->notNull(),
             'name_card' => $this->string(30),
-            'credit_limit' => $this->decimal(7, 2)->notNull(),
+            'credit_limit' => $this->decimal(9, 2)->notNull(),
             'cost_banking_services' => $this->decimal(4, 0)->notNull(),
             'interest_free_period' => $this->integer()->notNull(),
             'payment_partial_repayment' => $this->boolean(),

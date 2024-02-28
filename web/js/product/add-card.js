@@ -1,50 +1,51 @@
-$('#bank-select').change(function () {
-    const selected = $(this).val();
-    if (selected === 'new') {
-        window.location.href = "/product/add-bank";
-    }
-});
-
-
-$(document).ready(function () {
-    const input = $('#credit-limit');
-    console.log(input)
-    function formatInput(value) {
-        return value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    }
-
-    function unFormatInput(value) {
-        // Убедитесь, что уже не добавлено ".00". Если добавлено, возвращаем без изменений.
-        if (/^\d+\.00$/.test(value)) {
-            return value;
-        }
-        let creditLimit = parseFloat(value.replace(/\s/g, ''));
-        return creditLimit.toFixed(2);
-    }
-
-
-    input.on('input', function () {
-        $(this).val(formatInput($(this).val()));
-    });
-
-    $('#add-card-form').submit(function (event) {
-        // Проверка, была ли форма уже валидирована и готова к отправке
-        if (!$(this).data('ready-to-submit')) {
-            event.preventDefault(); // предотвращаем отправку формы
-
-            // Переформатирование значения в input перед отправкой
-            const unFormatInputValue = unFormatInput(input.val());
-            input.val(unFormatInputValue);
-            console.log(unFormatInputValue)
-            $(this).data('ready-to-submit', true); // Устанавливаем флаг, что форма готова к отправке
-            $(this).submit(); // повторно отправляем форму
+$(document).ready(function() {
+    $('#bank-select').change(function() {
+        if ($(this).val() === 'add-bank') {
+            window.location.href = '/product/add-bank';
+            $('#bank-select').val('');
         }
     });
-
-    $('#btn-add-card').click(function () {
-        $('#add-card-form').submit(); // Убедитесь, что форма отправляется при клике на кнопку
-    });
 });
+
+// $(document).ready(function () {
+//     const input = $('#credit-limit');
+//     console.log(input)
+//     function formatInput(value) {
+//         return value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+//     }
+//
+//     function unFormatInput(value) {
+//         // Убедитесь, что уже не добавлено ".00". Если добавлено, возвращаем без изменений.
+//         if (/^\d+\.00$/.test(value)) {
+//             return value;
+//         }
+//         let creditLimit = parseFloat(value.replace(/\s/g, ''));
+//         return creditLimit.toFixed(2);
+//     }
+//
+//
+//     input.on('input', function () {
+//         $(this).val(formatInput($(this).val()));
+//     });
+//
+//     $('#add-card-form').submit(function (event) {
+//         // Проверка, была ли форма уже валидирована и готова к отправке
+//         if (!$(this).data('ready-to-submit')) {
+//             event.preventDefault(); // предотвращаем отправку формы
+//
+//             // Переформатирование значения в input перед отправкой
+//             const unFormatInputValue = unFormatInput(input.val());
+//             input.val(unFormatInputValue);
+//             console.log(unFormatInputValue)
+//             $(this).data('ready-to-submit', true); // Устанавливаем флаг, что форма готова к отправке
+//             $(this).submit(); // повторно отправляем форму
+//         }
+//     });
+//
+//     $('#btn-add-card').click(function () {
+//         $('#add-card-form').submit(); // Убедитесь, что форма отправляется при клике на кнопку
+//     });
+// });
 
 
 
@@ -143,12 +144,5 @@ $("#model-service-period input[type='radio']").change(function () {
 
 
 
-$(document).ready(function() {
-    $('#bank-select').change(function() {
-        if ($(this).val() === 'add-bank') {
-            window.location.href = '/product/add-bank';
-            $('#bank-select').val('');
-        }
-    });
-});
+
 
