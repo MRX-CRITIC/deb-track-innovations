@@ -72,7 +72,7 @@ class ProductController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->interest_free_period = preg_replace('/\D/', '', $model->interest_free_period);
+            $model->grace_period = preg_replace('/\D/', '', $model->grace_period);
 
             $name_card = CardsServices::addNameCard($user_id, $model->name_card);
 
@@ -82,8 +82,9 @@ class ProductController extends Controller
                 $model->bank_id,
                 $name_card,
                 $model->credit_limit,
+                $model->withdrawal_limit,
                 $model->cost_banking_services,
-                $model->interest_free_period,
+                $model->grace_period,
                 $model->payment_partial_repayment,
                 $model->percentage_partial_repayment,
                 $model->payment_date_purchase_partial_repayment,
@@ -169,6 +170,8 @@ class ProductController extends Controller
                 $model->type_operation,
                 $model->sum,
             );
+
+
 
             Yii::$app->session->setFlash('success', 'Операция успешно добавлена');
             return $this->refresh();

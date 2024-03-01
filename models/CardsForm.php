@@ -13,8 +13,9 @@ class CardsForm extends Model
     public $bank_id;
     public $name_card;
     public $credit_limit;
+    public $withdrawal_limit;
     public $cost_banking_services;
-    public $interest_free_period;
+    public $grace_period;
     public $payment_partial_repayment;
     public $percentage_partial_repayment;
     public $payment_date_purchase_partial_repayment;
@@ -32,14 +33,14 @@ class CardsForm extends Model
             [
                 [
                     'user_id', 'bank_id', 'credit_limit',
-                    'cost_banking_services', 'interest_free_period'
+                    'cost_banking_services', 'grace_period'
                 ],
                 'required', 'message' => 'Поле не может быть пустое'
             ],
 
             [['payment_partial_repayment', 'service_period', 'refund_cash_calculation'], 'required', 'message' => 'Не может быть не выбрано'],
             [['user_id', 'bank_id'], 'integer'],
-            ['credit_limit', 'integer', 'min' => 1000.00, 'max' => 9999999.99, 'tooSmall' => 'Значение не может быть меньше 1 000.00', 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
+            [['credit_limit', 'withdrawal_limit'], 'integer', 'min' => 1000.00, 'max' => 9999999.99, 'tooSmall' => 'Значение не может быть меньше 1 000.00', 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
             [['cost_banking_services', 'percentage_partial_repayment'], 'number', 'min' => 0, 'max' => 9999, 'tooBig' => 'Значение не может быть больше 9 999'],
             [['start_date_billing_period', 'end_date_billing_period', 'date_annual_service'], 'date', 'format' => 'php:Y-m-d'],
             [['name_card'], 'string', 'max' => 30, 'tooLong' => 'Должно содержать не более 30 символов'],
@@ -54,7 +55,7 @@ class CardsForm extends Model
 
             [['conditions_partial_repayment', 'note'], 'string', 'max' => 600, 'tooLong' => 'Должно содержать не более 600 символов'],
 
-            ['interest_free_period', 'validateFreePeriod'],
+            ['grace_period', 'validateGracePeriod'],
             [['date_annual_service', 'service_period'], 'validateDateAnnualServiceRequired'],
             [['start_date_billing_period', 'end_date_billing_period'], 'validateDates'],
             [['start_date_billing_period', 'end_date_billing_period', 'refund_cash_calculation'], 'validateDatesRequired'],
@@ -107,12 +108,12 @@ class CardsForm extends Model
         }
     }
 
-    public function validateFreePeriod($attribute, $params)
+    public function validateGracePeriod($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $this->interest_free_period = preg_replace('/\D/', '', $this->interest_free_period);
+            $this->grace_period = preg_replace('/\D/', '', $this->grace_period);
 
-            if ($this->interest_free_period < 7 || $this->interest_free_period > 366) {
+            if ($this->grace_period < 7 || $this->grace_period > 366) {
                 $this->addError($attribute, 'Значение должно быть в диапазоне от 7 дней до 1 года');
             }
         }
@@ -126,8 +127,9 @@ class CardsForm extends Model
             'bank_id' => 'Название банка',
             'name_card' => 'Название карты',
             'credit_limit' => 'Кредитный лимит',
+            'withdrawal_limit' => 'Лимит снятия без процентов и комиссий',
             'cost_banking_services' => 'Стоимость обслуживания',
-            'interest_free_period' => 'Беспроцентный период',
+            'grace_period' => 'Беспроцентный период',
             'payment_partial_repayment' => 'Нужно ли вносить платежи в счет частичного погашения задолженность',
             'percentage_partial_repayment' => 'Какой процент частичного погашения от суммы долга',
             'payment_date_purchase_partial_repayment' => 'Платеж для частичного погашения рассчитывается с даты покупки/снятия',

@@ -6,6 +6,7 @@ use app\repository\BalanceRepository;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
 use app\repository\OperationsRepository;
+use DateInterval;
 use DateTime;
 use Yii;
 use yii\filters\AccessControl;
@@ -76,6 +77,42 @@ class SiteController extends Controller
         $cards = CardsRepository::getAllCards($user_id);
 
 
+        function calculateDueDate($startDateStr)
+        {
+            $startDate = DateTime::createFromFormat('d.m.Y', $startDateStr);
+
+
+            $endDate = clone $startDate;
+            $endDate->add(new DateInterval('P54D'));
+
+            return $endDate->format('d.m.Y');
+        }
+
+        $startDates = [
+            "23.10.2023",
+            "23.11.2023",
+            "23.12.2023",
+            "23.01.2024",
+            "23.02.2024",
+            "23.03.2024",
+            "23.04.2024",
+            "23.05.2024",
+            "23.06.2024",
+            "23.07.2024",
+            "23.08.2024",
+            "23.09.2024",
+            "23.10.2024",
+            "23.11.2024",
+            "23.12.2024",
+            "23.01.2025",
+            "23.02.2025",
+            "23.03.2025",
+        ];
+
+        foreach ($startDates as $startDate) {
+            $dueDate = calculateDueDate($startDate);
+            echo "Вернуть потраченные средства за период, начинающийся с $startDate необходимо до $dueDate\n" . "<br>";
+        }
 
         return $this->render('index', [
             'cards' => $cards,

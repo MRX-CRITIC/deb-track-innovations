@@ -38,13 +38,19 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'credit-limit',
     ]) ?>
 
+    <?= $form->field($model, 'withdrawal_limit')->textInput([
+        'type' => 'number',
+        'placeholder' => 'Не обязательно',
+        'id' => 'withdrawal-limit',
+    ]) ?>
+
     <?= $form->field($model, 'cost_banking_services')->textInput([
         'type' => 'number',
         'placeholder' => '990',
         'id' => 'cost-banking-services',
     ]) ?>
 
-    <?= $form->field($model, 'interest_free_period')->textInput([
+    <?= $form->field($model, 'grace_period')->textInput([
         'type' => 'text',
         'placeholder' => '120 дней',
         'id' => 'interest-free-period',

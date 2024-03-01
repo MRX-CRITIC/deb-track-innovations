@@ -52,7 +52,7 @@ $this->title = 'DebTrack Innovations';
                     <div>Банк: <?= Html::encode($card->bank->name) ?> </div>
                     <div>Кредитный лимит: <?= Html::encode($formattedCreditLimit) ?></div>
                     <div>Стоимость обслуживания: <?= Html::encode($formattedCostBanking) ?></div>
-                    <div>Льготный период: <?= Html::encode($card->interest_free_period) ?> дней</div>
+                    <div>Льготный период: <?= Html::encode($card->grace_period) ?> дней</div>
                     <div><?php if (!empty($card->note)): ?>
                             <a class="a-note"
                                data-bs-toggle="collapse"

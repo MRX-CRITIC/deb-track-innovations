@@ -28,7 +28,7 @@ class m240301_112830_create_payments_table extends Migration
 
     public function safeDown()
     {
-//        $this->dropForeignKey('fk-payments-operation_id', 'payments');
+        $this->dropForeignKey('fk-payments-operation_id', 'payments');
 
         $this->dropTable('payments');
     }

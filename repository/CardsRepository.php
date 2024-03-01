@@ -39,7 +39,7 @@ class CardsRepository
 
     public static function createCard(
         $user_id, $bank_id, $name_card = null,
-        $credit_limit, $cost_banking_services, $interest_free_period,
+        $credit_limit, $withdrawal_limit = null, $cost_banking_services, $grace_period,
         $payment_partial_repayment, $percentage_partial_repayment = null,
         $payment_date_purchase_partial_repayment = null,
         $conditions_partial_repayment = null, $service_period, $date_annual_service = null, $refund_cash_calculation,
@@ -52,8 +52,9 @@ class CardsRepository
         $card->bank_id = $bank_id;
         $card->name_card = $name_card;
         $card->credit_limit = $credit_limit;
+        $card->withdrawal_limit = $withdrawal_limit;
         $card->cost_banking_services = $cost_banking_services;
-        $card->interest_free_period = $interest_free_period;
+        $card->grace_period = $grace_period;
         $card->payment_partial_repayment = $payment_partial_repayment;
         $card->percentage_partial_repayment = $percentage_partial_repayment;
         $card->payment_date_purchase_partial_repayment = $payment_date_purchase_partial_repayment;
