@@ -6,12 +6,13 @@ class m240227_123444_create_balance_table extends Migration
 {
     public function safeUp()
     {
-        $this->createTable('balance', [
+        $this->createTable('{{%balance}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'card_id' => $this->integer()->notNull(),
             'fin_balance' => $this->decimal(9, 2)->notNull(),
             'date' => $this->timestamp()->defaultExpression('NOW()')->notNull(),
+            'reason' => $this->string(20)->notNull(),
         ]);
 
         $this->addForeignKey(

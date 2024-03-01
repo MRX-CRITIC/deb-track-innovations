@@ -6,7 +6,7 @@ class m240221_125145_create_cards_table extends Migration
 {
     public function safeUp()
     {
-        $this->createTable('cards', [
+        $this->createTable('{{%cards}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'bank_id' => $this->integer()->notNull(),

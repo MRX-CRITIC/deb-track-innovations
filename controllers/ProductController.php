@@ -5,17 +5,18 @@ namespace app\controllers;
 
 use app\entity\Balance;
 use app\entity\Banks;
-use app\entity\Operation;
+use app\entity\Operations;
 use app\models\BalanceForm;
 use app\models\BanksForm;
 use app\models\CardsForm;
-use app\models\OperationForm;
+use app\models\OperationsForm;
 use app\repository\BalanceRepository;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
-use app\repository\OperationRepository;
+use app\repository\OperationsRepository;
 use app\repository\UserRepository;
 use app\services\BalanceServices;
+use app\services\CardsServices;
 use DateTime;
 use Yii;
 use yii\db\StaleObjectException;
@@ -34,7 +35,7 @@ class ProductController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['add-card', 'add-bank', 'add-operation'],
+                        'actions' => ['add-card', 'add-bank', 'add-operation', 'delete-operation'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -64,6 +65,7 @@ class ProductController extends Controller
         $banksList = BanksRepository::getAllBanks($user_id);
         $banksList['add-bank'] = 'Добавить свой банк... ( + )';
 
+
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
@@ -72,12 +74,13 @@ class ProductController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->interest_free_period = preg_replace('/\D/', '', $model->interest_free_period);
 
+            $name_card = CardsServices::addNameCard($user_id, $model->name_card);
 
             $credit_limit = $model->credit_limit;
             $card_id = CardsRepository::createCard(
                 $model->user_id,
                 $model->bank_id,
-                $model->name_card,
+                $name_card,
                 $model->credit_limit,
                 $model->cost_banking_services,
                 $model->interest_free_period,
@@ -134,14 +137,15 @@ class ProductController extends Controller
      */
     public function actionAddOperation(int $card_id)
     {
-        $card = CardsRepository::getCardBuId($card_id);
+        $model = new OperationsForm();
+        $model->user_id = Yii::$app->user->getId();
+
+        $card = CardsRepository::getCardBuId($model->user_id, $card_id);
         if ($card === null) {
             Yii::$app->session->setFlash('error', 'Карта не найдена');
             return $this->redirect(['/site/index']);
         }
 
-        $model = new OperationForm();
-        $model->user_id = Yii::$app->user->getId();
         $model->card_id = $card->id;
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
@@ -150,7 +154,7 @@ class ProductController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            OperationRepository::createOperation(
+            OperationsRepository::createOperation(
                 $model->user_id,
                 $model->card_id,
                 $model->date_operation,
@@ -159,7 +163,7 @@ class ProductController extends Controller
                 $model->note,
             );
 
-            $fin_balance = BalanceServices::updateBalance(
+            BalanceServices::updateBalance(
                 $model->user_id,
                 $model->card_id,
                 $model->type_operation,
@@ -173,6 +177,95 @@ class ProductController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+//    public function actionDeleteOperation($id)
+//    {
+//        $user_id = Yii::$app->user->getId();
+//
+//        $operation = OperationsRepository::findOperationById($id);
+//        $lastDateOperation = OperationsRepository::getDateLastOperation($user_id, $operation->card->id);
+//
+//
+//        if ($lastDateOperation->date_operation <= $operation->date_operation) {
+//            if ($operation && $operation->user_id == $user_id) {
+//
+//                $fin_balance = BalanceRepository::getBalanceCard($user_id, $operation->card->id);
+//
+//                if ($operation->type_operation == 1) {
+//                    $new_balance = $fin_balance->fin_balance - $operation->sum;
+//                    $result = BalanceServices::createBalance($user_id, $operation->card->id, $new_balance);
+//
+//                } elseif ($operation->type_operation == 0) {
+//                    $new_balance = $fin_balance->fin_balance + $operation->sum;
+//                    $result = BalanceServices::createBalance($user_id, $operation->card->id, $new_balance);
+//                }
+//
+//                if ($result) {
+//                    OperationsRepository::deleteOperation($id, $user_id);
+//                    Yii::$app->session->setFlash('success', 'Операция успешно удалена');
+//                }
+//            } else {
+//                Yii::$app->session->setFlash('error', 'У вас нет прав для выполнения этой операции');
+//            }
+//
+//        } else {
+//            Yii::$app->session->setFlash('error', '
+//            Вы можете удалить только последнею операцию той или иной карты.
+//            Если вам нужно удалить старую запись, то вы можете удалять только
+//            последовательно в том порядка в котором они добавлялись по карте которая вам нужна.
+//            ');
+//        }
+//        return $this->redirect(['/site/operations']);
+//    }
+
+    public function actionDeleteOperation($id)
+    {
+        $user_id = Yii::$app->user->getId();
+        $operation = OperationsRepository::findOperationById($id);
+
+        if (!$operation || $operation->user_id != $user_id) {
+            Yii::$app->session->setFlash('error', 'У вас нет прав для выполнения этой операции');
+            return $this->redirect(['/site/operations']);
+        }
+
+        $lastDateOperation = OperationsRepository::getDateLastOperation($user_id, $operation->card_id);
+
+        if (!$lastDateOperation || $lastDateOperation->date_operation > $operation->date_operation) {
+            Yii::$app->session->setFlash('error', '
+            Вы можете удалить только последнею операцию по выбранной карты. 
+            Если вам нужно удалить старую запись, то вы можете удалять только 
+            последовательно в том порядка в котором они добавлялись по карте которая вам нужна.');
+            return $this->redirect(['/site/operations']);
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            $fin_balance = BalanceRepository::getBalanceCard($user_id, $operation->card->id);
+
+            if ($operation->type_operation == 1) {
+                $new_balance = $fin_balance->fin_balance - $operation->sum;
+                $reason = 'Отмена пополнения';
+                $result = BalanceServices::createBalance($user_id, $operation->card->id, $new_balance, $reason);
+
+            } elseif ($operation->type_operation == 0) {
+                $new_balance = $fin_balance->fin_balance + $operation->sum;
+                $reason = 'Отмена расхода';
+                $result = BalanceServices::createBalance($user_id, $operation->card->id, $new_balance,$reason);
+            }
+
+            if ($result) {
+                OperationsRepository::deleteOperation($id, $user_id);
+                Yii::$app->session->setFlash('success', 'Операция успешно удалена');
+                $transaction->commit();
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            Yii::error("Ошибка при удалении операции: " . $e->getMessage());
+            Yii::$app->session->setFlash('error', 'Произошла ошибка при удалении операции.');
+        }
+        return $this->redirect(['/site/operations']);
     }
 
 

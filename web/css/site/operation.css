@@ -1,0 +1,68 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+}
+
+td, th {
+    text-align: left;
+    padding: 0 1vh 0 1vh;
+}
+
+.name-bank {
+    color: #928B8B;
+    font-size: 0.9rem;
+}
+
+.name-card {
+    font-size: 1.2rem;
+}
+
+.sum {
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.title-table-operation {
+    font-size: 1.2rem;
+    text-align: center;
+    /*padding: 0 3vh 0 0;*/
+}
+
+.line-date {
+    background-color: #fff;
+    height: 1px;
+}
+
+.delete-link {
+    display: none;
+    text-decoration: none;
+    padding: 0.7vh 3vh;
+    height: 100%;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    margin: 0 0 0 1vh;
+    font-size: 0.675rem;
+    box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.25);
+    background-color: #DC143C;
+}
+
+.delete-link:hover {
+    opacity: 0.9;
+}
+
+.date-header {
+    font-size: 1rem;
+    color: #928B8B;
+}
+
+.operation:hover {
+    box-shadow: inset 0 0 3px #FFFFFF;
+    border-radius: 5px;
+}

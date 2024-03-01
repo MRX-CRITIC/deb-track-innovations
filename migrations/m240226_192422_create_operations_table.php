@@ -2,12 +2,12 @@
 
 use yii\db\Migration;
 
-class m240226_192422_create_operation_table extends Migration
+class m240226_192422_create_operations_table extends Migration
 {
 
     public function safeUp()
     {
-        $this->createTable('operation', [
+        $this->createTable('{{%operations}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'card_id' => $this->integer()->notNull(),
@@ -15,11 +15,14 @@ class m240226_192422_create_operation_table extends Migration
             'type_operation' => $this->boolean()->notNull(),
             'sum' => $this->decimal(9, 2)->notNull(),
             'note' => $this->text(),
+            'status' => $this->boolean()->notNull(),
+            'date_status' => $this->timestamp(),
+            'date_recording' => $this->timestamp()->defaultExpression('NOW()')->notNull(),
         ]);
 
         $this->addForeignKey(
             'fk-operation-user_id',
-            'operation',
+            'operations',
             'user_id',
             'users',
             'id',
@@ -28,7 +31,7 @@ class m240226_192422_create_operation_table extends Migration
 
         $this->addForeignKey(
             'fk-operation-bank_id',
-            'operation',
+            'operations',
             'card_id',
             'cards',
             'id',
@@ -41,6 +44,6 @@ class m240226_192422_create_operation_table extends Migration
         $this->dropForeignKey('fk-operation-user_id', 'operation');
         $this->dropForeignKey('fk-operation-bank_id', 'operation');
 
-        $this->dropTable('operation');
+        $this->dropTable('operations');
     }
 }

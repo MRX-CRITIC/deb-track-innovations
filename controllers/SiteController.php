@@ -5,6 +5,8 @@ namespace app\controllers;
 use app\repository\BalanceRepository;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
+use app\repository\OperationsRepository;
+use DateTime;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -30,7 +32,7 @@ class SiteController extends Controller
                         'roles' => ['?', '@'],
                     ],
                     [
-                        'actions' => ['index', 'contact'],
+                        'actions' => ['index', 'contact', 'operations'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -62,25 +64,36 @@ class SiteController extends Controller
     }
 
 
+    /**
+     * @throws \Exception
+     */
     public function actionIndex()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site/about');
+        }
+        $user_id = Yii::$app->user->getId();
+        $cards = CardsRepository::getAllCards($user_id);
+
+
+
+        return $this->render('index', [
+            'cards' => $cards,
+        ]);
+    }
+
+
+    public function actionOperations()
     {
         if (Yii::$app->user->isGuest) {
             return $this->redirect('/site/about');
         }
 
         $user_id = Yii::$app->user->getId();
-        $cards = CardsRepository::getAllCards($user_id);
+        $operations = OperationsRepository::getAllOperations($user_id);
 
-//        var_dump($cards);
-
-//        foreach ($cards as $card) {
-////            var_dump($card->id);
-//            $balance = BalanceRepository::getBalanceCard($user_id, $card->id);
-//            var_dump($balance->fin_balance);
-//        }
-        return $this->render('index', [
-            'cards' => $cards,
-//            'balance' => BalanceRepository::getBalanceCard($user_id, $card_id),
+        return $this->render('operations', [
+            'operations' => $operations,
         ]);
     }
 

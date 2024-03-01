@@ -7,32 +7,31 @@ use yii\db\StaleObjectException;
 
 class CardsRepository
 {
-    public static function getCardBuId($id)
+    public static function getCardBuId($user_id, $card_id)
     {
         return Cards::find()
             ->with()
-            ->where(['id' => $id])
+            ->where(['user_id' => $user_id, 'id' => $card_id])
             ->select('id')
             ->one();
     }
 
-    public static function getCreditLimitCard($id)
+    public static function getCreditLimitCard($user_id, $card_id)
     {
         return Cards::find()
-            ->where(['id' => $id])
+            ->where(['user_id' => $user_id,'id' => $card_id])
             ->select('credit_limit')
             ->one();
-//        return $card_id ? (int) $card_id : null;
     }
 
     /**
      * @throws \Throwable
      * @throws StaleObjectException
      */
-    public static function deleteCardErrorBalance($id)
+    public static function deleteCardErrorBalance($user_id, $card_id)
     {
         return Cards::find()
-            ->where(['id' => $id])
+            ->where(['user_id' =>$user_id, 'id' => $card_id])
             ->one()
             ->delete();
     }
@@ -73,9 +72,16 @@ class CardsRepository
     public static function getAllCards($user_id)
     {
         return Cards::find()
-            ->joinWith('bank', 'lastBalance')
+            ->joinWith(['bank', 'lastBalance'])
             ->where(['cards.user_id' => $user_id])
+            ->orderBy(['id' => SORT_ASC])
             ->all();
+    }
+
+    public static function getCountCards($user_id) {
+        return Cards::find()
+            ->where(['user_id' => $user_id])
+            ->count();
     }
 
 

@@ -22,17 +22,19 @@ class BalanceServices
             $model->user_id = $user_id;
             $model->card_id = $card_id;
             $model->fin_balance = $credit_limit;
+            $model->reason = 'Создание';
 
             if ($model->validate()) {
                 BalanceRepository::createBalance(
                     $model->user_id,
                     $model->card_id,
                     $model->fin_balance,
+                    $model->reason,
                 );
 
                 Yii::$app->session->setFlash('success', 'Карта успешно создана');
             } else {
-                CardsRepository::deleteCardErrorBalance($card_id);
+                CardsRepository::deleteCardErrorBalance($user_id, $card_id);
                 Yii::$app->session->setFlash('error', 'Ошибка! Повторите попытку! Если ошибка сохранилась, пожалуйста, свяжитесь с нами');
             }
         } else {
@@ -40,7 +42,7 @@ class BalanceServices
         }
     }
 
-    public static function createBalance($user_id, $card_id, $credit_limit)
+    public static function createBalance($user_id, $card_id, $credit_limit, $reason)
     {
         if (!empty($card_id)) {
             $model = new BalanceForm();
@@ -48,20 +50,25 @@ class BalanceServices
             $model->user_id = $user_id;
             $model->card_id = $card_id;
             $model->fin_balance = $credit_limit;
+            $model->reason = $reason;
 
             if ($model->validate()) {
                 BalanceRepository::createBalance(
                     $model->user_id,
                     $model->card_id,
                     $model->fin_balance,
+                    $model->reason,
                 );
 
                 Yii::$app->session->setFlash('success', 'Операция успешно создана');
+                return true;
             } else {
                 Yii::$app->session->setFlash('error', 'Ошибка! Повторите попытку! Если ошибка сохранилась, пожалуйста, свяжитесь с нами');
+                return false;
             }
         } else {
             Yii::$app->session->setFlash('error', 'Карта не найдена');
+            return false;
         }
     }
 
@@ -74,15 +81,20 @@ class BalanceServices
 
             if ($type_operation == 1) {
                 $new_balance = $fin_balance->fin_balance + $sum;
-                BalanceServices::createBalance($user_id, $card_id, $new_balance);
+                $reason = 'Пополнение';
+                BalanceServices::createBalance($user_id, $card_id, $new_balance, $reason);
 
             } elseif ($type_operation == 0) {
                 $new_balance = $fin_balance->fin_balance - $sum;
-                BalanceServices::createBalance($user_id, $card_id, $new_balance);
+                $reason = 'Расход';
+                BalanceServices::createBalance($user_id, $card_id, $new_balance, $reason);
+
             }
 
         }
         return $fin_balance;
     }
+
+
 
 }

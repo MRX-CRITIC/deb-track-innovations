@@ -74,6 +74,15 @@ a.desc:after {
     .site-product {
         padding: 3vh;
     }
+    .name-card {
+        font-size: 1rem;
+    }
+    .sum {
+        font-size: 1rem;
+    }
+    .title-table-operation {
+        font-size: 0.7rem;
+    }
 }
 
 .nav > li > form > button.logout:focus,
@@ -91,7 +100,10 @@ a.desc:after {
 }
 
 body .bg-dark {
+    font-family: 'system-ui', sans-serif;
+    font-size: 1rem;
     background-color: #2D3748 !important;
+    opacity: 0.85;
 }
 
 body .navbar-brand {

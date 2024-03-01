@@ -1,13 +1,15 @@
 .site-product {
     background-color: #2D3748;
+    opacity: 0.85;
     font-family: 'system-ui', sans-serif;
-    margin: 0;
+    /*margin: 0;*/
     color: white;
     display: block;
     height: 100%;
     border-radius: 10px;
     padding: 5vh 30vh 5vh 30vh;
     width: 100%;
+    margin: 2vh 0 0 0
 }
 
 .tooltip-custom {

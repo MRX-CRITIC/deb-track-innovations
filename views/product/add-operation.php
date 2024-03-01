@@ -8,7 +8,7 @@ use yii\bootstrap5\NavBar;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/* @var $model app\models\OperationForm */
+/* @var $model app\models\OperationsForm */
 /* @var $card_id app\controllers\ProductController */
 /* @var $fin_balance app\controllers\ProductController */
 
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <?= $form->field($model, 'sum')->textInput([
-        'type' => 'number',
+        'type' => 'integer',
         'placeholder' => '100000',
         'id' => 'sum',
     ]) ?>
