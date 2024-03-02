@@ -10,13 +10,16 @@ use app\models\BalanceForm;
 use app\models\BanksForm;
 use app\models\CardsForm;
 use app\models\OperationsForm;
+use app\models\PaymentsForm;
 use app\repository\BalanceRepository;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
 use app\repository\OperationsRepository;
+use app\repository\PaymentsRepository;
 use app\repository\UserRepository;
 use app\services\BalanceServices;
 use app\services\CardsServices;
+use app\services\OperationsServices;
 use DateTime;
 use Yii;
 use yii\db\StaleObjectException;
@@ -58,13 +61,11 @@ class ProductController extends Controller
     {
         $model = new CardsForm();
 
-
         $user_id = Yii::$app->user->getId();
         $model->user_id = $user_id;
 
         $banksList = BanksRepository::getAllBanks($user_id);
         $banksList['add-bank'] = 'Добавить свой банк... ( + )';
-
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -139,6 +140,8 @@ class ProductController extends Controller
     public function actionAddOperation(int $card_id)
     {
         $model = new OperationsForm();
+        $modelPayPeriod = new PaymentsForm();
+
         $model->user_id = Yii::$app->user->getId();
 
         $card = CardsRepository::getCardBuId($model->user_id, $card_id);
@@ -146,7 +149,6 @@ class ProductController extends Controller
             Yii::$app->session->setFlash('error', 'Карта не найдена');
             return $this->redirect(['/site/index']);
         }
-
         $model->card_id = $card->id;
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
@@ -155,7 +157,7 @@ class ProductController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            OperationsRepository::createOperation(
+            $operation_id = OperationsRepository::createOperation(
                 $model->user_id,
                 $model->card_id,
                 $model->date_operation,
@@ -164,14 +166,37 @@ class ProductController extends Controller
                 $model->note,
             );
 
+
+            $checkPeriod = PaymentsRepository::checkPaymentPeriodExists($model->date_operation, $model->card_id);
+            if (!$checkPeriod) {
+
+                $ballingPeriod = CardsRepository::getBillingAndGracePeriodCard($model->user_id, $model->card_id);
+
+                $datesBillingPeriod = OperationsServices::adjustPeriodToCurrentDate(
+                    $ballingPeriod->start_date_billing_period,
+                    $ballingPeriod->end_date_billing_period,
+                    $model->date_operation,
+                );
+
+                $modelPayPeriod->operation_id = $operation_id;
+                $modelPayPeriod->start_date_billing_period = $datesBillingPeriod['start'];
+                $modelPayPeriod->end_date_billing_period = $datesBillingPeriod['end'];
+                $modelPayPeriod->date_payment =
+
+
+
+                PaymentsRepository::createPayment(
+                    $operation_id,
+
+                );
+        }
+
             BalanceServices::updateBalance(
                 $model->user_id,
                 $model->card_id,
                 $model->type_operation,
                 $model->sum,
             );
-
-
 
             Yii::$app->session->setFlash('success', 'Операция успешно добавлена');
             return $this->refresh();
@@ -255,7 +280,7 @@ class ProductController extends Controller
             } elseif ($operation->type_operation == 0) {
                 $new_balance = $fin_balance->fin_balance + $operation->sum;
                 $reason = 'Отмена расхода';
-                $result = BalanceServices::createBalance($user_id, $operation->card->id, $new_balance,$reason);
+                $result = BalanceServices::createBalance($user_id, $operation->card->id, $new_balance, $reason);
             }
 
             if ($result) {

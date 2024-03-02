@@ -24,6 +24,14 @@ class CardsRepository
             ->one();
     }
 
+    public static function getBillingAndGracePeriodCard($user_id, $card_id)
+    {
+        return Cards::find()
+            ->where(['user_id' => $user_id,'id' => $card_id])
+            ->select('start_date_billing_period, end_date_billing_period, grace_period')
+            ->one();
+    }
+
     /**
      * @throws \Throwable
      * @throws StaleObjectException

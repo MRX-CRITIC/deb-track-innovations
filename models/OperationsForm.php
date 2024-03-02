@@ -25,7 +25,7 @@ class OperationsForm extends Model
                 [['user_id', 'card_id', 'date_operation', 'type_operation', 'sum'], 'required', 'message' => 'Поле не может быть пустое'],
                 [['user_id', 'card_id', 'type_operation'], 'integer'],
                 [['date_operation'], 'date', 'format' => 'php:Y-m-d'],
-                [['sum'], 'number'],
+                [['sum'], 'number', 'min' => 1, 'max' => 9999999.99, 'tooSmall' => 'Значение не может быть меньше 1.00', 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
                 [['note'], 'string', 'max' => 60, 'tooLong' => 'Должно содержать не более 60 символов'],
 
                 [['user_id', 'sum', 'type_operation'], 'validateBalance'],

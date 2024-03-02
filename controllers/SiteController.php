@@ -1,11 +1,14 @@
 <?php
 
 namespace app\controllers;
-
+use Exception;
+use app\entity\Cards;
 use app\repository\BalanceRepository;
 use app\repository\BanksRepository;
 use app\repository\CardsRepository;
 use app\repository\OperationsRepository;
+use app\repository\PaymentsRepository;
+use app\services\OperationsServices;
 use DateInterval;
 use DateTime;
 use Yii;
@@ -15,6 +18,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+
+use yii\helpers\FormatConverter;
 
 class SiteController extends Controller
 {
@@ -77,42 +82,31 @@ class SiteController extends Controller
         $cards = CardsRepository::getAllCards($user_id);
 
 
-        function calculateDueDate($startDateStr)
-        {
-            $startDate = DateTime::createFromFormat('d.m.Y', $startDateStr);
+        // Предполагаем, что $x - это объект, возвращенный из CardsRepository
+// и содержащий информацию об окончании периода счетов и льготном периоде
+        $x = CardsRepository::getBillingAndGracePeriodCard(4, 1);
 
+// Создаем объект DateTime для начальной даты
+        $endDate = new DateTime($x->end_date_billing_period);
 
-            $endDate = clone $startDate;
-            $endDate->add(new DateInterval('P54D'));
+// Получаем количество дней в месяце начальной даты
+        $daysInMonth = $endDate->format('t');
 
-            return $endDate->format('d.m.Y');
+// Вычисляем новый день месяца после добавления grace_period
+        $newDayOfMonth = (int)$endDate->format('d') + $x->grace_period-30;
+
+        if ($newDayOfMonth > $daysInMonth) {
+            // Если результат выходит за пределы количества дней в месяце, корректируем дату
+            $newDayOfMonth -= 31; // Вычитаем 31 для корректировки
+            $endDate->modify("+1 month"); // Добавляем один месяц к текущей дате
+            $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), $newDayOfMonth);
+        } else {
+            // Если число меньше или равно количеству дней в месяце, просто устанавливаем новый день месяца
+            $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), $newDayOfMonth);
         }
 
-        $startDates = [
-            "23.10.2023",
-            "23.11.2023",
-            "23.12.2023",
-            "23.01.2024",
-            "23.02.2024",
-            "23.03.2024",
-            "23.04.2024",
-            "23.05.2024",
-            "23.06.2024",
-            "23.07.2024",
-            "23.08.2024",
-            "23.09.2024",
-            "23.10.2024",
-            "23.11.2024",
-            "23.12.2024",
-            "23.01.2025",
-            "23.02.2025",
-            "23.03.2025",
-        ];
+        echo $endDate->format('Y-m-d'); // Вывод результата
 
-        foreach ($startDates as $startDate) {
-            $dueDate = calculateDueDate($startDate);
-            echo "Вернуть потраченные средства за период, начинающийся с $startDate необходимо до $dueDate\n" . "<br>";
-        }
 
         return $this->render('index', [
             'cards' => $cards,

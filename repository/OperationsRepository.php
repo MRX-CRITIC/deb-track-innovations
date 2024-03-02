@@ -14,6 +14,13 @@ class OperationsRepository
             ->one();
     }
 
+//    public static function getAllOperationCard($card_id, $user_id)
+//    {
+//        return Operations::find()
+//            ->where(['user_id' => $user_id, 'id' => $card_id])
+//            ->all();
+//    }
+
     public static function getDateLastOperation($user_id, $card_id)
     {
         return Operations::find()

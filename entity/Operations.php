@@ -9,4 +9,5 @@ class Operations extends ActiveRecord
     {
         return $this->hasOne(Cards::class, ['id' => 'card_id']);
     }
+
 }

@@ -40,7 +40,8 @@ class CardsForm extends Model
 
             [['payment_partial_repayment', 'service_period', 'refund_cash_calculation'], 'required', 'message' => 'Не может быть не выбрано'],
             [['user_id', 'bank_id'], 'integer'],
-            [['credit_limit', 'withdrawal_limit'], 'integer', 'min' => 1000.00, 'max' => 9999999.99, 'tooSmall' => 'Значение не может быть меньше 1 000.00', 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
+            [['credit_limit'], 'integer', 'min' => 1000.00, 'max' => 9999999.99, 'tooSmall' => 'Значение не может быть меньше 1 000.00', 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
+            [['withdrawal_limit'], 'integer', 'max' => 9999999.99, 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
             [['cost_banking_services', 'percentage_partial_repayment'], 'number', 'min' => 0, 'max' => 9999, 'tooBig' => 'Значение не может быть больше 9 999'],
             [['start_date_billing_period', 'end_date_billing_period', 'date_annual_service'], 'date', 'format' => 'php:Y-m-d'],
             [['name_card'], 'string', 'max' => 30, 'tooLong' => 'Должно содержать не более 30 символов'],
@@ -137,8 +138,8 @@ class CardsForm extends Model
             'service_period' => 'Период обслуживания',
             'date_annual_service' => 'Дата годового обслуживания',
             'refund_cash_calculation' => 'Как производится расчет возврата денежных средств банку',
-            'start_date_billing_period' => 'Начальная дата расчетного периода',
-            'end_date_billing_period' => 'Конечная дата расчетного периода',
+            'start_date_billing_period' => 'Текущая начальная дата расчетного периода',
+            'end_date_billing_period' => 'Текущая конечная дата расчетного периода',
             'note' => 'Примечание',
         ];
     }

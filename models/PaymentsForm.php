@@ -26,7 +26,7 @@ class PaymentsForm extends Model
             'operation_id' => 'ID операции',
             'start_date_billing_period' => 'Текущая начальная дата расчетного периода',
             'end_date_billing_period' => 'Текущая конечная дата расчетного периода',
-            'date_payment' => 'Дата платежа задолженности',
+            'date_payment' => 'Дата следующего платежа',
         ];
     }
 }
