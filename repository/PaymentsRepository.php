@@ -41,7 +41,9 @@ class PaymentsRepository
         return $payment->id;
     }
 
-    public static function checkPaymentPeriodExists($date_operation, $card_id)
+    // проверяет есть ли у операции которую хочет добавить пользователь расчетный период в бд
+    // возвращает true or false
+    public static function   checkPaymentPeriodExists($date_operation, $card_id)
     {
         $payments = Payments::find()
             ->innerJoin('operations', 'payments.operation_id = operations.id')

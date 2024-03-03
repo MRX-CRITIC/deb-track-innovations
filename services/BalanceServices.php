@@ -89,8 +89,11 @@ class BalanceServices
                 $reason = 'Расход';
                 BalanceServices::createBalance($user_id, $card_id, $new_balance, $reason);
 
+            } else {
+                return false;
             }
-
+        } else {
+            return false;
         }
         return $fin_balance;
     }

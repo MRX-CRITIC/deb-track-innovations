@@ -20,6 +20,7 @@ use app\repository\UserRepository;
 use app\services\BalanceServices;
 use app\services\CardsServices;
 use app\services\OperationsServices;
+use app\services\PaymentsServices;
 use DateTime;
 use Yii;
 use yii\db\StaleObjectException;
@@ -140,8 +141,6 @@ class ProductController extends Controller
     public function actionAddOperation(int $card_id)
     {
         $model = new OperationsForm();
-        $modelPayPeriod = new PaymentsForm();
-
         $model->user_id = Yii::$app->user->getId();
 
         $card = CardsRepository::getCardBuId($model->user_id, $card_id);
@@ -166,39 +165,27 @@ class ProductController extends Controller
                 $model->note,
             );
 
-
-            $checkPeriod = PaymentsRepository::checkPaymentPeriodExists($model->date_operation, $model->card_id);
-            if (!$checkPeriod) {
-
-                $ballingPeriod = CardsRepository::getBillingAndGracePeriodCard($model->user_id, $model->card_id);
-
-                $datesBillingPeriod = OperationsServices::adjustPeriodToCurrentDate(
-                    $ballingPeriod->start_date_billing_period,
-                    $ballingPeriod->end_date_billing_period,
-                    $model->date_operation,
-                );
-
-                $modelPayPeriod->operation_id = $operation_id;
-                $modelPayPeriod->start_date_billing_period = $datesBillingPeriod['start'];
-                $modelPayPeriod->end_date_billing_period = $datesBillingPeriod['end'];
-                $modelPayPeriod->date_payment =
-
-
-
-                PaymentsRepository::createPayment(
-                    $operation_id,
-
-                );
-        }
-
-            BalanceServices::updateBalance(
+            $billingPeriod = PaymentsServices::addPayment(
                 $model->user_id,
                 $model->card_id,
-                $model->type_operation,
-                $model->sum,
+                $model->date_operation,
+                $operation_id
             );
 
-            Yii::$app->session->setFlash('success', 'Операция успешно добавлена');
+            if ($billingPeriod) {
+                $balance = BalanceServices::updateBalance(
+                    $model->user_id,
+                    $model->card_id,
+                    $model->type_operation,
+                    $model->sum,
+                );
+            } else {
+                return $this->refresh();
+            }
+
+            if ($balance) {
+                Yii::$app->session->setFlash('success', 'Операция успешно добавлена');
+            }
             return $this->refresh();
         } else {
             return $this->render('add-operation', [

@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+
 use Exception;
 use app\entity\Cards;
 use app\repository\BalanceRepository;
@@ -82,30 +83,15 @@ class SiteController extends Controller
         $cards = CardsRepository::getAllCards($user_id);
 
 
-        // Предполагаем, что $x - это объект, возвращенный из CardsRepository
-// и содержащий информацию об окончании периода счетов и льготном периоде
-        $x = CardsRepository::getBillingAndGracePeriodCard(4, 1);
+//        if ($card->credit_limit > $card->lastBalance->fin_balance) {
+//
+//        }
 
-// Создаем объект DateTime для начальной даты
-        $endDate = new DateTime($x->end_date_billing_period);
+        $x = CardsRepository::getNextPayment();
+        var_dump($x[1]);
 
-// Получаем количество дней в месяце начальной даты
-        $daysInMonth = $endDate->format('t');
+//      var_dump($this->rr($x));
 
-// Вычисляем новый день месяца после добавления grace_period
-        $newDayOfMonth = (int)$endDate->format('d') + $x->grace_period-30;
-
-        if ($newDayOfMonth > $daysInMonth) {
-            // Если результат выходит за пределы количества дней в месяце, корректируем дату
-            $newDayOfMonth -= 31; // Вычитаем 31 для корректировки
-            $endDate->modify("+1 month"); // Добавляем один месяц к текущей дате
-            $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), $newDayOfMonth);
-        } else {
-            // Если число меньше или равно количеству дней в месяце, просто устанавливаем новый день месяца
-            $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), $newDayOfMonth);
-        }
-
-        echo $endDate->format('Y-m-d'); // Вывод результата
 
 
         return $this->render('index', [
@@ -113,6 +99,51 @@ class SiteController extends Controller
         ]);
     }
 
+//    public function rr($x)
+//    {
+//        $processedPayments = [];
+//
+//        foreach ($x as $operation) {
+//            $cardId = $operation['card_id'];
+//            $datePayment = $operation['date_payment'];
+//            $totalSum = $operation['totalSum'];
+//
+//            if (!isset($processedPayments[$cardId])) {
+//                $processedPayments[$cardId] = [
+//                    'payments' => [],
+//                    'total_paid' => 0,
+//                ];
+//            }
+//
+//            if ($totalSum < 0) { // Если это долг, добавляем его к "должно быть оплачено"
+//                $processedPayments[$cardId]['payments'][] = [
+//                    'date' => $datePayment,
+//                    'amount' => $totalSum
+//                ];
+//            } else { // Если это платеж, погашаем долг
+//                foreach ($processedPayments[$cardId]['payments'] as &$paymentInfo) {
+//                    if ($totalSum <= 0) break;
+//
+//                    if ($paymentInfo['amount'] < 0) { // Есть долг для погашения
+//                        if (abs($paymentInfo['amount']) <= $totalSum) {
+//                            // Долг полностью погашен
+//                            $totalSum += $paymentInfo['amount']; // Вычитаем из суммы платежа
+//                            $paymentInfo['amount'] = 0; // Долг погашен
+//                        } else {
+//                            // Частичное погашение долга
+//                            $paymentInfo['amount'] += $totalSum;
+//                            $totalSum = 0;
+//                        }
+//                    }
+//                }
+//                unset($paymentInfo); // Очистка ссылки
+//
+//                $processedPayments[$cardId]['total_paid'] += $totalSum; // Обновляем общую сумму платежей после погашения долгов
+//            }
+//        }
+//
+//        return $processedPayments;
+//    }
 
     public function actionOperations()
     {
