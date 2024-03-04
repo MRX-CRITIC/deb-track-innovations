@@ -165,11 +165,14 @@ class ProductController extends Controller
                 $model->note,
             );
 
+
             $billingPeriod = PaymentsServices::addPayment(
                 $model->user_id,
                 $model->card_id,
                 $model->date_operation,
-                $operation_id
+                $operation_id,
+                $model->type_operation,
+                $model->sum,
             );
 
             if ($billingPeriod) {
@@ -186,6 +189,7 @@ class ProductController extends Controller
             if ($balance) {
                 Yii::$app->session->setFlash('success', 'Операция успешно добавлена');
             }
+
             return $this->refresh();
         } else {
             return $this->render('add-operation', [

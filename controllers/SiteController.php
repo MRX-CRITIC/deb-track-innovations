@@ -39,7 +39,7 @@ class SiteController extends Controller
                         'roles' => ['?', '@'],
                     ],
                     [
-                        'actions' => ['index', 'contact', 'operations'],
+                        'actions' => ['index', 'contact', 'operations', 'test'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -80,18 +80,7 @@ class SiteController extends Controller
             return $this->redirect('/site/about');
         }
         $user_id = Yii::$app->user->getId();
-        $cards = CardsRepository::getAllCards($user_id);
-
-
-//        if ($card->credit_limit > $card->lastBalance->fin_balance) {
-//
-//        }
-
-        $x = CardsRepository::getNextPayment();
-        var_dump($x[1]);
-
-//      var_dump($this->rr($x));
-
+        $cards = CardsRepository::getAllCardWithDebtsAndPayments($user_id);
 
 
         return $this->render('index', [
@@ -99,51 +88,59 @@ class SiteController extends Controller
         ]);
     }
 
-//    public function rr($x)
-//    {
-//        $processedPayments = [];
+    public function actionTest() {
+
+
+//        $x = CardsRepository::getAllDebtsCard(4, 6);
+//        var_dump($x);
+
+//        $debts = CardsRepository::getAllDebtsCard(4, 1);
+        $user_id = Yii::$app->user->getId();
+
+        $cards = CardsRepository::getAllCardWithDebtsAndPayments($user_id);
+//        $debts = CardsRepository::getAllDebtsCard($user_id, 1);
+
+        var_dump($cards);
+
+//        var_dump($debts);
+//        1) $debt['debt'] = -110000;
+//        2) $debt['debt'] = -6200;
+//        3) $debt['debt'] = -500;
+
+//        $returnMoney = intval('111000');
 //
-//        foreach ($x as $operation) {
-//            $cardId = $operation['card_id'];
-//            $datePayment = $operation['date_payment'];
-//            $totalSum = $operation['totalSum'];
+//        if(is_array($debts)) {
+//            foreach ($debts as $key => $debt) {
+//                if ($debt['debt'] < 0 && $returnMoney > 0) {
+//                    $neededToClearDebt = abs($debt['debt']);
 //
-//            if (!isset($processedPayments[$cardId])) {
-//                $processedPayments[$cardId] = [
-//                    'payments' => [],
-//                    'total_paid' => 0,
-//                ];
-//            }
+//                    if ($returnMoney >= $neededToClearDebt) {
+//                        $debts[$key]['debt'] = 0;
+//                        $returnMoney -= $neededToClearDebt;
+//                    } else {
+//                        $debts[$key]['debt'] += $returnMoney;
+//                        $returnMoney = 0; // Все деньги возвращены.
+//                        break; // Выходим из цикла, т.к. денег больше нет.
 //
-//            if ($totalSum < 0) { // Если это долг, добавляем его к "должно быть оплачено"
-//                $processedPayments[$cardId]['payments'][] = [
-//                    'date' => $datePayment,
-//                    'amount' => $totalSum
-//                ];
-//            } else { // Если это платеж, погашаем долг
-//                foreach ($processedPayments[$cardId]['payments'] as &$paymentInfo) {
-//                    if ($totalSum <= 0) break;
-//
-//                    if ($paymentInfo['amount'] < 0) { // Есть долг для погашения
-//                        if (abs($paymentInfo['amount']) <= $totalSum) {
-//                            // Долг полностью погашен
-//                            $totalSum += $paymentInfo['amount']; // Вычитаем из суммы платежа
-//                            $paymentInfo['amount'] = 0; // Долг погашен
-//                        } else {
-//                            // Частичное погашение долга
-//                            $paymentInfo['amount'] += $totalSum;
-//                            $totalSum = 0;
-//                        }
 //                    }
 //                }
-//                unset($paymentInfo); // Очистка ссылки
-//
-//                $processedPayments[$cardId]['total_paid'] += $totalSum; // Обновляем общую сумму платежей после погашения долгов
 //            }
-//        }
 //
-//        return $processedPayments;
-//    }
+//        } else {
+//            echo "Ошибка: данные о долгах не получены или не являются массивом.";
+//        }
+
+
+
+// Если после цикла вам важно знать, остались ли непогашенные долги или остаток возврата, можно проверить и использовать эти данные.
+//        $t = CardsRepository::getAllDebtsCard(4, 7);
+//        var_dump($t);
+//
+//        $e = CardsRepository::getAllDebtsCard(4, 8);
+//        var_dump($e);
+
+
+    }
 
     public function actionOperations()
     {

@@ -9,6 +9,7 @@ use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
 use yii\helpers\Url;
 
+$formatter = \Yii::$app->formatter;
 
 $this->title = 'DebTrack Innovations';
 \app\assets\ProductAsset::register($this);
@@ -26,14 +27,16 @@ $this->title = 'DebTrack Innovations';
                 <?php $formattedCreditLimit = Yii::$app->formatter->asDecimal($card->credit_limit, 2); ?>
                 <?php $formattedCostBanking = Yii::$app->formatter->asDecimal($card->cost_banking_services, 2); ?>
                 <?php $formattedFinBalance = Yii::$app->formatter->asDecimal($card->lastBalance->fin_balance, 2); ?>
+                <?php $TotalDebt = Yii::$app->formatter->asDecimal($card->credit_limit - $card->lastBalance->fin_balance, 2); ?>
+                <?php $formattedDebt = Yii::$app->formatter->asDecimal(-$card->debt, 2); ?>
+                <?php $formattedDatePayment = $formatter->asDate($card->date_payment, 'php:d.m.Y'); ?>
+                <?php $formattedDateStart = $formatter->asDate($card->start_date, 'php:d.m.Y'); ?>
+                <?php $formattedDateEnd = $formatter->asDate($card->end_date, 'php:d.m.Y'); ?>
 
                 <div class="product-info">
                     <div class="header">
-                        <?php if (!empty($card->name_card)) {
-                            echo '<div> Название карты: ' . '<h6>' . htmlspecialchars($card->name_card) . '</h6>' . ' </div>';
-                        } else{
-                            echo '<div></div>';
-                        } ?>
+
+                        <div>Название карты: <h6><?= Html::encode(htmlspecialchars($card->name_card)) ?></h6></div>
                         <div class="links">
                             <a class="add-operation" href="<?=
                             Yii::$app->urlManager->createUrl([
@@ -45,8 +48,38 @@ $this->title = 'DebTrack Innovations';
 
                     <br>
                     <div>Баланс: <?= Html::encode($formattedFinBalance) ?></div>
-                    <div>Ближайший платеж: /** Дата и сумма **/</div>
-                    <div>Возможность снятия/перевода: /****/</div>
+                    <br>
+                    <?php if (!empty($formattedDebt > 0 && $formattedDatePayment)): ?>
+                        <div>Ближайший платеж:
+                            <span style="color: red; font-weight: bold;">
+                                <?= Html::encode($formattedDebt) ?>
+                            </span>
+                            оплатить до
+                            <span style="text-decoration: underline;">
+                                <?= Html::encode($formattedDatePayment) ?>
+                            </span>
+                        </div>
+                        <div style="font-size: 0.95rem; margin: 5px 0 5px 0;">Сумма ближайшего платежа ровна сумме
+                            операций за расчетный период:
+                            <span style="text-decoration: underline;">
+                                <?= Html::encode($formattedDateStart . ' - ' . $formattedDateEnd) ?>
+                            </span>
+                        </div>
+                        <div>Общая задолженность: <?= Html::encode(htmlspecialchars($TotalDebt)) ?></div>
+                    <?php else: ?>
+                        <div>Ближайший платеж:
+                            <span style="color: #00FF00">задолженность отсутствует</span>
+                        </div>
+                    <?php endif; ?>
+
+
+                    <div>Возможность снятия/перевода:
+                        <?php if ($card->credit_limit <= $card->withdrawal_limit): ?>
+                            <?= Html::encode($formattedCreditLimit) ?>
+                        <?php else: ?>
+                            <?= Html::encode($card->withdrawal_limit) ?>
+                        <?php endif; ?>
+                    </div>
                     <br>
 
                     <div>Банк: <?= Html::encode($card->bank->name) ?> </div>

@@ -17,7 +17,6 @@ class OperationsServices
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
 
-
         // Определяем год и месяц даты операции
         $yearOperation = $currentDate->format('Y');
         $monthOperation = $currentDate->format('m');
@@ -43,14 +42,16 @@ class OperationsServices
 
         // Если дата операции не попадает в интервал между начальной и конечной датами, корректируем интервал
         if ($currentDate < $adjustedStartDate) {
+//            return [$adjustedStartDate , $adjustedEndDate];
             $adjustedStartDate->modify('-1 month');
             $adjustedEndDate->modify('-1 month');
+            if ($currentDate > $adjustedEndDate) {
+                $adjustedEndDate->modify('+1 month');
+            }
         } elseif ($currentDate > $adjustedEndDate) {
             $adjustedStartDate->modify('+1 month');
             $adjustedEndDate->modify('+1 month');
         }
-
-
 
         return [
             'start' => $adjustedStartDate->format('Y-m-d'),

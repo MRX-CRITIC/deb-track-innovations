@@ -24,7 +24,7 @@ class CardsRepository
     public static function getCreditLimitCard($user_id, $card_id)
     {
         return Cards::find()
-            ->where(['user_id' => $user_id,'id' => $card_id])
+            ->where(['user_id' => $user_id, 'id' => $card_id])
             ->select('credit_limit')
             ->one();
     }
@@ -67,7 +67,7 @@ class CardsRepository
     public static function deleteCardErrorBalance($user_id, $card_id)
     {
         return Cards::find()
-            ->where(['user_id' =>$user_id, 'id' => $card_id])
+            ->where(['user_id' => $user_id, 'id' => $card_id])
             ->one()
             ->delete();
     }
@@ -115,110 +115,97 @@ class CardsRepository
             ->all();
     }
 
-    public static function getCountCards($user_id) {
+    public static function getCountCards($user_id)
+    {
         return Cards::find()
             ->where(['user_id' => $user_id])
             ->count();
     }
 
 
-
-    public static function getNextPayment() {
-        $subQueryMaxDate = Balance::find()
-            ->alias('b1')
-            ->select(['b1.card_id', 'max_date' => 'MAX(b1.date)'])
-            ->groupBy('b1.card_id');
-
-        $subQueryLastBalance = Balance::find()
-            ->alias('b2')
-            ->select(['b2.card_id', 'last_balance' => 'b2.fin_balance'])
-            ->innerJoin(['sqm' => $subQueryMaxDate], 'b2.card_id = sqm.card_id AND b2.date = sqm.max_date');
-
-        $cards = Cards::find()
-            ->alias('c')
-            ->select(['card_id' => 'c.id', 'c.credit_limit', 'current_balance' => 'sq.last_balance'])
-            ->leftJoin(['sq' => $subQueryLastBalance], 'c.id = sq.card_id')
-            ->where('sq.last_balance < c.credit_limit')
-            ->asArray()
-            ->all();
-
-        $cardsIds = ArrayHelper::getColumn($cards, 'card_id');
-
-        if (empty($cardsIds)) {
-            return "Задолженности нет";
-        }
-
-        $nearestDatePayment = Payments::find()
-            ->select(new Expression("MAX(date_payment) as nearestDate"))
-            ->leftJoin(['op' => 'operations'], 'op.id = payments.operation_id')
-            ->where(['in', 'op.card_id', $cardsIds])
-            ->groupBy('op.card_id')
-            ->asArray()
-            ->all();
-
-        if (empty($nearestDatePayment)) {
-            return "Платежи по найденным картам отсутствуют";
-        }
-
+    public static function getAllDebtsCard($user_id, $card_id)
+    {
+        // Получаем данные об операциях и связанных с ними платежах
         $paymentOperationsData = Operations::find()
             ->alias('op')
             ->select([
                 'op.card_id',
+                'start_date' => 'p.start_date_billing_period',
+                'end_date' => 'p.end_date_billing_period',
                 'date_payment' => 'p.date_payment',
-                'totalSum' => new Expression("SUM(IF(op.type_operation = 1, op.sum, -op.sum))")
+                'debt' => new Expression("SUM(IF(op.type_operation = 1, op.sum, -op.sum))")
             ])
             ->innerJoin(['p' => 'payments'], 'p.operation_id = op.id')
             ->where([
-                'and',
-                ['op.status' => 1],
-                ['in', 'op.card_id', $cardsIds],
-                ['between', 'op.date_operation', new Expression('p.start_date_billing_period'), new Expression('p.end_date_billing_period')]
+                'op.status' => 1,
+                'op.card_id' => $card_id,
+                'op.user_id' => $user_id,
             ])
-            ->groupBy(['op.card_id', 'p.date_payment'])
+            ->having(['!=', 'debt', 0])
+            ->groupBy([
+                'op.card_id',
+                'p.date_payment',
+                'p.start_date_billing_period',
+                'p.end_date_billing_period'
+            ])
             ->asArray()
             ->orderBy(['p.date_payment' => SORT_ASC])
             ->all();
 
-        $processedPayments = [];
-
-        foreach($paymentOperationsData as $operation) {
-            $cardId = $operation['card_id'];
-            $datePayment = $operation['date_payment'];
-            $totalSum = $operation['totalSum'];
-
-            if (!isset($processedPayments[$cardId])) {
-                $processedPayments[$cardId] = [
-                    'payments' => [],
-                    'total_paid' => 0,
-                ];
-            }
-
-            if ($totalSum < 0) {
-                $processedPayments[$cardId]['payments'][] = [
-                    'date' => $datePayment,
-                    'amount' => $totalSum
-                ];
-            } else {
-                foreach ($processedPayments[$cardId]['payments'] as &$paymentInfo) {
-                    if ($totalSum <= 0) break;
-
-                    if ($paymentInfo['amount'] < 0) {
-                        if (abs($paymentInfo['amount']) <= $totalSum) {
-                            $totalSum += $paymentInfo['amount'];
-                            $paymentInfo['amount'] = 0;
-                        } else {
-                            $paymentInfo['amount'] += $totalSum;
-                            $totalSum = 0;
-                        }
-                    }
-                }
-                unset($paymentInfo);
-                $processedPayments[$cardId]['total_paid'] += $totalSum;
-            }
+        if (empty($paymentOperationsData)) {
+            return true; //"Платежи по данной карте отсутствуют";
         }
-        return $processedPayments;
+
+        return $paymentOperationsData;
     }
 
+
+    public static function getAllCardWithDebtsAndPayments($user_id)
+    {
+        // Подзапрос для получения задолженностей и дат
+        $debtSubQuery = (new \yii\db\Query())
+            ->select([
+                'op.card_id',
+                'start_date' => 'p.start_date_billing_period',
+                'end_date' => 'p.end_date_billing_period',
+                'date_payment' => 'p.date_payment',
+                'debt' => new \yii\db\Expression("SUM(IF(op.type_operation = 1, op.sum, -op.sum))"),
+            ])
+            ->from(['op' => 'operations'])
+            ->innerJoin(['p' => 'payments'], 'p.operation_id = op.id')
+            ->where([
+                'op.status' => 1,
+                'op.user_id' => $user_id,
+            ])
+            ->groupBy([
+                'op.card_id',
+                'p.start_date_billing_period',
+                'p.end_date_billing_period',
+                'p.date_payment'
+            ])
+            ->having(['!=', 'debt', 0]);
+
+//        $results = $debtSubQuery->all();
+//        return $results;
+
+        return Cards::find()
+            ->alias('c')
+            ->joinWith(['bank', 'lastBalance'])
+            ->leftJoin(['debtInfo' => $debtSubQuery], 'debtInfo.card_id = c.id')
+            ->where(['c.user_id' => $user_id])
+            ->select([
+                'c.*',
+                'debt' => 'debtInfo.debt',
+                'start_date' => 'debtInfo.start_date',
+                'end_date' => 'debtInfo.end_date',
+                'date_payment' => 'debtInfo.date_payment',
+            ])
+            ->orderBy([
+                'c.id' => SORT_ASC,
+                'debt' => SORT_ASC,
+            ])
+            ->all();
+    }
 
 
 }
