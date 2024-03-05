@@ -8,3 +8,10 @@ $(document).ready(function(){
         }
     );
 });
+
+$(document).ready(function() {
+    $('.reset-btn').on('click', function() {
+        $('#filter-form')[0].reset();
+        window.location.href = '/site/operations';
+    });
+});

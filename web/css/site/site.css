@@ -71,17 +71,50 @@ a.desc:after {
         width: 100%;
         padding: 10px 0;
     }
+
     .site-product {
         padding: 3vh;
     }
+
     .name-card {
         font-size: 1rem;
     }
+
     .sum {
         font-size: 1rem;
     }
+
     .title-table-operation {
         font-size: 0.7rem;
+    }
+
+    body #filter-form {
+        flex-direction: column;
+        align-items: normal;
+    }
+    body .mb-3 {
+        margin: 0 0 0 0 !important;
+        margin-bottom: 1rem !important;
+    }
+
+    body .brand-logo {
+        display: none;
+    }
+    .line {
+        display: none;
+    }
+
+    .login-container {
+        margin: 0;
+    }
+    ol, ul, dl {
+        margin-left: 1vh;
+    }
+    .reg-title {
+        position: absolute;
+        top: 21%;
+         left: 0;
+        margin: -2.5vh 10vh 0 4vh;
     }
 }
 

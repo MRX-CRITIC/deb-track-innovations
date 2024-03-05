@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\OperationSearchForm;
+use app\services\CardsServices;
 use Exception;
 use app\entity\Cards;
 use app\repository\BalanceRepository;
@@ -13,7 +15,9 @@ use app\services\OperationsServices;
 use DateInterval;
 use DateTime;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -39,7 +43,7 @@ class SiteController extends Controller
                         'roles' => ['?', '@'],
                     ],
                     [
-                        'actions' => ['index', 'contact', 'operations', 'test'],
+                        'actions' => ['index', 'account', 'operations'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -79,67 +83,14 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->redirect('/site/about');
         }
+
         $user_id = Yii::$app->user->getId();
         $cards = CardsRepository::getAllCardWithDebtsAndPayments($user_id);
-
+        $cardsUpdate = CardsServices::actualWithdrawalLimit($cards);
 
         return $this->render('index', [
-            'cards' => $cards,
+            'cardsUpdate' => $cardsUpdate,
         ]);
-    }
-
-    public function actionTest() {
-
-
-//        $x = CardsRepository::getAllDebtsCard(4, 6);
-//        var_dump($x);
-
-//        $debts = CardsRepository::getAllDebtsCard(4, 1);
-        $user_id = Yii::$app->user->getId();
-
-        $cards = CardsRepository::getAllCardWithDebtsAndPayments($user_id);
-//        $debts = CardsRepository::getAllDebtsCard($user_id, 1);
-
-        var_dump($cards);
-
-//        var_dump($debts);
-//        1) $debt['debt'] = -110000;
-//        2) $debt['debt'] = -6200;
-//        3) $debt['debt'] = -500;
-
-//        $returnMoney = intval('111000');
-//
-//        if(is_array($debts)) {
-//            foreach ($debts as $key => $debt) {
-//                if ($debt['debt'] < 0 && $returnMoney > 0) {
-//                    $neededToClearDebt = abs($debt['debt']);
-//
-//                    if ($returnMoney >= $neededToClearDebt) {
-//                        $debts[$key]['debt'] = 0;
-//                        $returnMoney -= $neededToClearDebt;
-//                    } else {
-//                        $debts[$key]['debt'] += $returnMoney;
-//                        $returnMoney = 0; // Все деньги возвращены.
-//                        break; // Выходим из цикла, т.к. денег больше нет.
-//
-//                    }
-//                }
-//            }
-//
-//        } else {
-//            echo "Ошибка: данные о долгах не получены или не являются массивом.";
-//        }
-
-
-
-// Если после цикла вам важно знать, остались ли непогашенные долги или остаток возврата, можно проверить и использовать эти данные.
-//        $t = CardsRepository::getAllDebtsCard(4, 7);
-//        var_dump($t);
-//
-//        $e = CardsRepository::getAllDebtsCard(4, 8);
-//        var_dump($e);
-
-
     }
 
     public function actionOperations()
@@ -147,21 +98,33 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->redirect('/site/about');
         }
-
         $user_id = Yii::$app->user->getId();
-        $operations = OperationsRepository::getAllOperations($user_id);
+        $model = new OperationSearchForm();
+
+        if ($model->load(Yii::$app->request->get()) && $model->validate()) {
+            $selectedCardName = $model->name_card;
+        } else {
+            $selectedCardName = null;
+        }
+        $cards = CardsRepository::getUniqueCardNamesByUserId($user_id);
+        $cardsList = ArrayHelper::map($cards, 'name_card', 'name_card');
+        $operations = OperationsRepository::getAllOperations($user_id, $selectedCardName, $model->date_operation);
 
         return $this->render('operations', [
+            'model' => $model,
             'operations' => $operations,
+            'cardsList' => $cardsList,
+            'selectedCardName' => $selectedCardName,
         ]);
     }
+
 
     /**
      * Displays contact page.
      *
      * @return Response|string
      */
-    public function actionContact()
+    public function actionAccount()
     {
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -173,7 +136,7 @@ class SiteController extends Controller
 
             return $this->refresh();
         }
-        return $this->render('contact', [
+        return $this->render('account', [
             'model' => $model,
         ]);
     }

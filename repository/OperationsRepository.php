@@ -30,21 +30,32 @@ class OperationsRepository
             ->one();
     }
 
-    public static function getAllOperations($user_id)
+    public static function getAllOperations($user_id, $name_card = null, $date_operation)
     {
-        return Operations::find()
+        $query = Operations::find()
             ->joinWith(['card.bank'])
-            ->where(['operations.user_id' => $user_id, 'operations.status' => 1])
-            ->select([
-                '{{operations}}.*', // Выбрать все поля из операций
-                '{{cards}}.name_card', // Добавить name_card из таблицы карт
-                '{{banks}}.name AS bank_name', // Добавить name из таблицы банков как bank_name
-            ])
+            ->where(['operations.user_id' => $user_id, 'operations.status' => 1]);
+
+        if ($name_card !== null && $name_card !== '') {
+            $query->andWhere(['cards.name_card' => $name_card]);
+        }
+
+        if ($date_operation !== null && $date_operation !== '') {
+            $query->andWhere(['operations.date_operation' => $date_operation]);
+        }
+
+        $query->select([
+            '{{operations}}.*', // Выбрать все поля из операций
+            '{{cards}}.name_card', // Добавить name_card из таблицы карт
+            '{{banks}}.name AS bank_name', // Добавить name из таблицы банков как bank_name
+        ])
             ->orderBy([
                 'operations.date_operation' => SORT_DESC,
                 'operations.date_recording' => SORT_DESC
             ])
             ->all();
+
+        return $query->all();
     }
 
 //    public static function getAllOperations($user_id)

@@ -29,8 +29,17 @@ class CardsRepository
             ->one();
     }
 
+    public static function getUniqueCardNamesByUserId($user_id) {
+        return Cards::find()
+            ->where(['user_id' => $user_id])
+            ->select(['name_card'])
+            ->distinct()
+            ->all();
+    }
 
-    // получаем расчетную информацию и грейс период карты который добавил пользователь
+
+
+        // получаем расчетную информацию и грейс период карты который добавил пользователь
     public static function getInfoReturnMoney($user_id, $card_id)
     {
         $card = Cards::find()->where(['user_id' => $user_id, 'id' => $card_id])->one();

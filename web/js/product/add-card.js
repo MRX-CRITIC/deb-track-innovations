@@ -145,4 +145,15 @@ $("#model-service-period input[type='radio']").change(function () {
 
 
 
+// $(document).ready(function(){
+//     $('#filter-form select[name="OperationSearchForm[name_card]"]').change(function(){
+//         $(this).closest('form').submit(); // Отправка формы при изменении значения в dropdown
+//     });
+// });
+
+// $(document).on('submit', '#filter-form', function (event) {
+//     $.pjax.submit(event, '#pjax-container-id');
+// });
+
+
 

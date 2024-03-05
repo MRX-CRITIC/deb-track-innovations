@@ -2,7 +2,7 @@
 
 /** @var yii\web\View $this */
 
-/** @var $cards */
+/** @var $cardsUpdate */
 
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
@@ -23,12 +23,13 @@ $this->title = 'DebTrack Innovations';
     <div class="body-content">
 
         <div class="row">
-            <?php foreach ($cards as $card): ?>
+            <?php foreach ($cardsUpdate as $card): ?>
                 <?php $formattedCreditLimit = Yii::$app->formatter->asDecimal($card->credit_limit, 2); ?>
                 <?php $formattedCostBanking = Yii::$app->formatter->asDecimal($card->cost_banking_services, 2); ?>
                 <?php $formattedFinBalance = Yii::$app->formatter->asDecimal($card->lastBalance->fin_balance, 2); ?>
                 <?php $TotalDebt = Yii::$app->formatter->asDecimal($card->credit_limit - $card->lastBalance->fin_balance, 2); ?>
                 <?php $formattedDebt = Yii::$app->formatter->asDecimal(-$card->debt, 2); ?>
+                <?php $formattedWithdrawalLimit = Yii::$app->formatter->asDecimal($card->actual_withdrawal_limit, 2); ?>
                 <?php $formattedDatePayment = $formatter->asDate($card->date_payment, 'php:d.m.Y'); ?>
                 <?php $formattedDateStart = $formatter->asDate($card->start_date, 'php:d.m.Y'); ?>
                 <?php $formattedDateEnd = $formatter->asDate($card->end_date, 'php:d.m.Y'); ?>
@@ -46,9 +47,9 @@ $this->title = 'DebTrack Innovations';
                         </div>
                     </div>
 
-                    <br>
-                    <div>Баланс: <?= Html::encode($formattedFinBalance) ?></div>
-                    <br>
+
+                    <div style="margin: 3vh 0 3vh 0;">Баланс: <?= Html::encode($formattedFinBalance) ?></div>
+
                     <?php if (!empty($formattedDebt > 0 && $formattedDatePayment)): ?>
                         <div>Ближайший платеж:
                             <span style="color: red; font-weight: bold;">
@@ -74,13 +75,9 @@ $this->title = 'DebTrack Innovations';
 
 
                     <div>Возможность снятия/перевода:
-                        <?php if ($card->credit_limit <= $card->withdrawal_limit): ?>
-                            <?= Html::encode($formattedCreditLimit) ?>
-                        <?php else: ?>
-                            <?= Html::encode($card->withdrawal_limit) ?>
-                        <?php endif; ?>
-                    </div>
-                    <br>
+                        <?= Html::encode($formattedWithdrawalLimit) ?>
+                    </div><br>
+
 
                     <div>Банк: <?= Html::encode($card->bank->name) ?> </div>
                     <div>Кредитный лимит: <?= Html::encode($formattedCreditLimit) ?></div>

@@ -3,24 +3,60 @@
 /** @var yii\web\View $this */
 
 /** @var $operations */
+/** @var $model */
+/** @var $cardsList */
 
+/** @var $selectedCardName */
+
+use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
 use yii\widgets\ListView;
 use yii\widgets\LinkPager;
+use yii\widgets\Pjax;
 
 
 $this->title = 'DebTrack Innovations';
 \app\assets\ProductAsset::register($this);
 \app\assets\IndexAsset::register($this);
+\app\assets\OperationAsset::register($this);
 $currentDate = null;
 ?>
 
 
 <div class="site-product">
-    <div class="row">
+
+    <?php $form = ActiveForm::begin([
+        'method' => 'get',
+        'action' => ['operations'],
+//        'options' => ['data-pjax' => true],
+        'id' => 'filter-form',
+
+    ]);
+
+    echo $form->field($model, 'name_card')->dropDownList($cardsList, [
+        'prompt' => 'Показать все операции',
+        'options' => [
+            $selectedCardName => ['Selected' => true],
+        ],
+        'onchange' => 'this.form.submit()'
+    ])->label(false);
+
+    echo $form->field($model, 'date_operation')->input('date',[
+        'onchange' => 'this.form.submit()'
+    ])->label(false); ?>
+
+    <button type="button" class="reset-btn">Сбросить поиск</button>
+    <?php ActiveForm::end(); ?>
+
+
+<!--    --><?php //Pjax::begin(['id' => 'pjax-container-id']); ?>
+
+<!--     тут операции-->
+    <div class="row" id="operations">
         <table>
+
             <tr>
                 <td></td>
                 <td class="title-table-operation">Сумма операции</td>
@@ -85,6 +121,7 @@ $currentDate = null;
 
         </table>
     </div>
+<!--    --><?php //Pjax::end(); ?>
 </div>
 
 

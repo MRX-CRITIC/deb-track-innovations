@@ -44,7 +44,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     if (!Yii::$app->user->isGuest) {
         $navItems[] = ['label' => 'Главная', 'url' => ['/site/index']];
         $navItems[] = ['label' => 'Операции', 'url' => ['site/operations']];
-        $navItems[] = ['label' => 'Аккаунт', 'url' => ['/site/contact']];
+        $navItems[] = ['label' => 'Аккаунт', 'url' => ['/site/account']];
         $navItems[] = ['label' => 'О проекте', 'url' => ['/site/about']];
         $navItems[] = '<li class="nav-item">'
             . Html::beginForm(['/user/logout'])

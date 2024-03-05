@@ -9,6 +9,7 @@ class Cards extends ActiveRecord
     public $start_date;
     public $end_date;
     public $date_payment;
+    public $actual_withdrawal_limit;
 
     public function getBank()
     {
