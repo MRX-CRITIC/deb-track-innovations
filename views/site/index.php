@@ -43,7 +43,8 @@ $this->title = 'DebTrack Innovations';
                             Yii::$app->urlManager->createUrl([
                                 '/product/add-operation',
                                 'card_id' => $card->id,
-                            ]) ?>" data-method="post">Добавить операцию</a>
+                            ]) ?>" data-method="post"><img src="<?= Yii::getAlias('@web') ?> /img/add-operation.png" style="width: 6vh" alt="">
+                            </a>
                         </div>
                     </div>
 

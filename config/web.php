@@ -41,6 +41,11 @@ $config = [
         'user' => [
             'identityClass' => 'app\entity\Users',
             'enableAutoLogin' => true,
+            'identityCookie' => [
+                'name' => '_identity',
+                'httpOnly' => true,
+                'secure' => false
+            ],
             'loginUrl' => ['user/login']
         ],
         'errorHandler' => [

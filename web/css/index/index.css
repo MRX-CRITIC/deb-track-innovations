@@ -41,7 +41,7 @@
 
 .add-operation {
     text-decoration: none;
-    padding: 0.7vh 3vh;
+    /*padding: 0.7vh 3vh;*/
     height: 100%;
     border: none;
     color: white;
@@ -50,15 +50,15 @@
     outline: none;
     margin: 0 0 0 1vh;
     font-size: 0.675rem;
-    box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.25);
+    /*box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.25);*/
 }
 
 .add-operation {
-    background-color: #666666;
+    /*background-color: #5b1092;*/
 }
 
 .add-operation:hover {
-    opacity: 0.9;
+    opacity: 0.5;
 }
 
 .header {
