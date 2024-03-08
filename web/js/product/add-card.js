@@ -110,6 +110,8 @@ $(document).ready(function () {
         $(".conditional-fields-payment").show();
     } else {
         $(".conditional-fields-payment").hide();
+        $("#percentage_partial_repayment").val('');
+
     }
 });
 $("#model-payment-partial-repayment input[type='radio']").change(function () {
@@ -117,6 +119,7 @@ $("#model-payment-partial-repayment input[type='radio']").change(function () {
         $(".conditional-fields-payment").show();
     } else {
         $(".conditional-fields-payment").hide();
+        $("#percentage_partial_repayment").val('');
     }
 });
 

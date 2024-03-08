@@ -74,11 +74,6 @@ class ProductController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-//            $model->grace_period = preg_replace('/\D/', '', $model->grace_period);
-            return $model->percentage_partial_repayment;
-//            return $model->grace_period;
-//            $model->percentage_partial_repayment = preg_replace('/\D/', '', $model->percentage_partial_repayment) / 100;
-
             $name_card = CardsServices::addNameCard($user_id, $model->name_card);
 
             $credit_limit = $model->credit_limit;

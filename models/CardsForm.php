@@ -41,8 +41,8 @@ class CardsForm extends Model
             [['payment_partial_repayment', 'payment_date_purchase_partial_repayment', 'refund_cash_calculation', 'service_period'], 'boolean'],
             [['conditions_partial_repayment', 'note'], 'string', 'max' => 600, 'tooLong' => 'Должно содержать не более 600 символов'],
 
-//            [['percentage_partial_repayment'], 'validatePercentagePartialRepayment'],
-            [['percentage_partial_repayment', 'payment_partial_repayment'], 'validatePercentagePartialRepayment'],
+            [['percentage_partial_repayment'],'validatePercentagePartialRepayment'],
+            [['percentage_partial_repayment', 'payment_partial_repayment'],'validatePercentagePartialRepaymentRequired'],
             ['grace_period', 'validateGracePeriod'],
             [['date_annual_service', 'service_period'], 'validateDateAnnualServiceRequired'],
             [['start_date_billing_period', 'end_date_billing_period'], 'validateDates'],
@@ -108,23 +108,28 @@ class CardsForm extends Model
         }
     }
 
+    public function validatePercentagePartialRepaymentRequired($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if ($this->payment_partial_repayment == "1") {
+                $percentValueFiltered = preg_replace('/\D/', '', $this->percentage_partial_repayment);
+                if (empty($percentValueFiltered)) {
+                    $this->addError('percentage_partial_repayment', 'Поле не может быть пустое');
+                }
+            }
+        }
+    }
 
     public function validatePercentagePartialRepayment($attribute, $params)
     {
-        if (!$this->hasErrors() && $this->payment_partial_repayment == "1") {
-            // Удаление всех нецифровых символов и преобразование в число
-            $percentValueFiltered = preg_replace('/\D/', '', $this->percentage_partial_repayment);
-
-            // Проверяем, не является ли строка пустой после удаления нецифровых символов
-            if (empty($percentValueFiltered)) {
+        if (!$this->hasErrors()) {
+            if ($this->percentage_partial_repayment == " %") {
                 $this->addError('percentage_partial_repayment', 'Поле не может быть пустое');
-                return; // Прерываем функцию, если поле пустое
+                return;
             }
-
-            // Преобразуем строку в число и делим на 100
+            $percentValueFiltered = preg_replace('/\D/', '', $this->percentage_partial_repayment);
             $this->percentage_partial_repayment = $percentValueFiltered / 100;
-var_dump($this->percentage_partial_repayment);
-            // Проверка диапазона значений
+
             if ($this->percentage_partial_repayment < 0.02 || $this->percentage_partial_repayment > 0.99) {
                 $this->addError('percentage_partial_repayment', 'Значение должно быть в диапазоне от 1% до 99%');
             }
