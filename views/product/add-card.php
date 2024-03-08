@@ -36,24 +36,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'type' => 'number',
         'placeholder' => '100000',
         'id' => 'credit-limit',
+        'pattern' => '\d*',
     ]) ?>
 
     <?= $form->field($model, 'withdrawal_limit')->textInput([
         'type' => 'number',
         'placeholder' => 'Не обязательно',
         'id' => 'withdrawal-limit',
+        'pattern' => '[0-9,]*',
+        'inputmode' => 'decimal',
     ]) ?>
 
     <?= $form->field($model, 'cost_banking_services')->textInput([
         'type' => 'number',
         'placeholder' => '990',
         'id' => 'cost-banking-services',
+        'pattern' => '\d*',
     ]) ?>
 
     <?= $form->field($model, 'grace_period')->textInput([
         'type' => 'text',
         'placeholder' => '120 дней',
         'id' => 'interest-free-period',
+        'inputmode' => 'numeric',
     ]) ?>
 
     <?= $form->field($model, 'payment_partial_repayment')->radioList([
@@ -65,9 +70,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="conditional-fields-payment">
         <?= $form->field($model, 'percentage_partial_repayment')->textInput([
-            'type' => 'number',
-            'placeholder' => '3%',
+            'type' => 'text',
+            'placeholder' => '3 %',
+            'id' => 'percentage_partial_repayment',
+            'inputmode' => 'decimal',
         ]) ?>
+
         <?= $form->field($model, 'payment_date_purchase_partial_repayment')->radioList([
             true => 'Да',
             false => 'Нет'
@@ -116,27 +124,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'refund_cash_calculation')->radioList([
         true => 'Из расчета выписки',
-        false =>
-            '<span class="tooltip-custom">С даты снятия/покупки
-                        <span class="tooltiptext-custom">
-                             Если с даты снятия/покупки, то вы будете каждый раз указывать вручную дату
-                         </span>
-                    </span>'
-    ], [
-        'item' => function ($index, $label, $name, $checked, $value) {
-            $radioId = $name . '-' . $index;
-            $options = [
-                'class' => 'form-check-input',
-                'id' => $radioId
-            ];
-            $radio = Html::radio($name, $checked, array_merge(['value' => $value], $options));
-            return Html::tag('div',
-                Html::label($radio . " " . $label, $radioId, ['class' => 'form-check-label']),
-                ['class' => 'form-check']);
-        },
-        'id' => 'model-refund-cash-calculation',
-        'class' => ''
-    ]) ?>
+        false => 'С даты снятия/покупки'
+    ],
+        [
+            'id' => 'model-refund-cash-calculation',
+            'class' => ''
+        ]) ?>
 
     <div class="billing-period">
         <?= $form->field($model, 'start_date_billing_period')->input('date') ?>

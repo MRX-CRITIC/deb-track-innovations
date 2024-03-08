@@ -16,7 +16,7 @@ class m240221_125145_create_cards_table extends Migration
             'cost_banking_services' => $this->decimal(4, 0)->notNull(),
             'grace_period' => $this->integer()->notNull(),
             'payment_partial_repayment' => $this->boolean(),
-            'percentage_partial_repayment' => $this->decimal(4, 2),
+            'percentage_partial_repayment' => $this->decimal(3, 2),
             'payment_date_purchase_partial_repayment' => $this->boolean(),
             'conditions_partial_repayment' => $this->text(),
             'service_period' => $this->boolean()->notNull(),

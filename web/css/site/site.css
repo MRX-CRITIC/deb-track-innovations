@@ -114,7 +114,11 @@ a.desc:after {
         position: absolute;
         top: 21%;
          left: 0;
-        margin: -2.5vh 10vh 0 4vh;
+        margin: 0 10vh 0 4vh;
+    }
+
+    .login-form form {
+        margin: 0 0 -6em 0;
     }
 }
 

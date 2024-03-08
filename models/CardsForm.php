@@ -30,32 +30,19 @@ class CardsForm extends Model
     public function rules(): array
     {
         return [
-            [
-                [
-                    'user_id', 'bank_id', 'credit_limit',
-                    'cost_banking_services', 'grace_period'
-                ],
-                'required', 'message' => 'Поле не может быть пустое'
-            ],
-
+            [['user_id', 'bank_id', 'credit_limit', 'cost_banking_services', 'grace_period'], 'required', 'message' => 'Поле не может быть пустое'],
             [['payment_partial_repayment', 'service_period', 'refund_cash_calculation'], 'required', 'message' => 'Не может быть не выбрано'],
             [['user_id', 'bank_id'], 'integer'],
             [['credit_limit'], 'integer', 'min' => 1000.00, 'max' => 9999999.99, 'tooSmall' => 'Значение не может быть меньше 1 000.00', 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
             [['withdrawal_limit'], 'integer', 'max' => 9999999.99, 'tooBig' => 'Значение не может быть больше 9 999 999.99'],
-            [['cost_banking_services', 'percentage_partial_repayment'], 'number', 'min' => 0, 'max' => 9999, 'tooBig' => 'Значение не может быть больше 9 999'],
+            [['cost_banking_services'], 'number', 'min' => 0, 'max' => 9999, 'tooBig' => 'Значение не может быть больше 9 999'],
             [['start_date_billing_period', 'end_date_billing_period', 'date_annual_service'], 'date', 'format' => 'php:Y-m-d'],
             [['name_card'], 'string', 'max' => 30, 'tooLong' => 'Должно содержать не более 30 символов'],
-
-            [
-                [
-                    'payment_partial_repayment', 'payment_date_purchase_partial_repayment',
-                    'refund_cash_calculation', 'service_period'
-                ],
-                'boolean'
-            ],
-
+            [['payment_partial_repayment', 'payment_date_purchase_partial_repayment', 'refund_cash_calculation', 'service_period'], 'boolean'],
             [['conditions_partial_repayment', 'note'], 'string', 'max' => 600, 'tooLong' => 'Должно содержать не более 600 символов'],
 
+//            [['percentage_partial_repayment'], 'validatePercentagePartialRepayment'],
+            [['percentage_partial_repayment', 'payment_partial_repayment'], 'validatePercentagePartialRepayment'],
             ['grace_period', 'validateGracePeriod'],
             [['date_annual_service', 'service_period'], 'validateDateAnnualServiceRequired'],
             [['start_date_billing_period', 'end_date_billing_period'], 'validateDates'],
@@ -99,7 +86,8 @@ class CardsForm extends Model
         }
     }
 
-    public function validateDateAnnualServiceRequired($attribute, $params) {
+    public function validateDateAnnualServiceRequired($attribute, $params)
+    {
         if (!$this->hasErrors()) {
             if ($this->service_period == "1") {
                 if (empty($this->date_annual_service)) {
@@ -116,6 +104,29 @@ class CardsForm extends Model
 
             if ($this->grace_period < 7 || $this->grace_period > 366) {
                 $this->addError($attribute, 'Значение должно быть в диапазоне от 7 дней до 1 года');
+            }
+        }
+    }
+
+
+    public function validatePercentagePartialRepayment($attribute, $params)
+    {
+        if (!$this->hasErrors() && $this->payment_partial_repayment == "1") {
+            // Удаление всех нецифровых символов и преобразование в число
+            $percentValueFiltered = preg_replace('/\D/', '', $this->percentage_partial_repayment);
+
+            // Проверяем, не является ли строка пустой после удаления нецифровых символов
+            if (empty($percentValueFiltered)) {
+                $this->addError('percentage_partial_repayment', 'Поле не может быть пустое');
+                return; // Прерываем функцию, если поле пустое
+            }
+
+            // Преобразуем строку в число и делим на 100
+            $this->percentage_partial_repayment = $percentValueFiltered / 100;
+var_dump($this->percentage_partial_repayment);
+            // Проверка диапазона значений
+            if ($this->percentage_partial_repayment < 0.02 || $this->percentage_partial_repayment > 0.99) {
+                $this->addError('percentage_partial_repayment', 'Значение должно быть в диапазоне от 1% до 99%');
             }
         }
     }

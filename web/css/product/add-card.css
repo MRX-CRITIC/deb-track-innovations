@@ -20,17 +20,17 @@
 .tooltip-custom .tooltiptext-custom {
     visibility: hidden;
     backdrop-filter: blur(3px);
-    width: 45vh;
+    width: 21em;
     background-color: #2d282891;
     color: white;
     font-size: 13px;
     text-align: center;
     border-radius: 6px;
-    padding: 8px 18px;
+    padding: 8px 6px;
     position: absolute;
     bottom: 100%;
-    left: 15vh;
-    margin-left: -100px;
+    left: 3em;
+    /* margin-left: -100px; */
     opacity: 0;
     transition: opacity 0.3s;
 }

@@ -66,7 +66,7 @@ class ProductController extends Controller
         $model->user_id = $user_id;
 
         $banksList = BanksRepository::getAllBanks($user_id);
-        $banksList['add-bank'] = 'Добавить свой банк... ( + )';
+        $banksList['add-bank'] = 'Добавить банк...';
 
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -74,7 +74,10 @@ class ProductController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->grace_period = preg_replace('/\D/', '', $model->grace_period);
+//            $model->grace_period = preg_replace('/\D/', '', $model->grace_period);
+            return $model->percentage_partial_repayment;
+//            return $model->grace_period;
+//            $model->percentage_partial_repayment = preg_replace('/\D/', '', $model->percentage_partial_repayment) / 100;
 
             $name_card = CardsServices::addNameCard($user_id, $model->name_card);
 
@@ -154,6 +157,7 @@ class ProductController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
         }
+
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $operation_id = OperationsRepository::createOperation(

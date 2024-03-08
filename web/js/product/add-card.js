@@ -79,6 +79,33 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
+    const inputPercentage = $('#percentage_partial_repayment');
+
+    function formatInputPercentage(value) {
+        value = value.replace(' %', '').trim();
+        return value.replace(/\D/g, '') + ' %';
+    }
+
+    function setCursorBeforeSymbolPercentage(inputElement) {
+        const valueWithoutFormat = inputElement.value.replace(/\s+/g, '').replace(' %', '');
+        const newPosition = valueWithoutFormat.length - 1;
+        inputElement.setSelectionRange(newPosition, newPosition);
+    }
+
+    inputPercentage.on('input', function () {
+        const originalValue = $(this).val();
+        const formattedValue = formatInputPercentage(originalValue);
+        $(this).val(formattedValue);
+
+        setCursorBeforeSymbolPercentage(this);
+    });
+
+    if (inputPercentage.val()) {
+        inputPercentage.val(formatInputPercentage(inputPercentage.val()));
+    }
+});
+
+$(document).ready(function () {
     if ($("#model-payment-partial-repayment").find('input[type="radio"]:checked').val() === "1") {
         $(".conditional-fields-payment").show();
     } else {

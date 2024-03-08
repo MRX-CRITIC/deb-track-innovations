@@ -38,9 +38,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <?= $form->field($model, 'sum')->textInput([
-        'type' => 'integer',
-        'placeholder' => '100000',
+        'type' => 'number',
+        'placeholder' => '100000,00',
         'id' => 'sum',
+        'pattern' => '[0-9,]*',
+        'inputmode' => 'decimal',
     ]) ?>
 
     <?= $form->field($model, 'note')->textarea(['rows' => 3]) ?>

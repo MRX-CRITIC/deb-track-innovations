@@ -43,7 +43,7 @@ class SiteController extends Controller
                         'roles' => ['?', '@'],
                     ],
                     [
-                        'actions' => ['index', 'account', 'operations'],
+                        'actions' => ['index', 'account', 'operations', 'test'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -91,6 +91,16 @@ class SiteController extends Controller
         return $this->render('index', [
             'cardsUpdate' => $cardsUpdate,
         ]);
+    }
+
+
+    public function actionTest()
+    {
+        $grace = '90';
+        $grace = preg_replace('/\D/', '', $grace) / 100;
+
+        var_dump($grace);
+
     }
 
     public function actionOperations()

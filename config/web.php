@@ -11,7 +11,7 @@ $config = [
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
 //    'modules' => [
 //        'user' => [
@@ -19,6 +19,7 @@ $config = [
 //        ],
 //    ],
     'components' => [
+
         'assetManager' => [
             'bundles' => [
                 'yii\bootstrap\BootstrapAsset' => [
@@ -41,6 +42,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\entity\Users',
             'enableAutoLogin' => true,
+            'autoRenewCookie' => true,
             'identityCookie' => [
                 'name' => '_identity',
                 'httpOnly' => true,
@@ -48,48 +50,55 @@ $config = [
             ],
             'loginUrl' => ['user/login']
         ],
+        'session' => [
+//            'session' => ['class' => 'yii\web\Session'], //для веб приложений
+            'class' => 'yii\web\Session',
+            'cookieParams' => ['lifetime' => 24 * 3600], // 24 часа
+            'timeout' => 24 * 3600, // 24 часа, также настройка для session.gc_maxlifetime
+            'useCookies' => true,
+        ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
-        ],
+    'errorAction' => 'site/error',
+],
         'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.gmail.com',
-                'username' => 'money.back.monitoring@gmail.com',
-                'password' => 'xwnzrgbgilqgpowp',
-                'port' => '587',
-                'encryption' => 'tls',
-                ],
+    'class' => 'yii\swiftmailer\Mailer',
+    'transport' => [
+        'class' => 'Swift_SmtpTransport',
+        'host' => 'smtp.gmail.com',
+        'username' => 'deb.track.innovations@gmail.com',
+        'password' => 'favqsonvmjkbvfqk',
+        'port' => '587',
+        'encryption' => 'tls',
+    ],
 //            'viewPath' => '@app/mailer',
-            // send all mails to a file by default.
-            'useFileTransport' => false,
-        ],
+    // send all mails to a file by default.
+    'useFileTransport' => false,
+],
         'formatter' => [
-            'class' => 'yii\i18n\Formatter',
-            'thousandSeparator' => ' ', // Разделитель тысяч
-            'currencyCode' => 'RUB',
-        ],
+    'class' => 'yii\i18n\Formatter',
+    'thousandSeparator' => ' ', // Разделитель тысяч
+    'currencyCode' => 'RUB',
+],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'], // 'info'
+    'traceLevel' => YII_DEBUG ? 3 : 0,
+    'targets' => [
+        [
+            'class' => 'yii\log\FileTarget',
+            'levels' => ['error', 'warning'], // 'info'
 //                    'logFile' => '@runtime/logs/app.log',
-                ],
-            ],
         ],
+    ],
+],
         'db' => $db,
         'authManager' => [
-            'class' => 'yii\rbac\DbManager',
-        ],
+    'class' => 'yii\rbac\DbManager',
+],
         'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
+    'enablePrettyUrl' => true,
+    'showScriptName' => false,
+    'rules' => [
+    ],
+],
     ],
     'params' => $params,
 ];
