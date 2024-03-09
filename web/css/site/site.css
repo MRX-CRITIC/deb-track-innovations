@@ -85,7 +85,7 @@ a.desc:after {
     }
 
     .title-table-operation {
-        font-size: 0.7rem;
+        display: none;
     }
 
     body #filter-form {
@@ -108,7 +108,7 @@ a.desc:after {
         margin: 0;
     }
     ol, ul, dl {
-        margin-left: 1vh;
+        /*margin-left: 1vh;*/
     }
     .reg-title {
         position: absolute;

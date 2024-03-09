@@ -24,7 +24,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
+<meta name="format-detection" content="telephone=no">
 <head>
+
+
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>

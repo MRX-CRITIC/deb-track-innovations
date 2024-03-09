@@ -62,15 +62,16 @@ $config = [
 ],
         'mailer' => [
     'class' => 'yii\swiftmailer\Mailer',
+
     'transport' => [
         'class' => 'Swift_SmtpTransport',
         'host' => 'smtp.gmail.com',
-        'username' => 'deb.track.innovations@gmail.com',
-        'password' => 'favqsonvmjkbvfqk',
+        'username' => 'money.back.monitoring@gmail.com',
+        'password' => 'wpovppvalrkxkbcu',
         'port' => '587',
         'encryption' => 'tls',
     ],
-//            'viewPath' => '@app/mailer',
+            'viewPath' => '@app/mail',
     // send all mails to a file by default.
     'useFileTransport' => false,
 ],

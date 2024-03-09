@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'percentage_partial_repayment')->textInput([
             'type' => 'text',
             'placeholder' => '3 %',
-            'id' => 'percentage_partial_repayment',
+            'id' => 'percentage-partial-repayment',
             'inputmode' => 'decimal',
         ]) ?>
 
@@ -87,6 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $form->field($model, 'conditions_partial_repayment')->textarea([
                 'placeholder' => 'После отправки, пожалуйста, ссобщите нам, что вы ваших условий по частичному погашению нет',
                 'rows' => 3,
+                'id' => 'conditions-partial-repayment',
             ]) ?>
         </div>
     </div>
@@ -117,8 +118,9 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
     <div class="date_annual_service">
-        <?= $form->field($model, 'date_annual_service')->input('date') ?>
-        <div class="message-annual-service">Год укажите текущий, если в этом году списание уже было, то укажите ее.
+        <?= $form->field($model, 'date_annual_service')->input('date', ['id' => 'date-annual-service']) ?>
+        <div class="message-annual-service">
+            Год укажите текущий, если в этом году списание уже было, то укажите ее.
         </div>
     </div>
 
@@ -132,8 +134,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
 
     <div class="billing-period">
-        <?= $form->field($model, 'start_date_billing_period')->input('date') ?>
-        <?= $form->field($model, 'end_date_billing_period')->input('date') ?>
+        <?= $form->field($model, 'start_date_billing_period')->input('date', ['id' => 'start-date']) ?>
+        <?= $form->field($model, 'end_date_billing_period')->input('date', ['id' => 'end-date']) ?>
     </div>
 
     <?= $form->field($model, 'note')->textarea(['rows' => 3]) ?>

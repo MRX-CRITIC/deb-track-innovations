@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\commands\AlertController;
 use app\models\OperationSearchForm;
 use app\services\CardsServices;
 use Exception;
@@ -96,11 +97,19 @@ class SiteController extends Controller
 
     public function actionTest()
     {
-        $grace = '90';
-        $grace = preg_replace('/\D/', '', $grace) / 100;
+//        $x = CardsRepository::getAllDebts();
+//        $today = new \DateTime();
+//        $today->setTime(0, 0);
+//        foreach ($x as $y) {
+//
+//            if ($y['date_payment'] - $today < 1) {
+//                var_dump($y['email']);
+//            }
+//        }
 
-        var_dump($grace);
+//AlertController::actionSendPaymentReminders();
 
+//        var_dump($today);
     }
 
     public function actionOperations()
@@ -118,11 +127,11 @@ class SiteController extends Controller
         }
         $cards = CardsRepository::getUniqueCardNamesByUserId($user_id);
         $cardsList = ArrayHelper::map($cards, 'name_card', 'name_card');
-        $operations = OperationsRepository::getAllOperations($user_id, $selectedCardName, $model->date_operation);
+        $operationsDataProvider = OperationsRepository::getAllOperations($user_id, $selectedCardName, $model->date_operation);
 
         return $this->render('operations', [
             'model' => $model,
-            'operations' => $operations,
+            'operationsDataProvider' => $operationsDataProvider,
             'cardsList' => $cardsList,
             'selectedCardName' => $selectedCardName,
         ]);

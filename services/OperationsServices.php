@@ -1,18 +1,21 @@
 <?php
 
 namespace app\services;
+
 use DateTime;
 use Yii;
 
 class OperationsServices
 {
+    public static $lastOperationDate = null;
 
     /**
      * @throws \Exception
      */
     // настройка расчетного периода под текущую дату
     // возвращает начальную и конечную дату расчетного периода
-    public static function adjustPeriodToCurrentDate($startDate, $endDate, $dateOperation) {
+    public static function adjustPeriodToCurrentDate($startDate, $endDate, $dateOperation)
+    {
         $currentDate = new DateTime($dateOperation);
         $startDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
@@ -64,7 +67,8 @@ class OperationsServices
      * @throws \Exception
      */
     // Tinkoff
-    public static function settingDatePayment($endDate, $gracePeriod) {
+    public static function settingDatePayment($endDate, $gracePeriod)
+    {
         $endDateTime = new DateTime($endDate);
 
         $daysInMonth = $endDateTime->format('t');

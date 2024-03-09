@@ -29,7 +29,8 @@ class CardsRepository
             ->one();
     }
 
-    public static function getUniqueCardNamesByUserId($user_id) {
+    public static function getUniqueCardNamesByUserId($user_id)
+    {
         return Cards::find()
             ->where(['user_id' => $user_id])
             ->select(['name_card'])
@@ -38,8 +39,7 @@ class CardsRepository
     }
 
 
-
-        // получаем расчетную информацию и грейс период карты который добавил пользователь
+    // получаем расчетную информацию и грейс период карты который добавил пользователь
     public static function getInfoReturnMoney($user_id, $card_id)
     {
         $card = Cards::find()->where(['user_id' => $user_id, 'id' => $card_id])->one();
@@ -83,11 +83,11 @@ class CardsRepository
 
 
     public static function createCard(
-        $user_id, $bank_id, $name_card = null,
-        $credit_limit, $withdrawal_limit = null, $cost_banking_services, $grace_period,
-        $payment_partial_repayment, $percentage_partial_repayment = null,
-        $payment_date_purchase_partial_repayment = null,
-        $conditions_partial_repayment = null, $service_period, $date_annual_service = null, $refund_cash_calculation,
+        $user_id, $bank_id, $credit_limit, $cost_banking_services, $grace_period,
+        $payment_partial_repayment, $service_period, $refund_cash_calculation,
+        $name_card = null, $withdrawal_limit = null,
+        $percentage_partial_repayment = null, $payment_date_purchase_partial_repayment = null,
+        $conditions_partial_repayment = null, $date_annual_service = null,
         $start_date_billing_period = null, $end_date_billing_period = null, $note = null
     )
     {
@@ -95,18 +95,18 @@ class CardsRepository
 
         $card->user_id = $user_id;
         $card->bank_id = $bank_id;
-        $card->name_card = $name_card;
         $card->credit_limit = $credit_limit;
-        $card->withdrawal_limit = $withdrawal_limit;
         $card->cost_banking_services = $cost_banking_services;
         $card->grace_period = $grace_period;
         $card->payment_partial_repayment = $payment_partial_repayment;
+        $card->service_period = $service_period;
+        $card->refund_cash_calculation = $refund_cash_calculation;
+        $card->name_card = $name_card;
+        $card->withdrawal_limit = $withdrawal_limit;
         $card->percentage_partial_repayment = $percentage_partial_repayment;
         $card->payment_date_purchase_partial_repayment = $payment_date_purchase_partial_repayment;
         $card->conditions_partial_repayment = $conditions_partial_repayment;
-        $card->service_period = $service_period;
         $card->date_annual_service = $date_annual_service;
-        $card->refund_cash_calculation = $refund_cash_calculation;
         $card->start_date_billing_period = $start_date_billing_period;
         $card->end_date_billing_period = $end_date_billing_period;
         $card->note = $note;
@@ -163,6 +163,46 @@ class CardsRepository
 
         if (empty($paymentOperationsData)) {
             return true; //"Платежи по данной карте отсутствуют";
+        }
+
+        return $paymentOperationsData;
+    }
+
+    public static function getAllDebts()
+    {
+        // Получаем данные об операциях и связанных с ними платежах
+        $paymentOperationsData = Operations::find()
+            ->alias('op')
+            ->select([
+                'op.user_id',
+                'op.card_id',
+                'name_card' => 'c.name_card',
+                'email' => 'u.email',
+                'start_date' => 'p.start_date_billing_period',
+                'end_date' => 'p.end_date_billing_period',
+                'date_payment' => 'p.date_payment',
+                'debt' => new Expression("SUM(IF(op.type_operation = 1, op.sum, -op.sum))")
+            ])
+            ->innerJoin(['p' => 'payments'], 'p.operation_id = op.id')
+            ->leftJoin(['c' => 'cards'], 'c.id = op.card_id')
+            ->leftJoin(['u' => 'users'], 'u.id = op.user_id')
+            ->where([
+                'op.status' => 1,
+            ])
+            ->having(['!=', 'debt', 0])
+            ->groupBy([
+                'op.user_id',
+                'op.card_id',
+                'p.date_payment',
+                'p.start_date_billing_period',
+                'p.end_date_billing_period'
+            ])
+            ->asArray()
+            ->orderBy(['op.user_id' => SORT_ASC, 'p.date_payment' => SORT_ASC])
+            ->all();
+
+        if (empty($paymentOperationsData)) {
+            return "Долги отсутствуют";
         }
 
         return $paymentOperationsData;

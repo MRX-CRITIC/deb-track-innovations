@@ -95,5 +95,79 @@ td, th {
 
 .reset-btn:hover {
     opacity: 0.8;
-    transform: translateY(-1px); /* Поднимаем кнопку вверх */
+    transform: translateY(-1px);
+}
+
+.empty-text-class {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.row {
+    flex-wrap: wrap-reverse;
+}
+
+body .page-item:first-child .page-link {
+    border-radius: 5px !important;
+}
+
+body .page-item:last-child .page-link {
+    border-radius: 5px !important;
+}
+
+.custom-pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin-top: 2em;
+    justify-content: center;
+}
+
+.page-link {
+    display: block;
+    padding: 7px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #C0C0C0;
+    transition: background-color 0.3s ease;
+}
+
+.page-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 0.5em; */
+    width: 4em;
+}
+
+.page-item.active .page-link,
+.page-item:hover .page-link {
+    background-color: #D3D3D3;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.page-item.disabled .page-link {
+    color: #ccc;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.page-item.prev img,
+.page-item.next img {
+    vertical-align: middle;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Стиль для многоточия */
+.page-item .page-link.dots {
+    background-color: transparent;
+    cursor: default;
+    pointer-events: none;
 }

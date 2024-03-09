@@ -14,13 +14,6 @@ class OperationsRepository
             ->one();
     }
 
-//    public static function getAllOperationCard($card_id, $user_id)
-//    {
-//        return Operations::find()
-//            ->where(['user_id' => $user_id, 'id' => $card_id])
-//            ->all();
-//    }
-
     public static function getDateLastOperation($user_id, $card_id)
     {
         return Operations::find()
@@ -34,7 +27,10 @@ class OperationsRepository
     {
         $query = Operations::find()
             ->joinWith(['card.bank'])
-            ->where(['operations.user_id' => $user_id, 'operations.status' => 1]);
+            ->where([
+                'operations.user_id' => $user_id,
+                'operations.status' => 1
+            ]);
 
         if ($name_card !== null && $name_card !== '') {
             $query->andWhere(['cards.name_card' => $name_card]);
@@ -52,49 +48,19 @@ class OperationsRepository
             ->orderBy([
                 'operations.date_operation' => SORT_DESC,
                 'operations.date_recording' => SORT_DESC
-            ])
-            ->all();
+            ]);
+//            ->all();
+//        return $query->all();
 
-        return $query->all();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 7,
+            ],
+        ]);
+
+        return $dataProvider;
     }
-
-//    public static function getAllOperations($user_id)
-//    {
-//        $query = Operations::find()
-//            ->joinWith(['card.bank'])
-//            ->where(['operations.user_id' => $user_id, 'operations.status' => 1])
-//            ->select([
-//                '{{operations}}.*', // Выбрать все поля из операций
-//                '{{cards}}.name_card', // Добавить name_card из таблицы карт
-//                '{{banks}}.name AS bank_name', // Добавить name из таблицы банков как bank_name
-//            ])
-//            ->orderBy([
-//                'operations.date_operation' => SORT_DESC,
-//                'operations.date_recording' => SORT_DESC
-//            ]);
-//
-//
-//        return new ActiveDataProvider([
-//            'query' => $query,
-//            'pagination' => [
-//                'pageSize' => 10,
-//            ],
-//            'sort' => [
-//                'attributes' => [
-//                'date_operation' => [
-//                    'asc' => ['operations.date_operation' => SORT_ASC],
-//                    'desc' => ['operations.date_operation' => SORT_DESC],
-//                    'default' => SORT_DESC,
-//                ],
-//                'date_recording' => [
-//                    'asc' => ['operations.date_recording' => SORT_ASC],
-//                    'desc' => ['operations.date_recording' => SORT_DESC],
-//                    'default' => SORT_DESC,
-//                ],
-//            ],
-//            ],
-//        ]);
-//    }
 
     public static function createOperation(
         $user_id, $card_id, $date_operation,
@@ -133,6 +99,7 @@ class OperationsRepository
             return 'Операция не найдена';
         }
     }
+
 
 
 }

@@ -110,7 +110,8 @@ $(document).ready(function () {
         $(".conditional-fields-payment").show();
     } else {
         $(".conditional-fields-payment").hide();
-        $("#percentage_partial_repayment").val('');
+        $("#percentage-partial-repayment").val('');
+        $("#conditions-partial-repayment").val('');
 
     }
 });
@@ -119,7 +120,8 @@ $("#model-payment-partial-repayment input[type='radio']").change(function () {
         $(".conditional-fields-payment").show();
     } else {
         $(".conditional-fields-payment").hide();
-        $("#percentage_partial_repayment").val('');
+        $("#percentage-partial-repayment").val('');
+        $("#conditions-partial-repayment").val('');
     }
 });
 
@@ -129,6 +131,7 @@ $(document).ready(function () {
         $(".conditional-fields-terms-payment").show();
     } else {
         $(".conditional-fields-terms-payment").hide();
+        $("#conditions-partial-repayment").val('');
     }
 });
 $("#model-payment-date-purchase-partial-repayment input[type='radio']").change(function () {
@@ -136,6 +139,7 @@ $("#model-payment-date-purchase-partial-repayment input[type='radio']").change(f
         $(".conditional-fields-terms-payment").show();
     } else {
         $(".conditional-fields-terms-payment").hide();
+        $("#conditions-partial-repayment").val('');
     }
 });
 
@@ -145,6 +149,8 @@ $(document).ready(function () {
         $(".billing-period").show();
     } else {
         $(".billing-period").hide();
+        $("#start-date").val('');
+        $("#end-date").val('');
     }
 });
 $("#model-refund-cash-calculation input[type='radio']").change(function () {
@@ -152,6 +158,8 @@ $("#model-refund-cash-calculation input[type='radio']").change(function () {
         $(".billing-period").show();
     } else {
         $(".billing-period").hide();
+        $("#start-date").val('');
+        $("#end-date").val('');
     }
 });
 
@@ -162,6 +170,7 @@ $(document).ready(function () {
         $(".date_annual_service").show();
     } else {
         $(".date_annual_service").hide();
+        $("#date-annual-service").val('');
     }
 });
 $("#model-service-period input[type='radio']").change(function () {
@@ -169,6 +178,7 @@ $("#model-service-period input[type='radio']").change(function () {
         $(".date_annual_service").show();
     } else {
         $(".date_annual_service").hide();
+        $("#date-annual-service").val('');
     }
 });
 
