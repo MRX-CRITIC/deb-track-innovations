@@ -107,7 +107,10 @@ class SiteController extends Controller
 //            }
 //        }
 
-//AlertController::actionSendPaymentReminders();
+//        phpinfo();
+
+
+//        AlertController::actionSendPaymentReminders();
 
 //        var_dump($today);
     }

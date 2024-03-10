@@ -13,9 +13,6 @@ class CardsServices
     {
         if (empty($name_card)) {
             $count_card = CardsRepository::getCountCards($user_id);
-            if ($count_card = 0) {
-                return "Кредитная карта 1";
-            }
             return "Кредитная карта " . ($count_card + 1);
         } else {
             return $name_card;

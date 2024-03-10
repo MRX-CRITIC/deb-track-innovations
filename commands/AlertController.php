@@ -9,14 +9,23 @@ use yii\console\ExitCode;
 
 class AlertController extends Controller
 {
+    /**
+     * @throws \Exception
+     */
     public static function actionSendPaymentReminders()
     {
-        $today = new \DateTime();
-        $today->setTime(0, 0);
-
         $duePayments = CardsRepository::getAllDebts();
         foreach ($duePayments as $payment) {
-            if ($payment['date_payment'] - $today >= 1) {
+
+            $datePayment = new \DateTime($payment['date_payment']);
+            $datePayment->setTime(0, 0);
+
+            $today = new \DateTime();
+            $today->setTime(0, 0);
+
+            $diff = $today->diff($datePayment);
+
+            if ($diff->invert || $diff->days <= 1) {
                 Yii::$app->mailer->compose('/emails/payment-reminder', ['payment' => $payment])
                     ->setFrom('money.back.monitoring@gmail.com')
                     ->setTo($payment['email'])

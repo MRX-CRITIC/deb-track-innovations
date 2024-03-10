@@ -105,11 +105,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     </div>
 </main>
 
-<div>
-    <div class="wave"></div>
-    <div class="wave"></div>
-    <div class="wave"></div>
-</div>
 
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container">
