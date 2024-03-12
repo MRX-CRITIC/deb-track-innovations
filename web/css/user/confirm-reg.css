@@ -11,7 +11,7 @@
 }
 
 #code-modal {
-    background: #2D3748;
+    background: rgb(39 41 63 / 92%);
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -27,7 +27,7 @@
     border: 1px solid #4A5568;
     border-radius: 4px;
     color: white;
-    font-size: 2em;
+    font-size: 1.9em;
     text-align: center;
     margin: 10px 5px;
     max-width: 50px;
@@ -35,10 +35,10 @@
 }
 
 #verify-code-btn {
-    background-color: #4C51BF;
+    background-color: rgba(80, 85, 320, 0.92);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 0.375rem;
     padding: 10px 20px;
     margin-top: 7px;
     cursor: pointer;
@@ -46,8 +46,9 @@
 }
 
 #verify-code-btn:hover {
-    background-color: #667EEA;
-    border-radius: 10px;
+    background-color: rgba(80, 85, 200, 0.92);
+    /*opacity: 0.8;*/
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.25);
 }
 
 #code-inputs {
@@ -59,7 +60,7 @@
 }
 
 #info {
-    font-size: 11px;
+    font-size: 13px;
     color: rgba(96, 113, 129, 0.92);
 }
 
@@ -97,7 +98,7 @@ body .mb-3 {
 }
 
 #countdown-timer {
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(96, 113, 129, 0.92);
 }
 

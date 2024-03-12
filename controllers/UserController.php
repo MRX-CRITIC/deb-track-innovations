@@ -157,7 +157,7 @@ class UserController extends Controller
     {
         Yii::$app->mailer->compose('/emails/confirm-email', ['confirmationCode' => $confirmationCode])
             ->setTo($email)
-            ->setFrom("money.back.monitoring@gmail.com")
+            ->setFrom("info@deb-track-innovations.ru")
             ->setSubject('Подтверждение адреса электронной почты')
             ->send();
     }

@@ -97,22 +97,6 @@ class SiteController extends Controller
 
     public function actionTest()
     {
-//        $x = CardsRepository::getAllDebts();
-//        $today = new \DateTime();
-//        $today->setTime(0, 0);
-//        foreach ($x as $y) {
-//
-//            if ($y['date_payment'] - $today < 1) {
-//                var_dump($y['email']);
-//            }
-//        }
-
-//        phpinfo();
-
-
-//        AlertController::actionSendPaymentReminders();
-
-//        var_dump($today);
     }
 
     public function actionOperations()

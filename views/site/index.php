@@ -38,7 +38,6 @@ $this->title = 'DebTrack Innovations';
                     <div class="header">
 
                         <div>Название карты: <h6><?= Html::encode(htmlspecialchars($card->name_card)) ?></h6></div>
-<!--                        --><?php //var_dump($card); ?>
                         <div class="links">
                             <a class="add-operation" href="<?=
                             Yii::$app->urlManager->createUrl([

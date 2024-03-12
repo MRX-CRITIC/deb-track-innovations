@@ -13,6 +13,7 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
     ],
+
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -26,7 +27,23 @@ $config = [
             ],
         ],
         'db' => $db,
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.beget.com', //smtp.beget.com //smtp.gmail.com
+                'username' => 'info@deb-track-innovations.ru',
+                'password' => 'C2eeLP0%',
+                'port' => '2525', //465 2525
+                'encryption' => 'tls', //ssl
+            ],
+            'viewPath' => '@app/mail',
+            // send all mails to a file by default.
+            'useFileTransport' => false,
+        ],
     ],
+
     'params' => $params,
     /*
     'controllerMap' => [

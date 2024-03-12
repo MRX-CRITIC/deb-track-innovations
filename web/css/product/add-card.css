@@ -1,5 +1,5 @@
 .site-product {
-    background-color: rgba(39,41,66,0.92);
+    background-color: rgb(39 41 63 / 92%);
     /*opacity: 0.85;*/
     font-family: 'system-ui', sans-serif;
     /*margin: 0;*/
@@ -9,7 +9,7 @@
     border-radius: 30px;
     padding: 5vh 30vh 5vh 30vh;
     width: 100%;
-    margin: 0 0 0 0;
+    margin: 1em 0 0 0;
 }
 
 .tooltip-custom {
@@ -41,11 +41,17 @@
 }
 
 .btn-success {
-    --bs-btn-bg: #3748d4;
-    --bs-btn-border-color: #4C51BF;
-    --bs-btn-hover-bg: #5C63BF;
-    --bs-btn-hover-border-color: #5C63BF;
-    --bs-btn-active-bg: #5C63BF;
+    --bs-btn-bg: rgba(80, 85, 320, 0.92);
+    --bs-btn-border-color: rgba(80, 85, 320, 0.92);
+    --bs-btn-hover-bg: rgba(80, 85, 200, 0.92);
+    --bs-btn-hover-border-color: rgba(80, 85, 200, 0.92);
+    --bs-btn-active-bg: rgba(80, 85, 320, 0.92);
+    box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.btn-success:hover {
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.25);
 }
 
 .form-group {

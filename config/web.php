@@ -59,48 +59,50 @@ $config = [
             'useCookies' => true,
         ],
         'errorHandler' => [
-    'errorAction' => 'site/error',
-],
-        'mailer' => [
-    'class' => 'yii\swiftmailer\Mailer',
-
-    'transport' => [
-        'class' => 'Swift_SmtpTransport',
-        'host' => 'smtp.gmail.com',
-        'username' => 'money.back.monitoring@gmail.com',
-        'password' => 'wpovppvalrkxkbcu',
-        'port' => '587',
-        'encryption' => 'tls',
-    ],
-            'viewPath' => '@app/mail',
-    // send all mails to a file by default.
-    'useFileTransport' => false,
-],
-        'formatter' => [
-    'class' => 'yii\i18n\Formatter',
-    'thousandSeparator' => ' ', // Разделитель тысяч
-    'currencyCode' => 'RUB',
-],
-        'log' => [
-    'traceLevel' => YII_DEBUG ? 3 : 0,
-    'targets' => [
-        [
-            'class' => 'yii\log\FileTarget',
-            'levels' => ['error', 'warning'], // 'info'
-//                    'logFile' => '@runtime/logs/app.log',
+            'errorAction' => 'site/error',
         ],
-    ],
-],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.beget.com', //smtp.beget.com //smtp.gmail.com
+                'username' => 'info@deb-track-innovations.ru',
+                'password' => 'C2eeLP0%',
+                'port' => '2525', //465 2525
+                'encryption' => 'tls', //ssl
+            ],
+            'viewPath' => '@app/mail',
+            // send all mails to a file by default.
+            'useFileTransport' => false,
+        ],
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'locale' => 'ru-RU',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => ' ', // Разделитель тысяч
+            'currencyCode' => 'RUB',
+        ],
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning'], // 'info'
+//                    'logFile' => '@runtime/logs/app.log',
+                ],
+            ],
+        ],
         'db' => $db,
         'authManager' => [
-    'class' => 'yii\rbac\DbManager',
-],
+            'class' => 'yii\rbac\DbManager',
+        ],
         'urlManager' => [
-    'enablePrettyUrl' => true,
-    'showScriptName' => false,
-    'rules' => [
-    ],
-],
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
     ],
     'params' => $params,
 ];

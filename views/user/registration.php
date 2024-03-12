@@ -88,6 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'maxlength' => 1,
                         'autocomplete' => 'off',
                         'data-index' => $i,
+                        'inputmode' => 'numeric',
                     ])->label(false) ?>
                 <?php endfor; ?>
 

@@ -55,7 +55,7 @@ class OperationsRepository
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSize' => 7,
+                'pageSize' => 10,
             ],
         ]);
 

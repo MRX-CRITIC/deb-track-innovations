@@ -3,16 +3,16 @@ main > .container {
 }
 
 #main {
-    background: #7DA0CA;
+    background: rgba(30, 28, 41, 0.92);
 }
 
 #footer {
-    background: #7DA0CA;
+    background: rgba(30, 28, 41, 0.92);
 }
 
 body .bg-light {
     --bs-bg-opacity: 1;
-    background-color: #7DA0CA !important;
+    background-color: rgba(30, 28, 41, 0.92) !important;
 }
 
 .footer {
@@ -27,7 +27,7 @@ body .bg-light {
 }
 
 .flex-column {
-    background: #7DA0CA !important;
+    background: rgba(30, 28, 41, 1) !important;
 }
 
 .breadcrumb {
@@ -121,33 +121,50 @@ a.desc:after {
         flex-direction: column;
         align-items: normal;
     }
+
     body .mb-3 {
         margin: 0 0 0 0 !important;
         margin-bottom: 1rem !important;
     }
 
     body .brand-logo {
-        display: none;
+        /*display: none;*/
+        width: 100%;
+        height: 5em;
+        flex-direction: column;
+        margin-top: 1em;
     }
+
     .line {
         display: none;
     }
 
     .login-container {
-        margin: 0;
+        align-items: flex-start;
+        margin-left: 5em;
     }
+
     ol, ul, dl {
         /*margin-left: 1vh;*/
     }
+
     .reg-title {
-        position: absolute;
-        top: 21%;
-         left: 0;
-        margin: 0 10vh 0 4vh;
+        /*position: absolute;*/
+        /*top: 21%;*/
+        /* left: 0;*/
+        /*margin: 0 10vh 0 4vh;*/
+        display: none;
+    }
+
+    .body {
+        flex-direction: column;
+        width: 100%;
     }
 
     .login-form form {
-        margin: 0 0 -6em 0;
+        margin: -3em 0 0 0;
+        width: 20em;
+        max-width: 100%;
     }
 }
 
@@ -168,16 +185,17 @@ a.desc:after {
 body .bg-dark {
     font-family: 'system-ui', sans-serif;
     font-size: 1rem;
-    background-color: rgba(39,41,66,0.92) !important;
+    background-color: rgb(80 80 185) !important;
     /*opacity: 0.85;*/
     position: fixed;
 }
 
 body .navbar-brand {
-    /*font-size: 1.3rem !important;*/
-    background: linear-gradient(175deg, #44FFFD, #22E0E5, #9A4DFF, #9933FF, #ff00ff);
+    background: #FFFFFF;
+    /*background: linear-gradient(175deg, #44FFFD, #22E0E5, #9A4DFF, #9933FF, #ff00ff);*/
     /* background: linear-gradient(175deg, #89D1C9, #63B6B7, #897CB6, #8679B7, #e933ff); */
     background-size: 200% auto;
+    font-size: 1.3em;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     --bs-navbar-brand-margin-end: 3rem;

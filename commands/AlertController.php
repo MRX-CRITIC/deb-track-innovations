@@ -3,6 +3,7 @@
 namespace app\commands;
 
 use app\repository\CardsRepository;
+use Exception;
 use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
@@ -10,9 +11,9 @@ use yii\console\ExitCode;
 class AlertController extends Controller
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function actionSendPaymentReminders()
+    public function actionSendPaymentReminders()
     {
         $duePayments = CardsRepository::getAllDebts();
         foreach ($duePayments as $payment) {
@@ -27,7 +28,7 @@ class AlertController extends Controller
 
             if ($diff->invert || $diff->days <= 1) {
                 Yii::$app->mailer->compose('/emails/payment-reminder', ['payment' => $payment])
-                    ->setFrom('money.back.monitoring@gmail.com')
+                    ->setFrom("info@deb-track-innovations.ru")
                     ->setTo($payment['email'])
                     ->setSubject('Напоминание о внесение платежа')
                     ->send();
