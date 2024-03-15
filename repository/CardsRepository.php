@@ -168,27 +168,29 @@ class CardsRepository
         return $paymentOperationsData;
     }
 
-    public static function getAllDebts()
+    public static function getAllDebts($today)
     {
-        // Получаем данные об операциях и связанных с ними платежах
-        $paymentOperationsData = Operations::find()
+        $tomorrow = (clone $today)->modify('+1 day');
+        $tomorrowStr = $tomorrow->format('Y-m-d');
+
+        $query = Operations::find()
             ->alias('op')
             ->select([
                 'op.user_id',
                 'op.card_id',
-                'name_card' => 'c.name_card',
-                'email' => 'u.email',
-                'start_date' => 'p.start_date_billing_period',
-                'end_date' => 'p.end_date_billing_period',
-                'date_payment' => 'p.date_payment',
-                'debt' => new Expression("SUM(IF(op.type_operation = 1, op.sum, -op.sum))")
+                'c.name_card AS name_card',
+                'u.email AS email',
+                'p.start_date_billing_period AS start_date',
+                'p.end_date_billing_period AS end_date',
+                'p.date_payment AS date_payment',
+                'debt' => new \yii\db\Expression("SUM(IF(op.type_operation = 1, op.sum, -op.sum))")
             ])
-            ->innerJoin(['p' => 'payments'], 'p.operation_id = op.id')
-            ->leftJoin(['c' => 'cards'], 'c.id = op.card_id')
-            ->leftJoin(['u' => 'users'], 'u.id = op.user_id')
-            ->where([
-                'op.status' => 1,
-            ])
+            ->innerJoin('payments p', 'p.operation_id = op.id')
+            ->leftJoin('cards c', 'c.id = op.card_id')
+            ->leftJoin('users u', 'u.id = op.user_id')
+            ->where(['op.status' => 1])
+//            ->andWhere(['>=', 'p.date_payment', $todayStr])
+            ->andWhere(['<', 'p.date_payment', $tomorrowStr])
             ->having(['!=', 'debt', 0])
             ->groupBy([
                 'op.user_id',
@@ -197,9 +199,9 @@ class CardsRepository
                 'p.start_date_billing_period',
                 'p.end_date_billing_period'
             ])
-            ->asArray()
-            ->orderBy(['op.user_id' => SORT_ASC, 'p.date_payment' => SORT_ASC])
-            ->all();
+            ->orderBy(['op.user_id' => SORT_ASC, 'p.date_payment' => SORT_ASC]);
+
+        $paymentOperationsData = $query->asArray()->all();
 
         if (empty($paymentOperationsData)) {
             return "Долги отсутствуют";
@@ -207,6 +209,7 @@ class CardsRepository
 
         return $paymentOperationsData;
     }
+
 
 
     public static function getAllCardWithDebtsAndPayments($user_id)

@@ -13,25 +13,28 @@ use yii\bootstrap5\NavBar;
 
 AppAsset::register($this);
 
+
+
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/img/img_qHmjH7HacfBDlJ5DrfKr-fotor-bg-remover-20240218181020.png')]);
 ?>
 
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="shortcut icon" href="<?php echo Yii::$app->request->baseUrl; ?>/web/img/img_qHmjH7HacfBDlJ5DrfKr-fotor-bg-remover-20240218181020.png" type="image/x-icon">
-    <link rel="icon" href="<?php echo Yii::$app->request->baseUrl; ?>/web/img/img_qHmjH7HacfBDlJ5DrfKr-fotor-bg-remover-20240218181020.png" type="image/x-icon">
-
     <title><?= Html::encode($this->title) ?></title>
+    <meta charset="UTF-8">
+
+    <meta name="format-detection" content="telephone=no">
+<!--    <link rel="shortcut icon" href="--><?php //echo Yii::$app->request->baseUrl; ?><!--/web/img/img_qHmjH7HacfBDlJ5DrfKr-fotor-bg-remover-20240218181020.png" type="image/x-icon" style="width: 12px; height: 12px">-->
+<!--    <link rel="icon" href="--><?//= Yii::getAlias('@web') ?><!--/img/img_qHmjH7HacfBDlJ5DrfKr-fotor-bg-remover-20240218181020.png" type="image/x-icon">-->
+
+
     <?php $this->head() ?>
 </head>
 <body class="d-flex flex-column h-100">

@@ -20,6 +20,8 @@ use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
+use yii\web\HttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -75,7 +77,6 @@ class SiteController extends Controller
         ];
     }
 
-
     /**
      * @throws \Exception
      */
@@ -94,9 +95,20 @@ class SiteController extends Controller
         ]);
     }
 
-
+    /**
+     * @throws HttpException
+     */
     public function actionTest()
     {
+        if (\Yii::$app->user->can('showTest')) {
+            $today = new \DateTime();
+            $today->setTime(0, 0);
+
+            $debts = CardsRepository::getAllDebts($today);
+            var_dump($debts);
+        } else {
+            throw new HttpException(404, 'У вас нет доступа к этой странице');
+        }
     }
 
     public function actionOperations()
@@ -123,7 +135,6 @@ class SiteController extends Controller
             'selectedCardName' => $selectedCardName,
         ]);
     }
-
 
     /**
      * Displays contact page.

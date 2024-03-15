@@ -43,7 +43,9 @@ $this->title = 'DebTrack Innovations';
                             Yii::$app->urlManager->createUrl([
                                 '/product/add-operation',
                                 'card_id' => $card->id,
-                            ]) ?>" data-method="post"><img src="<?= Yii::getAlias('@web') ?> /img/add-operation.png" style="width: 6vh" alt="">
+                            ]) ?>"
+                               data-method="post"
+                               title="Добавить операцию"><img src="<?= Yii::getAlias('@web') ?> /img/add-operation.png" style="width: 6vh"  alt="Добавить операцию">
                             </a>
                         </div>
                     </div>
@@ -70,7 +72,7 @@ $this->title = 'DebTrack Innovations';
                         <div>Общая задолженность: <?= Html::encode(htmlspecialchars($TotalDebt)) ?></div>
                     <?php else: ?>
                         <div>Ближайший платеж:
-                            <span style="color: #00FF00">задолженность отсутствует</span>
+                            <span style="color: #00FF00">не найден</span>
                         </div>
                     <?php endif; ?>
 

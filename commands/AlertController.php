@@ -15,24 +15,18 @@ class AlertController extends Controller
      */
     public function actionSendPaymentReminders()
     {
-        $duePayments = CardsRepository::getAllDebts();
+        $today = new \DateTime();
+        $today->setTime(0, 0);
+
+        $duePayments = CardsRepository::getAllDebts($today);
         foreach ($duePayments as $payment) {
 
-            $datePayment = new \DateTime($payment['date_payment']);
-            $datePayment->setTime(0, 0);
+            Yii::$app->mailer->compose('/emails/payment-reminder', ['payment' => $payment])
+                ->setFrom("info@deb-track-innovations.ru")
+                ->setTo($payment['email'])
+                ->setSubject('Напоминание о внесение платежа')
+                ->send();
 
-            $today = new \DateTime();
-            $today->setTime(0, 0);
-
-            $diff = $today->diff($datePayment);
-
-            if ($diff->invert || $diff->days <= 1) {
-                Yii::$app->mailer->compose('/emails/payment-reminder', ['payment' => $payment])
-                    ->setFrom("info@deb-track-innovations.ru")
-                    ->setTo($payment['email'])
-                    ->setSubject('Напоминание о внесение платежа')
-                    ->send();
-            }
         }
     }
 }

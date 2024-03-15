@@ -12,6 +12,8 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
+        '@webroot' => '@app/web',
+        '@web' => '@app/web',
     ],
 
     'components' => [
@@ -27,6 +29,9 @@ $config = [
             ],
         ],
         'db' => $db,
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
 
