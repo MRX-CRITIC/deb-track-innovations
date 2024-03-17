@@ -162,7 +162,7 @@ class CardsRepository
             ->all();
 
         if (empty($paymentOperationsData)) {
-            return true; //"Платежи по данной карте отсутствуют";
+            return true; // "Платежи по данной карте отсутствуют";
         }
 
         return $paymentOperationsData;
@@ -212,7 +212,7 @@ class CardsRepository
 
 
 
-    public static function getAllCardWithDebtsAndPayments($user_id)
+    public static function getAllCardsWithDebtsAndPayments($user_id)
     {
         // Подзапрос для получения задолженностей и дат
         $debtSubQuery = (new \yii\db\Query())
@@ -257,6 +257,53 @@ class CardsRepository
                 'debt' => SORT_ASC,
             ])
             ->all();
+    }
+
+    public static function getCardWithDebtsAndPayments($user_id, $card_id)
+    {
+        // Подзапрос для получения задолженностей и дат
+        $debtSubQuery = (new \yii\db\Query())
+            ->select([
+                'op.card_id',
+                'start_date' => 'p.start_date_billing_period',
+                'end_date' => 'p.end_date_billing_period',
+                'date_payment' => 'p.date_payment',
+                'debt' => new \yii\db\Expression("SUM(IF(op.type_operation = 1, op.sum, -op.sum))"),
+            ])
+            ->from(['op' => 'operations'])
+            ->innerJoin(['p' => 'payments'], 'p.operation_id = op.id')
+            ->where([
+                'op.status' => 1,
+                'op.user_id' => $user_id,
+            ])
+            ->groupBy([
+                'op.card_id',
+                'p.start_date_billing_period',
+                'p.end_date_billing_period',
+                'p.date_payment'
+            ])
+            ->having(['!=', 'debt', 0]);
+
+        return Cards::find()
+            ->alias('c')
+            ->joinWith(['bank', 'lastBalance'])
+            ->leftJoin(['debtInfo' => $debtSubQuery], 'debtInfo.card_id = c.id')
+            ->where([
+                'c.user_id' => $user_id,
+                'c.id' => $card_id, // условие для выборки по определенной карте
+            ])
+            ->select([
+                'c.*',
+                'debt' => 'debtInfo.debt',
+                'start_date' => 'debtInfo.start_date',
+                'end_date' => 'debtInfo.end_date',
+                'date_payment' => 'debtInfo.date_payment',
+            ])
+            ->orderBy([
+                'c.id' => SORT_ASC,
+                'debt' => SORT_ASC,
+            ])
+            ->one(); // Используем one(), так как ожидаем получить данные только по одной карте
     }
 
 

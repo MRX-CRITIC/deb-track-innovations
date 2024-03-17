@@ -14,97 +14,93 @@ $formatter = \Yii::$app->formatter;
 $this->title = 'DebTrack Innovations';
 \app\assets\ProductAsset::register($this);
 \app\assets\IndexAsset::register($this);
-//var_dump($cardsUpdate);
 ?>
+<div class="control-panel">
+    <a class="add-card-href" href="/product/add-card">Добавить карту</a>
+</div>
 
-<div class="site-product">
-    <a class="add-card-href" href="/product/add-card">Добавить банковский продукт</a>
+<div class="body-content">
 
-    <div class="body-content">
+    <div class="content-row">
 
-        <div class="row">
-            <?php foreach ($cardsUpdate as $card): ?>
-                <?php $formattedCreditLimit = Yii::$app->formatter->asDecimal($card->credit_limit, 2); ?>
-                <?php $formattedCostBanking = Yii::$app->formatter->asDecimal($card->cost_banking_services, 2); ?>
-                <?php $formattedFinBalance = Yii::$app->formatter->asDecimal($card->lastBalance->fin_balance, 2); ?>
-                <?php $TotalDebt = Yii::$app->formatter->asDecimal($card->credit_limit - $card->lastBalance->fin_balance, 2); ?>
-                <?php $formattedDebt = Yii::$app->formatter->asDecimal(-$card->debt, 2); ?>
-                <?php $formattedWithdrawalLimit = Yii::$app->formatter->asDecimal($card->actual_withdrawal_limit, 2); ?>
-                <?php $formattedDatePayment = $formatter->asDate($card->date_payment, 'php:d.m.Y'); ?>
-                <?php $formattedDateStart = $formatter->asDate($card->start_date, 'php:d.m.Y'); ?>
-                <?php $formattedDateEnd = $formatter->asDate($card->end_date, 'php:d.m.Y'); ?>
+        <?php foreach ($cardsUpdate as $card): ?>
 
-                <div class="product-info">
-                    <div class="header">
+            <?php $formattedFinBalance = Yii::$app->formatter->asDecimal($card->lastBalance->fin_balance, 2); ?>
+            <?php $formattedDebt = Yii::$app->formatter->asDecimal(-$card->debt, 2); ?>
+            <?php $formattedDatePayment = $formatter->asDate($card->date_payment, 'php:d.m.Y'); ?>
+            <?php $formattedWithdrawalLimit = Yii::$app->formatter->asDecimal($card->actual_withdrawal_limit, 2); ?>
 
-                        <div>Название карты: <h6><?= Html::encode(htmlspecialchars($card->name_card)) ?></h6></div>
-                        <div class="links">
-                            <a class="add-operation" href="<?=
-                            Yii::$app->urlManager->createUrl([
-                                '/product/add-operation',
-                                'card_id' => $card->id,
-                            ]) ?>"
-                               data-method="post"
-                               title="Добавить операцию"><img src="<?= Yii::getAlias('@web') ?> /img/add-operation.png" style="width: 6vh"  alt="Добавить операцию">
-                            </a>
-                        </div>
-                    </div>
+            <div class="product-info">
+                <div class="header">
 
-
-                    <div style="margin: 3vh 0 3vh 0;">Баланс: <?= Html::encode($formattedFinBalance) ?></div>
-
-                    <?php if (!empty($formattedDebt > 0 && $formattedDatePayment)): ?>
-                        <div>Ближайший платеж:
-                            <span style="color: red; font-weight: bold;">
-                                <?= Html::encode($formattedDebt) ?>
+                    <div>
+                        Название карты:
+                        <h5 style="
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            gap: 0.5vh;
+                            flex-wrap: wrap;
+                            ">
+                            <?= Html::encode(htmlspecialchars($card->name_card)) ?>
+                            <span style="text-align: -webkit-center;">
+                                    <a class="card-info add-operation" id="card-info" href="<?=
+                                    Yii::$app->urlManager->createUrl([
+                                        '/product/card-info',
+                                        'card_id' => $card->id,
+                                    ]) ?>"
+                                       data-method="post"
+                                       title="Информация о карте">
+                                        <img src="<?= Yii::getAlias('@web') ?> /img/info.png"
+                                             style="width: 3vh" alt="Информация">
+                                    </a>
                             </span>
-                            оплатить до
+                        </h5>
+                    </div>
+                    <div class="links">
+                        <a class="add-operation" href="<?=
+                        Yii::$app->urlManager->createUrl([
+                            '/product/add-operation',
+                            'card_id' => $card->id,
+                        ]) ?>"
+                           data-method="post"
+                           title="Добавить операцию">
+                            <img src="<?= Yii::getAlias('@web') ?> /img/add-operation.png"
+                                 style="width: 5vh" alt="Добавить операцию">
+                        </a>
+                    </div>
+                </div>
+
+
+                <div style="margin: 3vh 0 0 0;">Баланс: <?= Html::encode($formattedFinBalance) ?>₽</div>
+
+                <div>Возможность снятия/перевода:
+                    <?= Html::encode($formattedWithdrawalLimit) ?>₽
+                </div><br>
+
+                <?php if ($formattedDebt > 0 && !empty($formattedDatePayment)): ?>
+
+                    <div>Ближайший платеж:
+                        <span style="color: red; font-weight: bold;">
+                                <?= Html::encode($formattedDebt) ?>₽
+                        </span>
+
+                        <span class="term">оплатить до
                             <span style="text-decoration: underline;">
                                 <?= Html::encode($formattedDatePayment) ?>
                             </span>
-                        </div>
-                        <div style="font-size: 0.95rem; margin: 5px 0 5px 0;">Сумма ближайшего платежа ровна сумме
-                            операций за расчетный период:
-                            <span style="text-decoration: underline;">
-                                <?= Html::encode($formattedDateStart . ' - ' . $formattedDateEnd) ?>
-                            </span>
-                        </div>
-                        <div>Общая задолженность: <?= Html::encode(htmlspecialchars($TotalDebt)) ?></div>
-                    <?php else: ?>
-                        <div>Ближайший платеж:
-                            <span style="color: #00FF00">не найден</span>
-                        </div>
-                    <?php endif; ?>
-
-
-                    <div>Возможность снятия/перевода:
-                        <?= Html::encode($formattedWithdrawalLimit) ?>
-                    </div><br>
-
-
-                    <div>Банк: <?= Html::encode($card->bank->name) ?> </div>
-                    <div>Кредитный лимит: <?= Html::encode($formattedCreditLimit) ?></div>
-                    <div>Стоимость обслуживания: <?= Html::encode($formattedCostBanking) ?></div>
-                    <div>Льготный период: <?= Html::encode($card->grace_period) ?> дней</div>
-                    <div><?php if (!empty($card->note)): ?>
-                            <a class="a-note"
-                               data-bs-toggle="collapse"
-                               href="#collapseNote-<?= $card->id ?>"
-                               aria-expanded="false"
-                               aria-controls="collapseNote-<?= $card->id ?>">
-                                Показать примечание
-                            </a>
-                            <div class="collapse" id="collapseNote-<?= $card->id ?>">
-                                <div class="card-note">
-                                    <?= Html::encode($card->note) ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
+                        </span>
                     </div>
 
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php else: ?>
 
+                    <div>Ближайший платеж:
+                        <span style="color: #00FF00">не найден</span>
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+        <?php endforeach; ?>
     </div>
 </div>

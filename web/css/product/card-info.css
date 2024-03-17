@@ -1,0 +1,36 @@
+.card-info {
+    /*display: flex;*/
+    background: rgb(39 41 63 / 92%);
+    color: #FFFFFF;
+    border-radius: 30px;
+    /*flex-direction: column;*/
+    /*align-items: center;*/
+    width: 50%;
+}
+
+.content-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.line-2 {
+    border: 1px solid #FFFFFF;
+    width: 90%;
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.delete-card {
+    float: right;
+    margin-right: 1vh;
+    width: 6em;
+    padding: 1vh;
+    text-align: center;
+    color: red;
+    text-decoration: none;
+}

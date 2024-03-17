@@ -7,9 +7,9 @@
     display: block;
     /*height: 100%;*/
     border-radius: 30px;
-    padding: 5vh 30vh 5vh 30vh;
+    padding: 1.5vh 30vh 1.5vh 30vh; /* 5vh 30vh 5vh 30vh; */
     width: 100%;
-    margin: 1em 0 0 0;
+    margin: 1em 0 1em 0;
 }
 
 .tooltip-custom {

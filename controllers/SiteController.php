@@ -87,7 +87,7 @@ class SiteController extends Controller
         }
 
         $user_id = Yii::$app->user->getId();
-        $cards = CardsRepository::getAllCardWithDebtsAndPayments($user_id);
+        $cards = CardsRepository::getAllCardsWithDebtsAndPayments($user_id);
         $cardsUpdate = CardsServices::actualWithdrawalLimit($cards);
 
         return $this->render('index', [
@@ -104,7 +104,8 @@ class SiteController extends Controller
             $today = new \DateTime();
             $today->setTime(0, 0);
 
-            $debts = CardsRepository::getAllDebts($today);
+            $debts = CardsRepository::getCardWithDebtsAndPayments(4, 1);
+
             var_dump($debts);
         } else {
             throw new HttpException(404, 'У вас нет доступа к этой странице');

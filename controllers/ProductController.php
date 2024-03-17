@@ -23,6 +23,7 @@ use app\services\OperationsServices;
 use app\services\PaymentsServices;
 use DateTime;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -39,7 +40,7 @@ class ProductController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['add-card', 'add-bank', 'add-operation', 'delete-operation'],
+                        'actions' => ['add-card', 'add-bank', 'add-operation', 'delete-operation', 'card-info'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -284,6 +285,20 @@ class ProductController extends Controller
             Yii::$app->session->setFlash('error', 'Произошла ошибка при удалении операции.');
         }
         return $this->redirect(['/site/operations']);
+    }
+
+    public function actionCardInfo($card_id)
+    {
+        $user_id = Yii::$app->user->getId();
+        $card = CardsRepository::getCardWithDebtsAndPayments($user_id, $card_id);
+
+        if (!$card) {
+            return 'Карта не найдена';
+        }
+
+        return $this->render('card-info', [
+            'card' => $card,
+        ]);
     }
 
 
