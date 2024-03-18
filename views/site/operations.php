@@ -25,7 +25,7 @@ $this->title = 'DebTrack Innovations';
 ?>
 
 
-<div class="site-product">
+<div class="control-panel" style="justify-content: center;">
 
     <?php $form = ActiveForm::begin([
         'method' => 'get',
@@ -39,18 +39,21 @@ $this->title = 'DebTrack Innovations';
         'options' => [
             $selectedCardName => ['Selected' => true],
         ],
-        'onchange' => 'this.form.submit()'
+        'onchange' => 'this.form.submit()',
+        'class' => 'custom-dropdown',
     ])->label(false);
 
     echo $form->field($model, 'date_operation')->input('date', [
-        'onchange' => 'this.form.submit()'
+        'id' => 'idDateInput',
     ])->label(false); ?>
 
     <button type="button" class="reset-btn">Сбросить поиск</button>
     <?php ActiveForm::end(); ?>
 
+</div>
 
-    <!--     тут операции-->
+<!--     тут операции-->
+<div class="all-operations">
     <div class="row" id="operations">
         <table>
             <tr>

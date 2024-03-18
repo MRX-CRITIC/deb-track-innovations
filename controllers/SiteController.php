@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\commands\AlertController;
 use app\models\OperationSearchForm;
 use app\services\CardsServices;
+use app\services\IndexServices;
 use Exception;
 use app\entity\Cards;
 use app\repository\BalanceRepository;
@@ -85,8 +86,9 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->redirect('/site/about');
         }
-
         $user_id = Yii::$app->user->getId();
+
+        IndexServices::paymentReminder($user_id);
         $cards = CardsRepository::getAllCardsWithDebtsAndPayments($user_id);
         $cardsUpdate = CardsServices::actualWithdrawalLimit($cards);
 
@@ -103,10 +105,13 @@ class SiteController extends Controller
         if (\Yii::$app->user->can('showTest')) {
             $today = new \DateTime();
             $today->setTime(0, 0);
+//            $difference = '+5 day';
+//            $debts = CardsRepository::getCardWithDebtsAndPayments(4, 1);
+//            $duePayments = CardsRepository::getAllDebts($today, $difference);
+            $cacheKey = 'duePayments_' . $today->format('Y-m-d');
+            $duePayments = Yii::$app->cache->get($cacheKey);
 
-            $debts = CardsRepository::getCardWithDebtsAndPayments(4, 1);
-
-            var_dump($debts);
+            var_dump($duePayments);
         } else {
             throw new HttpException(404, 'У вас нет доступа к этой странице');
         }

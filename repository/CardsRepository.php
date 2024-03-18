@@ -168,9 +168,9 @@ class CardsRepository
         return $paymentOperationsData;
     }
 
-    public static function getAllDebts($today)
+    public static function getAllDebts($today, $difference)
     {
-        $tomorrow = (clone $today)->modify('+1 day');
+        $tomorrow = (clone $today)->modify($difference);
         $tomorrowStr = $tomorrow->format('Y-m-d');
 
         $query = Operations::find()

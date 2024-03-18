@@ -63,13 +63,14 @@ td, th {
 }
 
 .operation:hover {
-    box-shadow: inset 0 0 3px #FFFFFF;
+    /*box-shadow: inset 0 0 3px #FFFFFF;*/
     border-radius: 5px;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 #filter-form {
     display: flex;
-    margin-bottom: 3vh;
+    /*margin-bottom: 3vh;*/
     align-items: center;
     /*justify-content: space-between;*/
 }
@@ -170,4 +171,39 @@ body .page-item:last-child .page-link {
     background-color: transparent;
     cursor: default;
     pointer-events: none;
+}
+
+.all-operations {
+    display: flex;
+    flex-direction: column;
+    background: rgb(39 41 63 / 92%);
+    color: #FFFFFF;
+    border-radius: 30px;
+    padding: 5vh 30vh 5vh 30vh;
+}
+
+.custom-dropdown {
+    -webkit-appearance: none; /* Для Safari */
+    -moz-appearance: none;    /* Для Firefox */
+    appearance: none;
+    background-color: rgba(39, 41, 63, 0.92) !important;
+    color: white;
+    background: url('../../img/dropdown.png') no-repeat right 16px center;
+    background-size: 16px 16px;
+}
+
+.custom-dropdown::-ms-expand {
+    display: none;
+}
+
+.form-control {
+    color: #ffffff;
+    background-color: rgba(39, 41, 63, 0.92);
+    /*background: url('../../img/calendar.png') no-repeat right 16px center;*/
+    background-size: 16px 16px;
+}
+
+.form-control:focus {
+    color: #ffffff;
+    background-color: rgba(39, 41, 63, 0.92);
 }

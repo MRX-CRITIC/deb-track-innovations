@@ -17,8 +17,9 @@ class AlertController extends Controller
     {
         $today = new \DateTime();
         $today->setTime(0, 0);
+        $difference = '+1 day';
 
-        $duePayments = CardsRepository::getAllDebts($today);
+        $duePayments = CardsRepository::getAllDebts($today, $difference);
         foreach ($duePayments as $payment) {
 
             Yii::$app->mailer->compose('/emails/payment-reminder', ['payment' => $payment])

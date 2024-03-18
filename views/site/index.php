@@ -15,6 +15,7 @@ $this->title = 'DebTrack Innovations';
 \app\assets\ProductAsset::register($this);
 \app\assets\IndexAsset::register($this);
 ?>
+
 <div class="control-panel">
     <a class="add-card-href" href="/product/add-card">Добавить карту</a>
 </div>
@@ -90,6 +91,12 @@ $this->title = 'DebTrack Innovations';
                                 <?= Html::encode($formattedDatePayment) ?>
                             </span>
                         </span>
+                        <?php $uniqueKey = 'warning_' . $card->id;
+                        $flashes = Yii::$app->session->getAllFlashes();
+                        if (isset($flashes[$uniqueKey])) {
+                            $message = $flashes[$uniqueKey];
+                            echo "<div class='alert alert-warning d-flex align-items-center'>{$message}</div>";
+                        } ?>
                     </div>
 
                 <?php else: ?>

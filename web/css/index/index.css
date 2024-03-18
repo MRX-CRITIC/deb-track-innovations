@@ -37,7 +37,8 @@
 }
 
 .product-info:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 .card-note {
@@ -98,4 +99,8 @@
     border-radius: 30px;
     padding: 1.5vh 2vh 1.5vh 2vh;
     margin: 1em 0.3125em 1em 0.3125em;
+}
+
+.align-items-center {
+    margin: 1rem 0 0 0;
 }

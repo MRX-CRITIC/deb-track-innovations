@@ -178,6 +178,11 @@ a.desc:after {
     .term {
         white-space: normal;
     }
+
+    .all-operations {
+        padding: 5vh 2vh 5vh 2vh;
+        margin: 0.3125em;
+    }
 }
 
 .nav > li > form > button.logout:focus,
