@@ -7,7 +7,7 @@
     flex-direction: row;
     gap: 5vh;
     flex-wrap: wrap;
-
+    margin: 1vh;
 }
 
 .img-site {
@@ -24,4 +24,9 @@
     background: rgb(39 41 63 / 92%);
     padding: 3vh;
     border-radius: 30px;
+    transition: transform 0.5s ease;
+}
+
+.paragraph:hover {
+    transform: scale(1.05);
 }

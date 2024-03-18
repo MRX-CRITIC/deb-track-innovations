@@ -1,0 +1,1 @@
+![](web/img/about/index.png)
