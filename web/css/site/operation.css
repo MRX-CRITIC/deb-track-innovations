@@ -184,7 +184,7 @@ body .page-item:last-child .page-link {
 
 .custom-dropdown {
     -webkit-appearance: none; /* Для Safari */
-    -moz-appearance: none;    /* Для Firefox */
+    -moz-appearance: none; /* Для Firefox */
     appearance: none;
     background-color: rgba(39, 41, 63, 0.92) !important;
     color: white;
@@ -199,11 +199,15 @@ body .page-item:last-child .page-link {
 .form-control {
     color: #ffffff;
     background-color: rgba(39, 41, 63, 0.92);
-    /*background: url('../../img/calendar.png') no-repeat right 16px center;*/
-    background-size: 16px 16px;
 }
 
 .form-control:focus {
     color: #ffffff;
     background-color: rgba(39, 41, 63, 0.92);
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: #007bff;
+    border-radius: 5px;
+}
+

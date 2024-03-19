@@ -60,7 +60,7 @@ class CardsRepository
 
             return Cards::find()
                 ->where(['user_id' => $user_id, 'id' => $card_id])
-                ->select(['id', 'grace_period', 'percentage_partial_repayment'])
+                ->select(['id', 'grace_period', 'percentage_partial_repayment', 'refund_cash_calculation'])
 //                ->asArray(false)
                 ->one();
 

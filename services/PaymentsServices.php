@@ -18,10 +18,16 @@ class PaymentsServices
             if ($debts === true || $type_operation == 0) {
 
                 $ballingPeriod = CardsRepository::getInfoReturnMoney($user_id, $card_id);
+
                 if (!empty($ballingPeriod->start_date_billing_period) && !empty($ballingPeriod->end_date_billing_period)) {
                     return self::processBillingPeriod($ballingPeriod, $date_operation, $operation_id);
+
                 } elseif (!empty($ballingPeriod->percentage_partial_repayment)) {
                     return self::handleError($operation_id, 'Условия возврата еще не добавлены');
+
+                } elseif ($ballingPeriod->refund_cash_calculation == 0 && empty($ballingPeriod->percentage_partial_repayment)) {
+                    return self::processBillingPeriod_2($ballingPeriod, $date_operation, $operation_id);
+
                 } else {
                     return self::handleError($operation_id, 'Не верные условия возврата, пожалуйста, обратитесь в техническую поддержку');
                 }
@@ -98,6 +104,38 @@ class PaymentsServices
             'start_date_billing_period' => $datesBillingPeriod['start'],
             'end_date_billing_period' => $datesBillingPeriod['end'],
             'date_payment' => $date_payment
+        ]);
+
+        if ($model->validate()) {
+            PaymentsRepository::createPayment(
+                $operation_id,
+                $model->start_date_billing_period,
+                $model->end_date_billing_period,
+                $model->date_payment
+            );
+            return true;
+        } else {
+            Yii::$app->session->setFlash('error', 'Не пройдена валидация');
+            return false;
+        }
+    }
+
+    private static function processBillingPeriod_2($ballingPeriod, $date_operation, $operation_id)
+    {
+
+        $end_date = OperationsServices::settingDatePayment_2(
+            $date_operation,
+            $ballingPeriod->grace_period,
+        );
+
+        $return_money = $end_date;
+
+        $model = new PaymentsForm();
+        $model->setAttributes([
+            'operation_id' => $operation_id,
+            'start_date_billing_period' => $date_operation,
+            'end_date_billing_period' => $end_date,
+            'date_payment' => $return_money,
         ]);
 
         if ($model->validate()) {
