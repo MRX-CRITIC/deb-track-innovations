@@ -14,15 +14,13 @@
     align-items: center;
 }
 
-.line-2 {
-    border: 1px solid #FFFFFF;
-    width: 90%;
-}
-
 .top {
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-radius: 30px;
+    border: 1px solid;
+    color: rgb(75 75 210);
 }
 
 .delete-card {

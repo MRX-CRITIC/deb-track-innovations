@@ -50,7 +50,7 @@ $this->title = 'О проекте';
         <div class="paragraph">
             6. В разделе операции есть полный доступ к истории всех операций.
             С возможностью последовательного удаления и фильтрации
-            <br><br><img class="img-site" src="<?= Yii::getAlias('@web') ?> /img/about/operation.png" alt="">
+            <br><br><br><img class="img-site" src="<?= Yii::getAlias('@web') ?> /img/about/operation.png" alt="">
         </div>
 
         <div class="paragraph">

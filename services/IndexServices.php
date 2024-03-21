@@ -7,7 +7,8 @@ use Yii;
 
 class IndexServices
 {
-    public static function paymentReminder($user_id) {
+    public static function paymentReminder($user_id)
+    {
         $difference = '+5 day';
 
         $today = new \DateTime();
@@ -18,10 +19,11 @@ class IndexServices
 
         if ($duePayments === false) {
             $duePayments = CardsRepository::getAllDebts($today, $difference);
-            Yii::$app->cache->set($cacheKey, $duePayments, 86400);
+            Yii::$app->cache->set($cacheKey, $duePayments, 1);
         }
+//        Yii::$app->cache->delete($cacheKey);
 
-            foreach ($duePayments as $payment) {
+        foreach ($duePayments as $payment) {
             if ($payment['user_id'] == $user_id) {
 
                 $datePaymentString = $payment['date_payment'];

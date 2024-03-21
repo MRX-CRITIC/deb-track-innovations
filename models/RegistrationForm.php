@@ -10,7 +10,7 @@ class RegistrationForm extends \yii\base\Model
     public $password;
     public $verificationCode;
     public $repeatPassword;
-
+    public $last_login;
 
     public function rules()
     {

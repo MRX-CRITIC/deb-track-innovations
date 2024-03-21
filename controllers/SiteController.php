@@ -3,9 +3,11 @@
 namespace app\controllers;
 
 use app\commands\AlertController;
+use app\entity\Payments;
 use app\models\OperationSearchForm;
 use app\services\CardsServices;
 use app\services\IndexServices;
+use app\services\PaymentsServices;
 use Exception;
 use app\entity\Cards;
 use app\repository\BalanceRepository;
@@ -59,6 +61,11 @@ class SiteController extends Controller
                     'logout' => ['post'],
                 ],
             ],
+            'pageCache' => [
+                'class' => 'yii\filters\PageCache',
+                'only' => ['index', 'about'],
+                'duration' => 30,
+            ],
         ];
     }
 
@@ -103,15 +110,8 @@ class SiteController extends Controller
     public function actionTest()
     {
         if (\Yii::$app->user->can('showTest')) {
-            $today = new \DateTime();
-            $today->setTime(0, 0);
-//            $difference = '+5 day';
-//            $debts = CardsRepository::getCardWithDebtsAndPayments(4, 1);
-//            $duePayments = CardsRepository::getAllDebts($today, $difference);
-            $cacheKey = 'duePayments_' . $today->format('Y-m-d');
-            $duePayments = Yii::$app->cache->get($cacheKey);
+            $user_id = Yii::$app->user->getId();
 
-            var_dump($duePayments);
         } else {
             throw new HttpException(404, 'У вас нет доступа к этой странице');
         }

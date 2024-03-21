@@ -289,6 +289,10 @@ class ProductController extends Controller
 
     public function actionCardInfo($card_id)
     {
+        if (Yii::$app->user->isGuest || !Yii::$app->request->isAjax) {
+            return $this->redirect(['/site/index']);
+        }
+
         $user_id = Yii::$app->user->getId();
         $card = CardsRepository::getCardWithDebtsAndPayments($user_id, $card_id);
 
@@ -296,7 +300,7 @@ class ProductController extends Controller
             return 'Карта не найдена';
         }
 
-        return $this->render('card-info', [
+        return $this->renderAjax('card-info', [
             'card' => $card,
         ]);
     }

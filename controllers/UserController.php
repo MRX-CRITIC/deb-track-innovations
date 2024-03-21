@@ -172,6 +172,11 @@ class UserController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->login()) {
+
+                $user = Yii::$app->user->identity;
+                $user->last_login = new \yii\db\Expression('NOW()');
+                $user->save(false, ['last_login']);
+
                 if (Yii::$app->request->isAjax) {
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     return ['validation' => $model->login()];

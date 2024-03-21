@@ -15,7 +15,6 @@ $this->title = 'DebTrack Innovations';
 \app\assets\ProductAsset::register($this);
 \app\assets\IndexAsset::register($this);
 ?>
-
 <div class="control-panel">
     <a class="add-card-href" href="/product/add-card">Добавить карту</a>
 </div>
@@ -45,16 +44,15 @@ $this->title = 'DebTrack Innovations';
                             ">
                             <?= Html::encode(htmlspecialchars($card->name_card)) ?>
                             <span style="text-align: -webkit-center;">
-                                    <a class="card-info add-operation" id="card-info" href="<?=
-                                    Yii::$app->urlManager->createUrl([
-                                        '/product/card-info',
-                                        'card_id' => $card->id,
-                                    ]) ?>"
-                                       data-method="post"
-                                       title="Информация о карте">
-                                        <img src="<?= Yii::getAlias('@web') ?> /img/info.png"
-                                             style="width: 3vh" alt="Информация">
-                                    </a>
+                                <a class="card-info add-operation" id="card-info"
+                                   href="#"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#modalCardInfo"
+                                   data-card-id="<?= $card->id ?>"
+                                   title="Информация о карте">
+                                    <img src="<?= Yii::getAlias('@web') ?> /img/info.png"
+                                         style="width: 3vh" alt="Информация">
+                                </a>
                             </span>
                         </h5>
                     </div>
@@ -72,12 +70,12 @@ $this->title = 'DebTrack Innovations';
                     </div>
                 </div>
 
-
                 <div style="margin: 3vh 0 0 0;">Баланс: <?= Html::encode($formattedFinBalance) ?>₽</div>
 
                 <div>Возможность снятия/перевода:
                     <?= Html::encode($formattedWithdrawalLimit) ?>₽
-                </div><br>
+                </div>
+                <br>
 
                 <?php if ($formattedDebt > 0 && !empty($formattedDatePayment)): ?>
 
@@ -109,5 +107,20 @@ $this->title = 'DebTrack Innovations';
 
             </div>
         <?php endforeach; ?>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalCardInfo" tabindex="-1" aria-labelledby="modalCardInfoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="modal-title" id="modalCardInfoLabel">Информация о карте</p>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
     </div>
 </div>

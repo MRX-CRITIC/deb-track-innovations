@@ -6,10 +6,16 @@ use app\models\PaymentsForm;
 use app\repository\CardsRepository;
 use app\repository\OperationsRepository;
 use app\repository\PaymentsRepository;
+use DateTime;
 use Yii;
+use yii\db\StaleObjectException;
 
 class PaymentsServices
 {
+    /**
+     * @throws \Throwable
+     * @throws StaleObjectException
+     */
     public static function addPayment($user_id, $card_id, $date_operation, $operation_id, $type_operation, $sum)
     {
         if (Yii::$app->user->getId() == $user_id) {
@@ -26,7 +32,7 @@ class PaymentsServices
                     return self::handleError($operation_id, 'Условия возврата еще не добавлены');
 
                 } elseif ($ballingPeriod->refund_cash_calculation == 0 && empty($ballingPeriod->percentage_partial_repayment)) {
-                    return self::processBillingPeriod_2($ballingPeriod, $date_operation, $operation_id);
+                    return self::processBillingPeriod_2($user_id, $card_id, $ballingPeriod, $date_operation, $operation_id);
 
                 } else {
                     return self::handleError($operation_id, 'Не верные условия возврата, пожалуйста, обратитесь в техническую поддержку');
@@ -85,73 +91,85 @@ class PaymentsServices
         }
     }
 
-    private static function processBillingPeriod($ballingPeriod, $date_operation, $operation_id)
+    private static function createPaymentModel($operationId, $startDate, $endDate, $datePayment)
+    {
+        $model = new PaymentsForm();
+        $model->setAttributes([
+            'operation_id' => $operationId,
+            'start_date_billing_period' => $startDate,
+            'end_date_billing_period' => $endDate,
+            'date_payment' => $datePayment,
+        ]);
+
+        if ($model->validate()) {
+            PaymentsRepository::createPayment(
+                $operationId,
+                $startDate,
+                $endDate,
+                $datePayment
+            );
+            return true;
+        } else {
+            Yii::$app->session->setFlash('error', 'Не пройдена валидация');
+            return false;
+        }
+    }
+
+    private static function processBillingPeriod($ballingPeriod, $dateOperation, $operationId)
     {
         $datesBillingPeriod = OperationsServices::adjustPeriodToCurrentDate(
             $ballingPeriod->start_date_billing_period,
             $ballingPeriod->end_date_billing_period,
-            $date_operation
+            $dateOperation
         );
 
-        $date_payment = OperationsServices::settingDatePayment(
+        $datePayment = OperationsServices::settingDatePayment(
             $datesBillingPeriod['end'],
             $ballingPeriod->grace_period
         );
 
-        $model = new PaymentsForm();
-        $model->setAttributes([
-            'operation_id' => $operation_id,
-            'start_date_billing_period' => $datesBillingPeriod['start'],
-            'end_date_billing_period' => $datesBillingPeriod['end'],
-            'date_payment' => $date_payment
-        ]);
-
-        if ($model->validate()) {
-            PaymentsRepository::createPayment(
-                $operation_id,
-                $model->start_date_billing_period,
-                $model->end_date_billing_period,
-                $model->date_payment
-            );
-            return true;
-        } else {
-            Yii::$app->session->setFlash('error', 'Не пройдена валидация');
-            return false;
-        }
-    }
-
-    private static function processBillingPeriod_2($ballingPeriod, $date_operation, $operation_id)
-    {
-
-        $end_date = OperationsServices::settingDatePayment_2(
-            $date_operation,
-            $ballingPeriod->grace_period,
+        return self::createPaymentModel(
+            $operationId,
+            $datesBillingPeriod['start'],
+            $datesBillingPeriod['end'],
+            $datePayment
         );
-
-        $return_money = $end_date;
-
-        $model = new PaymentsForm();
-        $model->setAttributes([
-            'operation_id' => $operation_id,
-            'start_date_billing_period' => $date_operation,
-            'end_date_billing_period' => $end_date,
-            'date_payment' => $return_money,
-        ]);
-
-        if ($model->validate()) {
-            PaymentsRepository::createPayment(
-                $operation_id,
-                $model->start_date_billing_period,
-                $model->end_date_billing_period,
-                $model->date_payment
-            );
-            return true;
-        } else {
-            Yii::$app->session->setFlash('error', 'Не пройдена валидация');
-            return false;
-        }
     }
 
+    private static function processBillingPeriod_2($userId, $cardId, $ballingPeriod, $dateOperation, $operationId)
+    {
+        $debts = CardsRepository::getAllDebtsCard($userId, $cardId);
+        $dateOperation = new DateTime($dateOperation);
+
+        if (is_array($debts)) {
+            $endDate = new DateTime(end($debts)['end_date']);
+        } else {
+            $endDate = new DateTime('0000-00-00');
+        }
+
+        if ($dateOperation >= $endDate) {
+            $endDate = OperationsServices::settingDatePayment_2(
+                $dateOperation->format('Y-m-d'),
+                $ballingPeriod->grace_period
+            );
+        } else {
+            $latestDebt = end($debts);
+            $endDate = $latestDebt['end_date'];
+            $dateOperation = new DateTime($latestDebt['start_date']);
+        }
+
+        return self::createPaymentModel(
+            $operationId,
+            $dateOperation->format('Y-m-d'),
+            $endDate,
+            $endDate
+        );
+    }
+
+
+    /**
+     * @throws StaleObjectException|\Throwable
+     */
     private static function handleError($operation_id, $message)
     {
         OperationsRepository::findOperationById($operation_id)->delete();

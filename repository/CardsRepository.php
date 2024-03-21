@@ -56,8 +56,10 @@ class CardsRepository
 //                ->asArray(false)
                 ->one();
 
-        } elseif ($card->refund_cash_calculation == 0 && (!empty($card->payment_partial_repayment)) && $card->payment_date_purchase_partial_repayment == 1) {
-
+        } elseif ($card->refund_cash_calculation == 0 && empty($ballingPeriod->percentage_partial_repayment)) {
+            /*$card->refund_cash_calculation == 0 &&
+            (!empty($card->payment_partial_repayment)) &&
+            $card->payment_date_purchase_partial_repayment == 1*/
             return Cards::find()
                 ->where(['user_id' => $user_id, 'id' => $card_id])
                 ->select(['id', 'grace_period', 'percentage_partial_repayment', 'refund_cash_calculation'])

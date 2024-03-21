@@ -18,6 +18,7 @@ class LoginForm extends Model
     public $email;
     public $password;
     public $rememberMe = true;
+    public $last_login;
 
     private $_user = false;
 
@@ -31,6 +32,7 @@ class LoginForm extends Model
             [['email', 'password'], 'required', 'message' => 'Поле не может быть пустое'],
             ['rememberMe', 'boolean'],
             ['password', 'validatePassword'],
+            ['last_login', 'date'],
         ];
     }
 
@@ -83,6 +85,7 @@ class LoginForm extends Model
         return [
             'email' => 'Электронная почта',
             'password' => 'Пароль',
+            'last_login' => 'Последние время входа',
             'rememberMe' => 'Запомнить меня',
         ];
     }

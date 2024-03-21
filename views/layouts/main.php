@@ -74,9 +74,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             'options' => ['class' => 'nav-item dropdown'],
             'linkOptions' => [
                 'class' => 'nav-link dropdown-toggle',
-                'id' => 'navbarDropdown',
+                'id' => 'navbarDarkDropdownMenuLink',
                 'role' => 'button',
-                'data-toggle' => 'dropdown',
+                'data-bs-toggle' => 'dropdown',
                 'aria-haspopup' => 'true',
                 'aria-expanded' => 'false'],
             'url' => ['#'],

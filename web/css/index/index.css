@@ -104,3 +104,9 @@
 .align-items-center {
     margin: 1rem 0 0 0;
 }
+
+.modal-content {
+    color: #FFFFFF;
+    background-color: rgb(39 41 63 / 100%);
+    border-radius: 30px;
+}
