@@ -1,6 +1,6 @@
 <?php
 
-namespace app\services;
+namespace app\services\product;
 
 use app\models\BalanceForm;
 use app\repository\BalanceRepository;

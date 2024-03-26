@@ -1,6 +1,6 @@
 <?php
 
-namespace app\services;
+namespace app\services\product;
 
 use app\models\PaymentsForm;
 use app\repository\CardsRepository;
@@ -18,7 +18,7 @@ class PaymentsServices
      */
     public static function addPayment($user_id, $card_id, $date_operation, $operation_id, $type_operation, $sum)
     {
-        if (Yii::$app->user->getId() == $user_id) {
+        if (Yii::$app->user->getId() === $user_id) {
 
             $debts = CardsRepository::getAllDebtsCard($user_id, $card_id);
             if ($debts === true || $type_operation == 0) {

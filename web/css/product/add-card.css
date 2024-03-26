@@ -8,8 +8,8 @@
     /*height: 100%;*/
     border-radius: 30px;
     padding: 1.5vh 30vh 1.5vh 30vh; /* 5vh 30vh 5vh 30vh; */
-    width: 100%;
-    margin: 1em 0 1em 0;
+    /*width: 100%;*/
+    margin: 1em 0.5em 1em 0.5em;
 }
 
 .tooltip-custom {
@@ -63,7 +63,7 @@
 }
 
 .btn {
-    --bs-btn-padding-x: 100%;
+    --bs-btn-padding-x: 1rem;
     --bs-btn-padding-y: 0.5rem;
 }
 
@@ -80,3 +80,4 @@
     font-size: 0.8rem;
     color: #ff0000;
 }
+

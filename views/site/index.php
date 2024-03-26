@@ -3,6 +3,7 @@
 /** @var yii\web\View $this */
 
 /** @var $cardsUpdate */
+/** @var $allTotalDebt */
 
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
@@ -14,9 +15,19 @@ $formatter = \Yii::$app->formatter;
 $this->title = 'DebTrack Innovations';
 \app\assets\ProductAsset::register($this);
 \app\assets\IndexAsset::register($this);
+
+$formattedAllTotalDebt = Yii::$app->formatter->asDecimal($allTotalDebt, 2);
 ?>
 <div class="control-panel">
     <a class="add-card-href" href="/product/add-card">Добавить карту</a>
+    <div class="all-debt">
+        <span class="all-debt-description">
+            Общая задолженность:
+        </span>
+        <span>
+            <?= Html::encode(htmlspecialchars($formattedAllTotalDebt)) ?>₽
+        </span>
+    </div>
 </div>
 
 <div class="body-content">
@@ -42,6 +53,8 @@ $this->title = 'DebTrack Innovations';
                             gap: 0.5vh;
                             flex-wrap: wrap;
                             ">
+                            <img src="<?= Yii::getAlias('@web') ?> /img/bank-card.png"
+                                 style="width: 3vh" alt="">
                             <?= Html::encode(htmlspecialchars($card->name_card)) ?>
                             <span style="text-align: -webkit-center;">
                                 <a class="card-info add-operation" id="card-info"

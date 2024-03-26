@@ -1,6 +1,6 @@
 <?php
 
-namespace app\services;
+namespace app\services\site;
 
 use app\repository\CardsRepository;
 use Yii;
@@ -24,7 +24,7 @@ class IndexServices
 //        Yii::$app->cache->delete($cacheKey);
 
         foreach ($duePayments as $payment) {
-            if ($payment['user_id'] == $user_id) {
+            if ($payment['user_id'] === $user_id) {
 
                 $datePaymentString = $payment['date_payment'];
                 $datePayment = new \DateTime($datePaymentString);
@@ -47,6 +47,19 @@ class IndexServices
 
                 Yii::$app->session->setFlash($uniqueKey, $message);
             }
+        }
+    }
+
+    public static function AllTotalDebt($cards) {
+        $allTotalDebt = 0;
+        if (isset($cards)) {
+            foreach ($cards as $card) {
+                $totalDebt = $card->credit_limit - $card->lastBalance->fin_balance;
+                $allTotalDebt += $totalDebt;
+            }
+            return $allTotalDebt;
+        } else {
+            return false;
         }
     }
 }

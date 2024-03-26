@@ -54,8 +54,8 @@ $config = [
         'session' => [
 //            'session' => ['class' => 'yii\web\Session'], //для веб приложений
             'class' => 'yii\web\Session',
-            'cookieParams' => ['lifetime' => 24 * 3600], // 24 часа
-            'timeout' => 24 * 3600, // 24 часа, также настройка для session.gc_maxlifetime
+            'cookieParams' => ['lifetime' => 240 * 3600], // 24 часа
+            'timeout' => 240 * 3600, // 24 часа, также настройка для session.gc_maxlifetime
             'useCookies' => true,
         ],
         'errorHandler' => [
@@ -67,8 +67,8 @@ $config = [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.beget.com', //smtp.beget.com //smtp.gmail.com
-                'username' => '',
-                'password' => '',
+                'username' => 'info@deb-track-innovations.ru',
+                'password' => 'C2eeLP0%',
                 'port' => '2525', //465 2525
                 'encryption' => 'tls', //ssl
             ],

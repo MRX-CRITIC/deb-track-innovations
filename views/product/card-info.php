@@ -28,20 +28,40 @@ $formattedDateEnd = $formatter->asDate($card->end_date, 'php:d.m.Y');
     </div>
 
     <div style="padding: 2vh 0 1vh 3vh;">
-        <div>Банк: <?= Html::encode($card->bank->name) ?> </div>
-        <div>Кредитный лимит: <?= Html::encode($formattedCreditLimit) ?></div>
-        <div>Льготный период: <?= Html::encode($card->grace_period) ?> дней</div>
-        <div>Стоимость обслуживания: <?= Html::encode($formattedCostBanking) ?></div>
-        <div>Общая задолженность: <?= Html::encode($TotalDebt) ?></div>
+        <div>Банк: <span>
+                <?= Html::encode($card->bank->name) ?>
+            </span>
+        </div>
+        <div>Кредитный лимит: <span>
+                <?= Html::encode($formattedCreditLimit) ?>
+            </span>
+        </div>
+        <div>Льготный период: <span>
+                <?= Html::encode($card->grace_period) ?> дней
+            </span>
+        </div>
+        <div>Стоимость обслуживания: <span>
+                <?= Html::encode($formattedCostBanking) ?>
+            </span>
+        </div>
+        <div>Общая задолженность: <span>
+                <?= Html::encode($TotalDebt) ?>
+            </span>
+        </div>
         <br>
 
         <?php if (!empty($formattedDebt > 0 && $formattedDatePayment)): ?>
-            <div>Расчетный период:
-                <br> <?= Html::encode(Html::encode($formattedDateStart . ' - ' . $formattedDateEnd)) ?></div>
+            <div>Расчетный период: <br> <span>
+                    <?= Html::encode(Html::encode($formattedDateStart . ' - ' . $formattedDateEnd)) ?>
+                </span>
+            </div>
         <?php endif; ?>
 
         <?php if ($card->percentage_partial_repayment != null): ?>
-            <div>Частичное погашение: <?= Html::encode($card->percentage_partial_repayment * 100) . '%' ?></div>
+                <div>Частичное погашение: <span>
+                        <?= Html::encode($card->percentage_partial_repayment * 100) . '%' ?>
+                    </span>
+                </div>
         <?php endif; ?>
 
         <div><?php if (!empty($card->note)): ?>

@@ -37,7 +37,7 @@
 }
 
 .product-info:hover {
-    transform: scale(1.03);
+    transform: scale(1.01);
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
@@ -93,6 +93,9 @@
 
 .control-panel {
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     background-color: rgb(39 41 63 / 92%);
     font-family: 'system-ui', sans-serif;
     color: white;
@@ -109,4 +112,12 @@
     color: #FFFFFF;
     background-color: rgb(39 41 63 / 100%);
     border-radius: 30px;
+}
+
+.all-debt {
+    margin-right: 1em;
+    font-size: 1rem;
+    background: rgba(151, 0, 20, 0.92);
+    padding: 0.5em 0.7em 0.5em 0.7em;
+    border-radius: 25px;
 }

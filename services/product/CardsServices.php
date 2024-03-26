@@ -1,6 +1,6 @@
 <?php
 
-namespace app\services;
+namespace app\services\product;
 
 use app\repository\CardsRepository;
 use Yii;
@@ -47,8 +47,8 @@ class CardsServices
                 }
 
             } elseif (
-                $card->lastBalance->fin_balance == $card->credit_limit ||
-                ($card->lastBalance->fin_balance == 0 && $card->withdrawal_limit > $card->credit_limit)
+                $card->lastBalance->fin_balance === $card->credit_limit ||
+                ($card->lastBalance->fin_balance === 0 && $card->withdrawal_limit > $card->credit_limit)
             ) {
                 $cards[$id]->actual_withdrawal_limit = $card->lastBalance->fin_balance;
             }

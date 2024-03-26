@@ -5,5 +5,4 @@ use yii\db\ActiveRecord;
 
 class Payments extends ActiveRecord
 {
-
 }

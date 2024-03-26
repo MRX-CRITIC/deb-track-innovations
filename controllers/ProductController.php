@@ -17,10 +17,10 @@ use app\repository\CardsRepository;
 use app\repository\OperationsRepository;
 use app\repository\PaymentsRepository;
 use app\repository\UserRepository;
-use app\services\BalanceServices;
-use app\services\CardsServices;
-use app\services\OperationsServices;
-use app\services\PaymentsServices;
+use app\services\product\BalanceServices;
+use app\services\product\CardsServices;
+use app\services\product\OperationsServices;
+use app\services\product\PaymentsServices;
 use DateTime;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -143,6 +143,7 @@ class ProductController extends Controller
         $model->user_id = Yii::$app->user->getId();
 
         $card = CardsRepository::getCardBuId($model->user_id, $card_id);
+
         if ($card === null) {
             Yii::$app->session->setFlash('error', 'Карта не найдена');
             return $this->redirect(['/site/index']);
@@ -193,50 +194,12 @@ class ProductController extends Controller
             return $this->refresh();
         } else {
             return $this->render('add-operation', [
+                'card' => $card,
                 'model' => $model,
             ]);
         }
     }
 
-//    public function actionDeleteOperation($id)
-//    {
-//        $user_id = Yii::$app->user->getId();
-//
-//        $operation = OperationsRepository::findOperationById($id);
-//        $lastDateOperation = OperationsRepository::getDateLastOperation($user_id, $operation->card->id);
-//
-//
-//        if ($lastDateOperation->date_operation <= $operation->date_operation) {
-//            if ($operation && $operation->user_id == $user_id) {
-//
-//                $fin_balance = BalanceRepository::getBalanceCard($user_id, $operation->card->id);
-//
-//                if ($operation->type_operation == 1) {
-//                    $new_balance = $fin_balance->fin_balance - $operation->sum;
-//                    $result = BalanceServices::createBalance($user_id, $operation->card->id, $new_balance);
-//
-//                } elseif ($operation->type_operation == 0) {
-//                    $new_balance = $fin_balance->fin_balance + $operation->sum;
-//                    $result = BalanceServices::createBalance($user_id, $operation->card->id, $new_balance);
-//                }
-//
-//                if ($result) {
-//                    OperationsRepository::deleteOperation($id, $user_id);
-//                    Yii::$app->session->setFlash('success', 'Операция успешно удалена');
-//                }
-//            } else {
-//                Yii::$app->session->setFlash('error', 'У вас нет прав для выполнения этой операции');
-//            }
-//
-//        } else {
-//            Yii::$app->session->setFlash('error', '
-//            Вы можете удалить только последнею операцию той или иной карты.
-//            Если вам нужно удалить старую запись, то вы можете удалять только
-//            последовательно в том порядка в котором они добавлялись по карте которая вам нужна.
-//            ');
-//        }
-//        return $this->redirect(['/site/operations']);
-//    }
 
     public function actionDeleteOperation($id)
     {

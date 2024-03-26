@@ -8,6 +8,11 @@ $(document).ready(function () {
     $('#verify-code-btn').click(function (e) {
         e.preventDefault();
 
+        $(this).prop('disabled', true).html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">' +
+            '</span>'
+        );
+
         let confirmationCode = '';
         $('.code-input').each(function () {
             confirmationCode += $(this).val();
@@ -42,6 +47,10 @@ $(document).ready(function () {
                     $('#error-message-code').text(response.errors.confirmationCode[0]).show();
                     timeShowErrors();
                 }
+            },
+            complete: function() {
+                // Снимаем блокировку с кнопки и удаляем спиннер после завершения запроса
+                $('#verify-code-btn').prop('disabled', false).html('Подтвердить код');
             }
         });
     });

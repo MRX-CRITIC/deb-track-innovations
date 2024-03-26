@@ -12,6 +12,11 @@ $(document).ready(function () {
         e.preventDefault();
         $('.error-message').hide().text('');
 
+        $(this).prop('disabled', true).html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">' +
+            '</span>'
+        );
+
         $.ajax({
             type: "POST",
             url: '/user/registration',
@@ -34,6 +39,10 @@ $(document).ready(function () {
                         $('.input-field').css('border', '1px solid #3385ff');
                     }, 3000);
                 }
+            },
+            complete: function() {
+                // Снимаем блокировку с кнопки и удаляем спиннер после завершения запроса
+                $('#registration-btn').prop('disabled', false).html('Зарегистрироваться');
             }
         });
     });

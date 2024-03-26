@@ -15,9 +15,9 @@ class CardsRepository
     public static function getCardBuId($user_id, $card_id)
     {
         return Cards::find()
-            ->with()
+            ->with(['lastBalance'])
             ->where(['user_id' => $user_id, 'id' => $card_id])
-            ->select('id')
+            ->select(['id', 'name_card'])
             ->one();
     }
 
@@ -216,7 +216,7 @@ class CardsRepository
 
     public static function getAllCardsWithDebtsAndPayments($user_id)
     {
-        // Подзапрос для получения задолженностей и дат
+        // Под-запрос для получения задолженностей и дат
         $debtSubQuery = (new \yii\db\Query())
             ->select([
                 'op.card_id',
@@ -238,9 +238,6 @@ class CardsRepository
                 'p.date_payment'
             ])
             ->having(['!=', 'debt', 0]);
-
-//        $results = $debtSubQuery->all();
-//        return $results;
 
         return Cards::find()
             ->alias('c')

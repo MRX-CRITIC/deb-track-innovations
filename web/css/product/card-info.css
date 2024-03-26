@@ -19,8 +19,6 @@
     flex-direction: column;
     align-items: center;
     border-radius: 30px;
-    border: 1px solid;
-    color: rgb(75 75 210);
 }
 
 .delete-card {

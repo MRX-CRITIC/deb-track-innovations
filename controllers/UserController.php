@@ -7,6 +7,7 @@ use app\models\ConfirmationForm;
 use app\models\LoginForm;
 use app\models\RegistrationForm;
 use app\repository\UserRepository;
+use app\services\user\RegistrationServices;
 use Exception;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -65,10 +66,12 @@ class UserController extends Controller
                     $model->email != Yii::$app->session->get('model')->email) {
 
                     $confirmationCode = random_int(1000, 9999);
+
                     Yii::$app->session->set('confirmationCode', $confirmationCode);
                     Yii::$app->session->set('model', $model);
                     Yii::$app->session->set('time', time());
-                    $this->SendConfirmationEmail($model->email, $confirmationCode);
+
+                    RegistrationServices::SendConfirmationEmail($model->email, $confirmationCode);
                     return [
                         'validation' => true,
                         'time' => false,
@@ -112,10 +115,10 @@ class UserController extends Controller
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post(), '')) {
 
             if ($model->validate()) {
-                if (Yii::$app->session->get('model')->email == $model->email &&
-                    Yii::$app->session->get('model')->password == $model->password) {
+                if (Yii::$app->session->get('model')->email === $model->email &&
+                    Yii::$app->session->get('model')->password === $model->password) {
 
-                    if (Yii::$app->session->get('confirmationCode') == $model->confirmationCode) {
+                    if (Yii::$app->session->get('confirmationCode') === $model->confirmationCode) {
 
                         $userId = UserRepository::createUser(
                             $model->email,
@@ -151,15 +154,6 @@ class UserController extends Controller
             }
         }
         throw new HttpException(404, 'Страница не найдена');
-    }
-
-    public function SendConfirmationEmail($email, $confirmationCode)
-    {
-        Yii::$app->mailer->compose('/emails/confirm-email', ['confirmationCode' => $confirmationCode])
-            ->setTo($email)
-            ->setFrom("info@deb-track-innovations.ru")
-            ->setSubject('Подтверждение адреса электронной почты')
-            ->send();
     }
 
     public function actionLogin()
@@ -200,10 +194,5 @@ class UserController extends Controller
     {
         Yii::$app->user->logout();
         return $this->redirect(['user/login']);
-    }
-
-    public function actionIndex()
-    {
-        return $this->render('index');
     }
 }

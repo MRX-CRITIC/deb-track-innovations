@@ -5,9 +5,9 @@ namespace app\controllers;
 use app\commands\AlertController;
 use app\entity\Payments;
 use app\models\OperationSearchForm;
-use app\services\CardsServices;
-use app\services\IndexServices;
-use app\services\PaymentsServices;
+use app\services\product\CardsServices;
+use app\services\site\IndexServices;
+use app\services\product\PaymentsServices;
 use Exception;
 use app\entity\Cards;
 use app\repository\BalanceRepository;
@@ -15,7 +15,7 @@ use app\repository\BanksRepository;
 use app\repository\CardsRepository;
 use app\repository\OperationsRepository;
 use app\repository\PaymentsRepository;
-use app\services\OperationsServices;
+use app\services\product\OperationsServices;
 use DateInterval;
 use DateTime;
 use Yii;
@@ -64,7 +64,7 @@ class SiteController extends Controller
             'pageCache' => [
                 'class' => 'yii\filters\PageCache',
                 'only' => ['index', 'about'],
-                'duration' => 30,
+                'duration' => 10,
             ],
         ];
     }
@@ -99,8 +99,11 @@ class SiteController extends Controller
         $cards = CardsRepository::getAllCardsWithDebtsAndPayments($user_id);
         $cardsUpdate = CardsServices::actualWithdrawalLimit($cards);
 
+        $allTotalDebt = IndexServices::AllTotalDebt($cards);
+
         return $this->render('index', [
             'cardsUpdate' => $cardsUpdate,
+            'allTotalDebt' => $allTotalDebt,
         ]);
     }
 
@@ -111,7 +114,18 @@ class SiteController extends Controller
     {
         if (\Yii::$app->user->can('showTest')) {
             $user_id = Yii::$app->user->getId();
+            $cards = CardsRepository::getAllCardsWithDebtsAndPayments($user_id);
 
+            $allTotalDebt = 0;
+            if (isset($cards)) {
+                foreach ($cards as $card) {
+                    $totalDebt = $card->credit_limit - $card->lastBalance->fin_balance;
+                    $allTotalDebt += $totalDebt;
+                }
+            }
+
+
+            var_dump($allTotalDebt);
         } else {
             throw new HttpException(404, 'У вас нет доступа к этой странице');
         }
@@ -172,5 +186,15 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionError()
+    {
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception !== null) {
+            return $this->render('error', [
+                'exception' => $exception
+            ]);
+        }
     }
 }

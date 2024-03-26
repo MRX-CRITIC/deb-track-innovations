@@ -158,7 +158,7 @@ a.desc:after {
 
     .body {
         flex-direction: column;
-        width: 100%;
+        height: 100%;
     }
 
     .login-form form {
@@ -182,6 +182,10 @@ a.desc:after {
     .all-operations {
         padding: 5vh 2vh 5vh 2vh;
         margin: 0.3125em;
+    }
+
+    .all-debt-description {
+        display: none;
     }
 }
 
