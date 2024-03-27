@@ -155,7 +155,6 @@ class ProductController extends Controller
             return ActiveForm::validate($model);
         }
 
-
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $operation_id = OperationsRepository::createOperation(
                 $model->user_id,
@@ -165,7 +164,6 @@ class ProductController extends Controller
                 $model->sum,
                 $model->note,
             );
-
 
             $billingPeriod = PaymentsServices::addPayment(
                 $model->user_id,
