@@ -115,6 +115,7 @@ class SiteController extends Controller
         if (\Yii::$app->user->can('showTest')) {
             $user_id = Yii::$app->user->getId();
 
+
         } else {
             throw new HttpException(404, 'У вас нет доступа к этой странице');
         }
@@ -177,13 +178,13 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionError()
-    {
-        $exception = Yii::$app->errorHandler->exception;
-        if ($exception !== null) {
-            return $this->render('error', [
-                'exception' => $exception
-            ]);
-        }
-    }
+//    public function actionError()
+//    {
+//        $exception = Yii::$app->errorHandler->exception;
+//        if ($exception !== null) {
+//            return $this->render('error', [
+//                'exception' => $exception
+//            ]);
+//        }
+//    }
 }
