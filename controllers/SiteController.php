@@ -114,18 +114,7 @@ class SiteController extends Controller
     {
         if (\Yii::$app->user->can('showTest')) {
             $user_id = Yii::$app->user->getId();
-            $cards = CardsRepository::getAllCardsWithDebtsAndPayments($user_id);
 
-            $allTotalDebt = 0;
-            if (isset($cards)) {
-                foreach ($cards as $card) {
-                    $totalDebt = $card->credit_limit - $card->lastBalance->fin_balance;
-                    $allTotalDebt += $totalDebt;
-                }
-            }
-
-
-            var_dump($allTotalDebt);
         } else {
             throw new HttpException(404, 'У вас нет доступа к этой странице');
         }

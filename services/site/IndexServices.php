@@ -17,7 +17,7 @@ class IndexServices
         $cacheKey = 'duePayments_' . $today->format('Y-m-d');
         $duePayments = Yii::$app->cache->get($cacheKey);
 
-        if ($duePayments === false) {
+        if (!$duePayments) {
             $duePayments = CardsRepository::getAllDebts($today, $difference);
             Yii::$app->cache->set($cacheKey, $duePayments, 1);
         }

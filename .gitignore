@@ -34,3 +34,8 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+Dockerfile
+web/img/
+nginx
+docker-compose.yml
+config

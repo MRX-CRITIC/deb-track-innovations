@@ -206,7 +206,7 @@ class CardsRepository
         $paymentOperationsData = $query->asArray()->all();
 
         if (empty($paymentOperationsData)) {
-            return "Долги отсутствуют";
+            return false;
         }
 
         return $paymentOperationsData;
