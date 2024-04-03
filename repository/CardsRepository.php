@@ -172,7 +172,7 @@ class CardsRepository
 
     public static function getAllDebts($today, $difference)
     {
-        $tomorrow = (clone $today)->modify($difference);
+        $tomorrow = ($today)->modify($difference);
         $tomorrowStr = $tomorrow->format('Y-m-d');
 
         $query = Operations::find()
@@ -220,9 +220,9 @@ class CardsRepository
         $debtSubQuery = (new \yii\db\Query())
             ->select([
                 'op.card_id',
-                'start_date' => 'p.start_date_billing_period',
-                'end_date' => 'p.end_date_billing_period',
-                'date_payment' => 'p.date_payment',
+                'start_date' => new \yii\db\Expression("DATE_FORMAT(p.start_date_billing_period, '%d.%m.%Y')"),
+                'end_date' => new \yii\db\Expression("DATE_FORMAT(p.end_date_billing_period, '%d.%m.%Y')"),
+                'date_payment' => new \yii\db\Expression("DATE_FORMAT(p.date_payment, '%d.%m.%Y')"),
                 'debt' => new \yii\db\Expression("SUM(IF(op.type_operation = 1, op.sum, -op.sum))"),
             ])
             ->from(['op' => 'operations'])

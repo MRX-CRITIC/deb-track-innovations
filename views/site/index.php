@@ -102,11 +102,16 @@ $formattedAllTotalDebt = Yii::$app->formatter->asDecimal($allTotalDebt, 2);
                                 <?= Html::encode($formattedDatePayment) ?>
                             </span>
                         </span>
+
                         <?php $uniqueKey = 'warning_' . $card->id;
                         $flashes = Yii::$app->session->getAllFlashes();
                         if (isset($flashes[$uniqueKey])) {
                             $message = $flashes[$uniqueKey];
-                            echo "<div class='alert alert-warning d-flex align-items-center'>{$message}</div>";
+                            if ($message === 'Срочно внесите платеж') {
+                                echo "<div class='alert alert-danger' role='alert'>{$message}</div>";
+                            } else {
+                                echo "<div class='alert alert-warning' role='alert'>{$message}</div>";
+                            }
                         } ?>
                     </div>
 

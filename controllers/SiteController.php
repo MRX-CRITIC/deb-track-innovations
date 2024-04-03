@@ -44,7 +44,7 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['about'],
+                        'actions' => ['about', 'error'],
                         'allow' => true,
                         'roles' => ['?', '@'],
                     ],
@@ -109,6 +109,7 @@ class SiteController extends Controller
 
     /**
      * @throws HttpException
+     * @throws Exception
      */
     public function actionTest()
     {
@@ -178,13 +179,13 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-//    public function actionError()
-//    {
-//        $exception = Yii::$app->errorHandler->exception;
-//        if ($exception !== null) {
-//            return $this->render('error', [
-//                'exception' => $exception
-//            ]);
-//        }
-//    }
+    public function actionError()
+    {
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception !== null) {
+            return $this->render('error', [
+                'exception' => $exception
+            ]);
+        }
+    }
 }

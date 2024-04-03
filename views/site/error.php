@@ -3,25 +3,31 @@
 /** @var yii\web\View $this */
 /** @var string $name */
 /** @var string $message */
+
 /** @var Exception $exception */
 
 use yii\helpers\Html;
 
-$this->title = $name;
+$this->title = 'Ошибка';
+\app\assets\IndexAsset::register($this);
 ?>
-<div class="site-error">
+<div class="content-row error">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="product-info">
+<!--        --><?//= nl2br(Html::encode($message)) ?>
+        <p style="
+        font-size: 1.8em;
+        color: #8546c5;">
+            Произошла непредвиденная ошибка.
+        </p>
+        <p style="font-size: 0.8rem">
+            Пожалуйста, свяжитесь с нами, если вы считаете, что это ошибка сервера.
+        </p>
 
-    <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
+
     </div>
 
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
+    <a class="add-card-href" style="width: 30vh;" href="/site/index">Вернуться на главную</a>
+
 
 </div>

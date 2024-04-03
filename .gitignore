@@ -39,4 +39,3 @@ nginx
 web/img
 docker-compose.yml
 Dockerfile
-config

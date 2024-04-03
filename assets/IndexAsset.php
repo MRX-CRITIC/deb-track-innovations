@@ -9,5 +9,6 @@ class IndexAsset extends AppAsset
     ];
     public $css = [
         'css/index/index.css',
+        'css/site/error.css',
     ];
 }
