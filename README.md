@@ -2,6 +2,6 @@
 
 #### Для снятия или перевода денежных средств
 
->https://deb-track-innovations.ru
+
 
 ![](web/img/about/index.png)
