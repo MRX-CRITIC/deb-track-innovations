@@ -1,0 +1,123 @@
+version: '3.3' # Указывает версию синтаксиса Docker Compose файла.
+
+# Раздел, определяющий сервисы, которые будут созданы.
+services:
+
+  # PHP-FRM Service # Раздел, определяющий сервисы, которые будут созданы.
+  php:
+    # Используемый образ Docker для сервиса (версия PHP 7.4 с PHP-FPM).
+    # image: php:7.4-fpm
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+
+    # Задает имя создаваемого контейнера.
+    container_name: dti_php
+
+    # Монтирует текущую директорию
+    # (где расположен docker-compose.yml) в /var/www/html внутри контейнера.
+    volumes:
+      - ./:/var/www/html
+
+    # Устанавливает рабочую директорию в контейнере.
+    working_dir: /var/www/html
+
+    # Это команда, которая будет запущена в контейнере.
+    # Но обычно для php-fpm это не требуется указывать, т.к. оно стартует по умолчанию.
+    command:
+      - php-fpm
+
+    expose:
+    # Открывает порт 9000 внутри контейнера для связи между сервисами (например, с nginx).
+      - "9000"
+
+    # Задает переменные окружения в контейнере.
+    environment:
+      PHP_FPM_USER: www-data # Задает пользователя для PHP-FPM.
+      PHP_FPM_GROUP: www-data # Задает группу для PHP-FPM.
+      PHP_FPM_LISTEN_MODE: 0660 # Определяет права доступа к сокету PHP-FPM.
+
+    networks:
+      - yii2net
+
+
+
+  # Nginx Service
+  web:
+    # Используемый образ Docker для Nginx (последняя версия).
+    image: nginx:latest
+    restart: always
+    # Имя создаваемого контейнера для nginx.
+    container_name: dti_nginx
+    volumes:
+      # Монтирует текущую директорию в /var/www/html внутри контейнера только для чтения.
+      - ./:/var/www/html:ro
+
+      # Монтирует конфигурационный файл nginx из хоста в контейнер.
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      # Пробрасывает порт 80 с хоста на порт 80 контейнера, делая веб-сайт доступным извне.
+      - "80:80"
+    depends_on:
+      # Указывает, что сервис web должен быть запущен только после запуска сервиса php.
+      - php
+    networks:
+      - yii2net
+
+
+
+  mysql:
+    image: mysql:8.0.30 # или любая другая необходимая вам версия
+    restart: always
+    container_name: dtimysql
+    ports:
+      - "3306:3306"
+    hostname: localhost
+    environment:
+      MYSQL_ROOT_PASSWORD: '5874'
+      MYSQL_DATABASE: deb-track-innovations
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+      # Можете раскомментировать следующую строку, чтобы инициализировать базу данных при первом запуске
+      # - ./path/to/your/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database-dump/init.sql/deb-track-innovations.sql:/docker-entrypoint-initdb.d/deb-track-innovations.sql
+    networks:
+      - yii2net
+
+#  db:
+#    image: mysql:8.0.30
+#    restart: always
+#    command: --default-authentication-plugin=mysql_native_password
+#    environment:
+#      MYSQL_ROOT_PASSWORD: '5874'
+
+  phpmyadmin:
+      image: phpmyadmin
+      restart: always
+      ports:
+        - "8080:80"
+      environment:
+        - PMA_ARBITRARY=1
+        - PMA_HOST=dtimysql
+        - PMA_USER=user
+        - PMA_PASSWORD=password
+      networks:
+        - yii2net
+
+volumes:
+  db_data:
+
+
+
+# Docker networks
+# Определяет сети, используемые в вашем проекте Docker Compose.
+networks:
+  yii2net: # Название сети.
+
+    # Использует bridge драйвер Docker для сети.
+    # Это позволяет контейнерам внутри одной сети видеть друг друга.
+    driver: bridge

@@ -52,6 +52,7 @@ class LoginForm extends Model
                 $this->addError($attribute, 'Неверный адрес электронной почты или пароль');
             }
         }
+//        return parent::validate();
     }
 
     /**

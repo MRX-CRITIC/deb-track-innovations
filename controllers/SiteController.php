@@ -2,35 +2,21 @@
 
 namespace app\controllers;
 
-use app\commands\AlertController;
-use app\entity\Payments;
 use app\models\OperationSearchForm;
 use app\services\product\CardsServices;
 use app\services\site\IndexServices;
-use app\services\product\PaymentsServices;
 use Exception;
-use app\entity\Cards;
-use app\repository\BalanceRepository;
-use app\repository\BanksRepository;
 use app\repository\CardsRepository;
 use app\repository\OperationsRepository;
-use app\repository\PaymentsRepository;
-use app\services\product\OperationsServices;
-use DateInterval;
-use DateTime;
 use Yii;
-use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
 use app\models\ContactForm;
 
-use yii\helpers\FormatConverter;
 
 class SiteController extends Controller
 {
@@ -115,7 +101,9 @@ class SiteController extends Controller
     {
         if (\Yii::$app->user->can('showTest')) {
             $user_id = Yii::$app->user->getId();
+            $cards = CardsRepository::getAllCardsWithDebtsAndPayments($user_id);
 
+            var_dump($cards);
 
         } else {
             throw new HttpException(404, 'У вас нет доступа к этой странице');

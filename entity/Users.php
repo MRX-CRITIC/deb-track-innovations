@@ -7,7 +7,7 @@ use app\repository\UserRepository;
 use yii\web\IdentityInterface;
 use yii\db\ActiveRecord;
 
-class Users extends \yii\db\ActiveRecord implements IdentityInterface
+class Users extends ActiveRecord implements IdentityInterface
 {
     public static function findIdentity($id)
     {

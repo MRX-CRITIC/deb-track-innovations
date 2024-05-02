@@ -80,8 +80,8 @@ $config = [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.beget.com', //smtp.beget.com //smtp.gmail.com
-                'username' => '',
-                'password' => '',
+                'username' => 'info@deb-track-innovations.ru',
+                'password' => 'C2eeLP0%',
                 'port' => '2525', //465 2525
                 'encryption' => 'tls', //ssl
             ],
