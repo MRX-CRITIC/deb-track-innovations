@@ -19,6 +19,16 @@ $this->params['breadcrumbs'][] = $this->title;
 \app\assets\ProductAsset::register($this);
 \app\assets\IndexAsset::register($this);
 $formattedBalance = Yii::$app->formatter->asDecimal($card->lastBalance->fin_balance, 2);
+
+$radioOptions = [];
+
+if ($card->lastBalance->fin_balance == 0) {
+    $radioOptions = [true => 'Внесение'];
+} elseif ($card->lastBalance->fin_balance == $card->credit_limit) {
+    $radioOptions = [false => 'Снятие'];
+} else {
+    $radioOptions = [false => 'Снятие', true => 'Внесение'];
+}
 ?>
 
 <div class="site-product">
@@ -39,10 +49,8 @@ $formattedBalance = Yii::$app->formatter->asDecimal($card->lastBalance->fin_bala
     </div>
 
     <div class="type_operation">
-        <?= $form->field($model, 'type_operation')->radioList([
-            false => 'Снятие',
-            true => 'Внесение'
-        ],
+        <?= $form->field($model, 'type_operation')->radioList(
+                $radioOptions,
             [
                 'id' => 'type_operation',
                 'item' => function ($index, $label, $name, $checked, $value) {
@@ -65,7 +73,7 @@ $formattedBalance = Yii::$app->formatter->asDecimal($card->lastBalance->fin_bala
         'inputmode' => 'decimal',
     ]) ?>
 
-    <?= $form->field($model, 'note')->textarea(['rows' => 3]) ?>
+    <?= $form->field($model, 'note')->textarea(['rows' => 2]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Добавить', ['class' => 'btn btn-success']) ?>

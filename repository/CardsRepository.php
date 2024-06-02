@@ -17,7 +17,7 @@ class CardsRepository
         return Cards::find()
             ->with(['lastBalance'])
             ->where(['user_id' => $user_id, 'id' => $card_id])
-            ->select(['id', 'name_card'])
+            ->select(['id', 'name_card', 'credit_limit'])
             ->one();
     }
 
@@ -170,11 +170,14 @@ class CardsRepository
         return $paymentOperationsData;
     }
 
+    // получение всех долгов по пользователю на дату
     public static function getAllDebts($today, $difference)
     {
+        // к дате прибавляем интервал
         $tomorrow = ($today)->modify($difference);
         $tomorrowStr = $tomorrow->format('Y-m-d');
 
+        // создание запроса
         $query = Operations::find()
             ->alias('op')
             ->select([
@@ -203,6 +206,7 @@ class CardsRepository
             ])
             ->orderBy(['op.user_id' => SORT_ASC, 'p.date_payment' => SORT_ASC]);
 
+        // сохраняем результат запроса в виде массива
         $paymentOperationsData = $query->asArray()->all();
 
         if (empty($paymentOperationsData)) {

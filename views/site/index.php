@@ -83,10 +83,10 @@ $formattedAllTotalDebt = Yii::$app->formatter->asDecimal($allTotalDebt, 2);
                     </div>
                 </div>
 
-                <div style="margin: 3vh 0 0 0;">Баланс: <?= Html::encode($formattedFinBalance) ?>₽</div>
+                <div style="margin: 3vh 0 0 0;">Баланс: <?= Html::encode($formattedFinBalance) ?> ₽</div>
 
                 <div>Возможность снятия/перевода:
-                    <?= Html::encode($formattedWithdrawalLimit) ?>₽
+                    <?= Html::encode($formattedWithdrawalLimit) ?> ₽
                 </div>
                 <br>
 
@@ -94,7 +94,7 @@ $formattedAllTotalDebt = Yii::$app->formatter->asDecimal($allTotalDebt, 2);
 
                     <div>Ближайший платеж:
                         <span style="color: red; font-weight: bold;">
-                                <?= Html::encode($formattedDebt) ?>₽
+                                <?= Html::encode($formattedDebt) ?> ₽
                         </span>
 
                         <span class="term">оплатить до
@@ -118,7 +118,7 @@ $formattedAllTotalDebt = Yii::$app->formatter->asDecimal($allTotalDebt, 2);
                 <?php else: ?>
 
                     <div>Ближайший платеж:
-                        <span style="color: #00FF00">не найден</span>
+                        <span style="color: #00FF00">отсутствует</span>
                     </div>
 
                 <?php endif; ?>
