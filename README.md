@@ -4,4 +4,4 @@
 
 
 
-![](web/img/about/index.png)
+![](web/index.png)
