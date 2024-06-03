@@ -15,9 +15,11 @@ class CardsRepository
     public static function getCardBuId($user_id, $card_id)
     {
         return Cards::find()
-            ->with(['lastBalance'])
+            ->with(['lastBalance' => function ($query) {
+                $query->select(['fin_balance']);
+            }])
             ->where(['user_id' => $user_id, 'id' => $card_id])
-            ->select(['id', 'name_card', 'credit_limit'])
+            ->select(['id', 'name_card', 'credit_limit', 'withdrawal_limit'])
             ->one();
     }
 
@@ -39,7 +41,8 @@ class CardsRepository
     }
 
 
-    // получаем расчетную информацию и грейс период карты который добавил пользователь
+    /* получаем расчетную информацию и грейс период карты который добавил пользователь
+    для расчета возврата ДС */
     public static function getInfoReturnMoney($user_id, $card_id)
     {
         $card = Cards::find()->where(['user_id' => $user_id, 'id' => $card_id])->one();
@@ -57,9 +60,9 @@ class CardsRepository
                 ->one();
 
         } elseif ($card->refund_cash_calculation == 0 && empty($ballingPeriod->percentage_partial_repayment)) {
-            /*$card->refund_cash_calculation == 0 &&
+            /* $card->refund_cash_calculation == 0 &&
             (!empty($card->payment_partial_repayment)) &&
-            $card->payment_date_purchase_partial_repayment == 1*/
+            $card->payment_date_purchase_partial_repayment == 1 */
             return Cards::find()
                 ->where(['user_id' => $user_id, 'id' => $card_id])
                 ->select(['id', 'grace_period', 'percentage_partial_repayment', 'refund_cash_calculation'])
@@ -159,6 +162,7 @@ class CardsRepository
                 'p.start_date_billing_period',
                 'p.end_date_billing_period'
             ])
+            // необходимо всегда возвращать как массив, иначе фатальная ошибка
             ->asArray()
             ->orderBy(['p.date_payment' => SORT_ASC])
             ->all();

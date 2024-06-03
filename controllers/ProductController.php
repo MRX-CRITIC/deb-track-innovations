@@ -133,9 +133,10 @@ class ProductController extends Controller
         }
     }
 
+
     /**
-     * @throws \Throwable
      * @throws StaleObjectException
+     * @throws \Throwable
      */
     public function actionAddOperation(int $card_id)
     {

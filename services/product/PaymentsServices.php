@@ -16,37 +16,62 @@ class PaymentsServices
      * @throws \Throwable
      * @throws StaleObjectException
      */
+
+    /* основной метод отвечающий за создание платежа для возврата ДС
+           type_operation - тип операции [false(0) => 'Снятие', true(1) => 'Внесение']
+           sum - сумма операции */
     public static function addPayment($user_id, $card_id, $date_operation, $operation_id, $type_operation, $sum)
     {
         if (Yii::$app->user->getId() === $user_id) {
 
+            // получаем все долги по картам, получаем true в случае их отсутствия
             $debts = CardsRepository::getAllDebtsCard($user_id, $card_id);
-            if ($debts === true || $type_operation == 0) {
 
+            // если долгов нет ИЛИ операция является снятия ДС с карты
+            if ($debts === true || $type_operation == 0) {
                 $ballingPeriod = CardsRepository::getInfoReturnMoney($user_id, $card_id);
 
+                // если есть строго заданный расчетный период (применяется для ТБ)
                 if (!empty($ballingPeriod->start_date_billing_period) && !empty($ballingPeriod->end_date_billing_period)) {
                     return self::processBillingPeriod($ballingPeriod, $date_operation, $operation_id);
 
-                } elseif (!empty($ballingPeriod->percentage_partial_repayment)) {
+                    /* если есть процент частичного погашения И
+                    нужно ли вносить платежи в счет частичного погашения И
+                    платеж для частичного погашения рассчитывается с даты снятия(применяется для АБ) */
+                } elseif (
+                    !empty($ballingPeriod->percentage_partial_repayment) &&
+                    $ballingPeriod->payment_partial_repayment == 1 &&
+                    $ballingPeriod->payment_date_purchase_partial_repayment == 1
+                )
+                {
+//                    return self::processBillingPeriod_3();
                     return self::handleError($operation_id, 'Условия возврата еще не добавлены');
 
+                    // если возврат ДС производится из расчета даты снятия И НЕТ процента частичного погашения (применяется для кубышки ТБ)
                 } elseif ($ballingPeriod->refund_cash_calculation == 0 && empty($ballingPeriod->percentage_partial_repayment)) {
-                    return self::processBillingPeriod_2($user_id, $card_id, $ballingPeriod, $date_operation, $operation_id);
+                    return self::processBillingPeriod_2($ballingPeriod, $date_operation, $operation_id, $debts);
 
                 } else {
                     return self::handleError($operation_id, 'Не верные условия возврата, пожалуйста, обратитесь в техническую поддержку');
                 }
 
+                // подразумевается что сюда мы попадаем в случае если есть долги и операция является пополнением
             } else {
+                // преобразуем сумму операции в целое число для ...
                 $returnMoney = intval($sum);
+                // проверка на наличия долгов, т.к. в случае их отсутствия метод вернет Boolean
                 if (is_array($debts)) {
-                    foreach ($debts as $key => $debt) {
+                    foreach ($debts as $debt) {
 
+
+                        // наличие долга фиксируется число со знаком минус
+                        // если долг есть И сумма операции больше нуля И тип операции внесения
                         if ($debt['debt'] < 0 && $returnMoney > 0 && $type_operation == 1) {
 
+                            // преобразование долга в положительное число
                             $neededToClearDebt = abs($debt['debt']);
 
+                            // если сумма внесения <= сумме долга
                             if ($returnMoney <= $neededToClearDebt) {
                                 $model = new PaymentsForm();
                                 $model->setAttributes([
@@ -115,6 +140,10 @@ class PaymentsServices
         }
     }
 
+    /**
+     * @throws \Exception
+     */
+    // ТБ
     private static function processBillingPeriod($ballingPeriod, $dateOperation, $operationId)
     {
         $datesBillingPeriod = OperationsServices::adjustPeriodToCurrentDate(
@@ -136,9 +165,39 @@ class PaymentsServices
         );
     }
 
-    private static function processBillingPeriod_2($userId, $cardId, $ballingPeriod, $dateOperation, $operationId)
+    // кубышка ТБ
+    private static function processBillingPeriod_2($ballingPeriod, $dateOperation, $operationId, $debts)
     {
-        $debts = CardsRepository::getAllDebtsCard($userId, $cardId);
+        $dateOperation = new DateTime($dateOperation);
+
+        if (is_array($debts)) {
+            $endDate = new DateTime(end($debts)['end_date']);
+        } else {
+            $endDate = new DateTime('0000-00-00');
+        }
+
+        if ($dateOperation >= $endDate) {
+            $endDate = OperationsServices::settingDatePayment_2(
+                $dateOperation->format('Y-m-d'),
+                $ballingPeriod->grace_period
+            );
+        } else {
+            $latestDebt = end($debts);
+            $endDate = $latestDebt['end_date'];
+            $dateOperation = new DateTime($latestDebt['start_date']);
+        }
+
+        return self::createPaymentModel(
+            $operationId,
+            $dateOperation->format('Y-m-d'),
+            $endDate,
+            $endDate
+        );
+    }
+
+    // АБ - в работе
+    private static function processBillingPeriod_3($debts, $ballingPeriod, $dateOperation, $operationId)
+    {
         $dateOperation = new DateTime($dateOperation);
 
         if (is_array($debts)) {

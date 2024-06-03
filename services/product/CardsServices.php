@@ -17,7 +17,6 @@ class CardsServices
         } else {
             return $name_card;
         }
-
     }
 
     /**

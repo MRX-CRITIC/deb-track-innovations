@@ -84,7 +84,7 @@ class OperationsServices
         return $endDateTime->format('Y-m-d');
     }
 
-    // Кубышка
+    // Кубышка от Tinkoff
     public static function settingDatePayment_2($endDate, $gracePeriod)
     {
         $endDateTime = new DateTime($endDate);
@@ -102,5 +102,22 @@ class OperationsServices
         return $endDateTime->format('Y-m-d');
     }
 
+    // альфа (в работе)
+    public static function settingDatePayment_3($endDate, $gracePeriod)
+    {
+        $endDateTime = new DateTime($endDate);
+
+        $daysInMonth = $endDateTime->format('t');
+
+        $newDayOfMonth = (int)$endDateTime->format('d') + $gracePeriod - 1;
+
+        if ($newDayOfMonth > $daysInMonth) {
+            $newDayOfMonth -= 31;
+            $endDateTime->modify("+1 month");
+        }
+        $endDateTime->setDate((int)$endDateTime->format('Y'), (int)$endDateTime->format('m'), $newDayOfMonth);
+
+        return $endDateTime->format('Y-m-d');
+    }
 
 }
